@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/ll_main_bottom_delete"
+        style="@style/bottom_linear_layout_style">
+
+        <ImageView
+            android:id="@+id/iv_main_bottom_delete"
+            style="@style/bottom_image_view_style"
+            app:srcCompat="@drawable/ic_bottom_delete" />
+
+        <TextView
+            android:id="@+id/tv_main_bottom_delete"
+            style="@style/bottom_text_view_style"
+            android:text="删除" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_main_bottom_cancel"
+        style="@style/bottom_linear_layout_style">
+
+        <ImageView
+            style="@style/bottom_image_view_style"
+            app:srcCompat="@drawable/ic_bottom_cancel" />
+
+        <TextView
+            style="@style/bottom_text_view_style"
+            android:text="取消" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_main_bottom_select"
+        style="@style/bottom_linear_layout_style">
+
+        <ImageView
+            android:id="@+id/iv_main_bottom_select"
+            style="@style/bottom_image_view_style"
+            app:srcCompat="@drawable/ic_bottom_select_all_cancel" />
+
+        <TextView
+            android:id="@+id/tv_main_bottom_select"
+            style="@style/bottom_text_view_style"
+            android:text="全选" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_main_bottom_detail"
+        style="@style/bottom_linear_layout_style">
+
+        <ImageView
+            android:id="@+id/iv_main_bottom_detail"
+            style="@style/bottom_image_view_style"
+            app:srcCompat="@drawable/ic_bottom_detail" />
+
+        <TextView
+            android:id="@+id/tv_main_bottom_detail"
+            style="@style/bottom_text_view_style"
+            android:text="详细信息" />
+    </LinearLayout>
+
+</LinearLayout>
