@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#1D87DB</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="white_bg">#FFF</color>
+    <color name="black_color">#000</color>
+
+<!--    导入图书-->
+    <color name="white_text">#FFF</color>
+    <color name="import_book_file_name_logo">#A0A0A0</color>
+    <color name="freeze_color">#8F989F</color>
+
+<!--    书架-->
+    <color name="popup_window_detail_line">#E6663F</color>
+
+<!--    阅读-->
+    <color name="read_settings_add_border">#86796B</color>
+
+
+    <color name="read_bg_default">#CEC29C</color>
+    <color name="read_bg_1">#CCEBCC</color>
+    <color name="read_bg_2">#37342F</color>
+    <color name="read_bg_3">#D1CEC5</color>
+    <color name="read_bg_4">#001C27</color>
+
+    <color name="read_font_default">#2C2C2C</color>
+    <color name="read_font_1">#2F332D</color>
+    <color name="read_font_2">#92918C</color>
+    <color name="read_font_3">#383429</color>
+    <color name="read_font_4">#627176</color>
+
+    <color name="read_dialog_bg">#2C2C2C</color>
+    <color name="read_dialog_button_select">#E25754</color>
+
+    <color name="read_textColor">#3B3A38</color>
+
+</resources>

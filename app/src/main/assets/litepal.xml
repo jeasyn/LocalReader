@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<litepal>
+    <dbname value="Reader"></dbname>
+    <version value="1"></version>
+    <list>
+        <mapping class="com.example.localreader.entity.Book"></mapping>
+        <mapping class="com.example.localreader.entity.BookCatalog"></mapping>
+        <mapping class="com.example.localreader.entity.Bookmark"></mapping>
+    </list>
+</litepal>
