@@ -76,7 +76,6 @@ public class BookmarkAdapter extends BaseAdapter {
         this.list = list;
         pageFactory = PageFactory.getInstance();
         config = config.getInstance();
-        typeface = config.getTypeface();
     }
 
     class ViewHolder {

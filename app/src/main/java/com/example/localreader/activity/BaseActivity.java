@@ -105,8 +105,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                         new String[]{permission},
                         requestCode);
             }
-        } else {
-
         }
     }
 

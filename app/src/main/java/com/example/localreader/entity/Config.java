@@ -2,8 +2,6 @@ package com.example.localreader.entity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.graphics.Typeface;
 
 import com.example.localreader.R;
 
@@ -14,21 +12,10 @@ import com.example.localreader.R;
 public class Config {
     private final static String SP_NAME = "config";
     private final static String BOOK_BG_KEY = "bookbg";
-    private final static String FONT_TYPE_KEY = "fonttype";
     private final static String FONT_SIZE_KEY = "fontsize";
     private final static String NIGHT_KEY = "night";
     private final static String LIGHT_KEY = "light";
     private final static String SYSTEM_LIGHT_KEY = "systemlight";
-
-    public final static String FONTTYPE_DEFAULT = "";
-    public final static String FONTTYPE_QIHEI = "font/qihei.ttf";
-    public final static String FONTTYPE_FZKATONG = "font/fzkatong.ttf";
-    public final static String FONTTYPE_BYSONG = "font/bysong.ttf";
-
-    public final static String FONTTYPE_HKSHAONV ="font/hkshaonv.ttf";
-    public final static String FONTTYPE_HWZHONGSONG ="font/hwzhongsong.ttf";
-    public final static String FONTTYPE_KAITI ="font/kaiti.ttf";
-    public final static String FONTTYPE_YOUYUAN ="font/youyuan.ttf";
 
     public final static int BOOK_BG_DEFAULT = 0;
     public final static int BOOK_BG_1 = 1;
@@ -39,8 +26,7 @@ public class Config {
     private Context mContext;
     private static Config config;
     private SharedPreferences sp;
-    //字体
-    private Typeface typeface;
+
     //字体大小
     private float mFontSize = 0;
     //亮度值
@@ -72,34 +58,6 @@ public class Config {
         sp.edit().putInt(BOOK_BG_KEY,type).commit();
     }
 
-    public Typeface getTypeface(){
-        if (typeface == null) {
-            String typePath = sp.getString(FONT_TYPE_KEY,FONTTYPE_QIHEI);
-            typeface = getTypeface(typePath);
-        }
-        return typeface;
-    }
-
-    public String getTypefacePath(){
-        String path = sp.getString(FONT_TYPE_KEY,FONTTYPE_QIHEI);
-        return path;
-    }
-
-    public Typeface getTypeface(String typeFacePath){
-        Typeface mTypeface;
-        if (typeFacePath.equals(FONTTYPE_DEFAULT)){
-            mTypeface = Typeface.DEFAULT;
-        }else{
-            AssetManager mAssetManager = mContext.getAssets();
-            mTypeface = Typeface.createFromAsset(mContext.getAssets(),typeFacePath);
-        }
-        return mTypeface;
-    }
-
-    public void setTypeface(String typefacePath){
-        typeface = getTypeface(typefacePath);
-        sp.edit().putString(FONT_TYPE_KEY,typefacePath).commit();
-    }
 
     public float getFontSize(){
         if (mFontSize == 0){

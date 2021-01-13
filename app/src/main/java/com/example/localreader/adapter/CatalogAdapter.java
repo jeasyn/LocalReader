@@ -1,7 +1,6 @@
 package com.example.localreader.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ public class CatalogAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<BookCatalog> bookCatalogueList;
-    private Typeface typeface;
     private Config config;
     private int currentCharter = 0;
 
@@ -53,7 +51,6 @@ public class CatalogAdapter extends BaseAdapter {
             viewHolder= new ViewHolder();
             convertView = inflater.inflate(R.layout.item_catalog,null);
             viewHolder.catalogue_tv = (TextView)convertView.findViewById(R.id.catalogue_tv);
-            viewHolder.catalogue_tv.setTypeface(typeface);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
@@ -72,7 +69,6 @@ public class CatalogAdapter extends BaseAdapter {
         mContext = context;
         this.bookCatalogueList = bookCatalogueList;
         config = config.getInstance();
-        typeface = config.getTypeface();
     }
 
     class ViewHolder {

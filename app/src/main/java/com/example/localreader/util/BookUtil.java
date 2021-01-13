@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class BookUtil {
 
-    private static final String cachedPath = Environment.getExternalStorageDirectory() + "/reader/";
+    private static final String cachedPath = Environment.getExternalStorageDirectory() + "/LocalReader/";
     //存储的字符数
     public static final int cachedSize = 30000;
 
@@ -163,7 +163,7 @@ public class BookUtil {
         return position;
     }
 
-    public void setPostition(long position){
+    public void setPosition(long position){
         this.position = position;
     }
 
@@ -244,7 +244,7 @@ public class BookUtil {
                 String bufStr = new String(buf);
                 String[] paragraphs = bufStr.split("\r\n");
                 for (String str : paragraphs) {
-                    if (str.length() <= 30 && (str.matches(".*第.{1,8}章.*") || str.matches(".*第.{1,8}节.*"))) {
+                    if (str.length() <= 30 && (str.matches(".*第.{1,8}章.*") || str.matches(".*第.{1,8}节.*") || str.matches("[0-9 \\u4e00-\\u9fa5]+"))) {
                         BookCatalog bookCatalogue = new BookCatalog();
                         bookCatalogue.setBookCatalogueStartPos(size);
                         bookCatalogue.setBookCatalogue(str);
