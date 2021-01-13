@@ -1,13 +1,10 @@
 package com.example.localreader.activity;
 
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
 import android.graphics.Point;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.localreader.R;
 import com.example.localreader.entity.Book;
@@ -172,11 +171,6 @@ public class ReadActivity extends BaseActivity {
             @Override
             public void changeFontSize(int fontSize) {
                 pageFactory.changeFontSize(fontSize);
-            }
-
-            @Override
-            public void changeTypeFace(Typeface typeface) {
-                pageFactory.changeTypeface(typeface);
             }
 
             @Override

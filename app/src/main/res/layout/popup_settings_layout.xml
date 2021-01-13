@@ -3,205 +3,149 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#fff"
     android:layout_gravity="bottom"
-    android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:background="#fff"
+    android:orientation="vertical">
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center_vertical"
+                android:text="亮度" />
+
+            <SeekBar
+                android:id="@+id/sb_brightness"
+                android:layout_width="wrap_content"
+                android:clickable="true"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:layout_weight="4"
+                android:max="100" />
+
+        </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/setting_height"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:gravity="center"
-            android:text="亮度"
-            android:textAlignment="center"
-            android:textSize="16sp" />
+            android:text="字号" />
 
-        <SeekBar
-            android:id="@+id/sb_brightness"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:max="100"
-            android:layout_gravity="center_vertical">
-        </SeekBar>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="亮"
-            android:textAlignment="center"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tv_xitong"
-            style="@style/setting_dialog_button"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:text="系统" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/setting_height"
-        android:orientation="horizontal">
         <TextView
             android:id="@+id/tv_subtract"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:textSize="30sp"
-            android:background="@null"
-            android:textColor="#E25754"
-            android:text="A-" />
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:onClick="lessFontSize"
+            android:background="@drawable/read_settings_font_change_style"
+            android:gravity="center"
+            android:text="A -" />
+
         <TextView
             android:id="@+id/tv_size"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:textSize="16sp"
-            android:text="64" />
+            android:text="60"
+            android:textColor="#000" />
 
         <TextView
             android:id="@+id/tv_add"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:textSize="30sp"
-            android:background="@null"
-            android:textColor="#E25754"
-            android:text="A+" />
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:onClick="addFontSize"
+            android:background="@drawable/read_settings_font_change_style"
+            android:gravity="center"
+            android:text="A +" />
 
-        <TextView
-            android:id="@+id/tv_size_default"
-            style="@style/setting_dialog_button"
-            android:layout_marginLeft="20dp"
-            android:text="默认" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/setting_height"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tv_default"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:text="系统默认" />
-        <TextView
-            android:id="@+id/tv_qihei"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:textSize="14sp"
-            android:text="羿创旗黑" />
-        <TextView
-            android:id="@+id/tv_fzkatong"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:textSize="14sp"
-            android:text="卡通" />
-        <TextView
-            android:id="@+id/tv_bysong"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:textSize="14sp"
-            android:text="繁宋体" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/setting_height"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tv_hkshaonv"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:text="华康少女" />
-        <TextView
-            android:id="@+id/tv_hwzhongsong"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:textSize="14sp"
-            android:text="华文中宋" />
-        <TextView
-            android:id="@+id/tv_kaiti"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:textSize="14sp"
-            android:text="楷体" />
-        <TextView
-            android:id="@+id/tv_youyuan"
-            style="@style/setting_dialog_button"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:textSize="14sp"
-            android:text="幼圆" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="8dp"
-        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="主题" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="30dp"
             android:id="@+id/iv_bg_default"
-            app:backgroundTint="@color/read_bg_default"
-            android:src="@color/read_bg_default" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="30dp"
+            android:src="@color/read_bg_default"
+            app:backgroundTint="@color/read_bg_default" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/iv_bg_1"
-            app:backgroundTint="@color/read_bg_1"
-            android:src="@color/read_bg_1" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="30dp"
+            android:src="@color/read_bg_1"
+            app:backgroundTint="@color/read_bg_1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/iv_bg_2"
-            app:backgroundTint="@color/read_bg_2"
-            android:src="@color/read_bg_2" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="30dp"
+            android:src="@color/read_bg_2"
+            app:backgroundTint="@color/read_bg_2" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/iv_bg_3"
-            app:backgroundTint="@color/read_bg_3"
-            android:src="@color/read_bg_3" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:src="@color/read_bg_3"
+            app:backgroundTint="@color/read_bg_3" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/iv_bg_4"
-            app:backgroundTint="@color/read_bg_4"
-            android:src="@color/read_bg_4" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@color/read_bg_4"
+            app:backgroundTint="@color/read_bg_4" />
     </LinearLayout>
 
 </LinearLayout>
