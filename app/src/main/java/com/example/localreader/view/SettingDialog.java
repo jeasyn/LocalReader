@@ -1,9 +1,8 @@
-package com.example.localreader.util;
+package com.example.localreader.view;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
@@ -16,25 +15,12 @@ import com.example.localreader.R;
 import com.example.localreader.entity.Config;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 /**
  * @author xialijuan
  * @date 2021/1/10
  */
-public class SettingDialog extends Dialog {
+public class SettingDialog extends Dialog implements View.OnClickListener {
 
-    @BindView(R.id.sb_brightness) SeekBar sb_brightness;
-    @BindView(R.id.tv_subtract) TextView tv_subtract;
-    @BindView(R.id.tv_size) TextView tv_size;
-    @BindView(R.id.tv_add) TextView tv_add;
-    @BindView(R.id.iv_bg_default) FloatingActionButton iv_bg_default;
-    @BindView(R.id.iv_bg_1) FloatingActionButton iv_bg1;
-    @BindView(R.id.iv_bg_2) FloatingActionButton iv_bg2;
-    @BindView(R.id.iv_bg_3) FloatingActionButton iv_bg3;
-    @BindView(R.id.iv_bg_4) FloatingActionButton iv_bg4;
 
     private Config config;
     private Boolean isSystem;
@@ -42,6 +28,15 @@ public class SettingDialog extends Dialog {
     private int FONT_SIZE_MIN;
     private int FONT_SIZE_MAX;
     private int currentFontSize;
+    private SeekBar sb_brightness;
+    private TextView tv_size;
+    private TextView tv_add;
+    private FloatingActionButton iv_bg_default;
+    private FloatingActionButton iv_bg1;
+    private FloatingActionButton iv_bg2;
+    private FloatingActionButton iv_bg3;
+    private FloatingActionButton iv_bg4;
+    private TextView tv_subtract;
 
     private SettingDialog(Context context, boolean flag, DialogInterface.OnCancelListener listener) {
         super(context, flag, listener);
@@ -61,8 +56,8 @@ public class SettingDialog extends Dialog {
         super.onCreate(savedInstanceState);
         getWindow().setGravity(Gravity.BOTTOM);
         setContentView(R.layout.popup_settings_layout);
-        // 初始化View注入
-        ButterKnife.bind(this);
+
+        initView();
 
         WindowManager m = getWindow().getWindowManager();
         Display d = m.getDefaultDisplay();
@@ -77,7 +72,6 @@ public class SettingDialog extends Dialog {
 
         //初始化亮度
         isSystem = config.isSystemLight();
-//        setTextViewSelect(tv_xitong, isSystem);
         setBrightness(config.getLight());
 
         //初始化字体大小
@@ -104,6 +98,26 @@ public class SettingDialog extends Dialog {
         });
     }
 
+    private void initView() {
+        sb_brightness = findViewById(R.id.sb_brightness);
+        tv_size = findViewById(R.id.tv_size);
+        tv_subtract = findViewById(R.id.tv_subtract);
+        tv_add = findViewById(R.id.tv_add);
+        iv_bg_default = findViewById(R.id.iv_bg_default);
+        iv_bg1 = findViewById(R.id.iv_bg_1);
+        iv_bg2 = findViewById(R.id.iv_bg_2);
+        iv_bg3 = findViewById(R.id.iv_bg_3);
+        iv_bg4 = findViewById(R.id.iv_bg_4);
+
+        tv_subtract.setOnClickListener(this);
+        tv_add.setOnClickListener(this);
+        iv_bg_default.setOnClickListener(this);
+        iv_bg1.setOnClickListener(this);
+        iv_bg2.setOnClickListener(this);
+        iv_bg3.setOnClickListener(this);
+        iv_bg4.setOnClickListener(this);
+    }
+
     //设置字体
     public void setBookBg(int type) {
         config.setBookBg(type);
@@ -117,22 +131,9 @@ public class SettingDialog extends Dialog {
         sb_brightness.setProgress((int) (brightness * 100));
     }
 
-    private void applyCompat() {
-        if (Build.VERSION.SDK_INT < 19) {
-            return;
-        }
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
-    }
-
-    public Boolean isShow() {
-        return isShowing();
-    }
-
-
-    @OnClick({R.id.tv_subtract, R.id.tv_add, R.id.iv_bg_default, R.id.iv_bg_1, R.id.iv_bg_2, R.id.iv_bg_3, R.id.iv_bg_4})
-    public void onClick(View view) {
-        switch (view.getId()) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.tv_subtract:
                 subtractFontSize();
                 break;
@@ -202,5 +203,4 @@ public class SettingDialog extends Dialog {
 
         void changeBookBg(int type);
     }
-
 }

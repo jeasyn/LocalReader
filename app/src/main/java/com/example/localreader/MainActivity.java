@@ -1,8 +1,10 @@
-package com.example.localreader.activity;
+package com.example.localreader;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -23,20 +25,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.localreader.R;
 import com.example.localreader.adapter.BookShelfAdapter;
 import com.example.localreader.entity.Book;
 import com.example.localreader.util.BookShelfUtil;
 import com.example.localreader.util.FileUtil;
-import com.google.android.material.navigation.NavigationView;
 
 import org.litepal.LitePal;
 
@@ -49,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Book> books;
     private static BookShelfAdapter adapter;
-    private DrawerLayout mDrawerLayout;
     private RecyclerView bookShelfRv;
-    private NavigationView navView;
     private TextView pointTv;
     private LinearLayout bottomLayout;
     private LinearLayout deleteLayout;
@@ -81,15 +77,10 @@ public class MainActivity extends AppCompatActivity {
         LitePal.getDatabase();
 
         //申请读取文件权限
-        FileUtil.verifyStoragePermissions(this);
+        verifyStoragePermissions(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_title_menu);
-        }
 
         //引入popup_window_book_detail布局，否则弹出详细信息时，会找不到子控件
         inflater = getLayoutInflater();
@@ -102,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initViews() {
-        mDrawerLayout = findViewById(R.id.dl_menu);
-        navView = findViewById(R.id.nav_view);
         bookShelfRv = findViewById(R.id.rv_book_shelf);
         pointTv = findViewById(R.id.tv_point_add_book);
         bottomLayout = findViewById(R.id.ll_main_bottom);
@@ -130,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         cancelLayout.setOnClickListener(mCancelListener);
         selectLayout.setOnClickListener(mSelectListener);
         detailLayout.setOnClickListener(mDetailListener);
-        navView.setNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     public void initData() {
@@ -180,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
             detailTv.setTextColor(getResources().getColor(R.color.freeze_color));
         }
     }
-
 
     private View.OnClickListener mDeleteBookListener = new View.OnClickListener() {
         @Override
@@ -348,30 +335,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ImportActivity.class));
                 directHideBottom();
                 break;
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                break;
-
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private NavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            mDrawerLayout.closeDrawers();
-            return false;
-        }
-    };
-
-
-    //解决点击返回时侧滑问题
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mDrawerLayout.closeDrawers();
-            } else if (isHideBottom) {
+            if (isHideBottom) {
                 hideBottomLayout();
             } else {
                 exit();
@@ -398,6 +369,26 @@ public class MainActivity extends AppCompatActivity {
             }, 2000);
         } else {//两秒内再次按下返回键，则直接退出程序
             finish();
+        }
+    }
+
+    /**
+     * 动态申请SD卡读写的权限
+     * Android6.0之后系统对权限的管理更加严格了，不但要在AndroidManifest中添加，还要在应用运行的时候动态申请
+     */
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+
+    private static String[] PERMISSION_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE"};
+
+    public static void verifyStoragePermissions(Activity activity) {
+        try {
+            int permission = ActivityCompat.checkSelfPermission(activity, "android.permission.WRITE_EXTERNAL_STORAGE");
+            if (permission != PackageManager.PERMISSION_GRANTED) {//判断是否已经授予权限
+                ActivityCompat.requestPermissions(activity, PERMISSION_STORAGE, REQUEST_EXTERNAL_STORAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

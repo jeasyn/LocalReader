@@ -14,6 +14,7 @@ public class Book extends LitePalSupport implements Serializable {
     private String bookPath;
     private String charset;
     private long begin;
+    private String progress;//读书的进度
 
     public int getId() {
         return id;
@@ -53,5 +54,13 @@ public class Book extends LitePalSupport implements Serializable {
 
     public void setBegin(long begin) {
         this.begin = begin;
+    }
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
     }
 }

@@ -1,7 +1,6 @@
 package com.example.localreader.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +22,8 @@ import java.util.List;
 public class BookmarkAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<Bookmark> list ;
+    private List<Bookmark> list;
     private Config config;
-    private Typeface typeface;
     private PageFactory pageFactory;
 
     @Override
@@ -50,15 +48,12 @@ public class BookmarkAdapter extends BaseAdapter {
         final ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_bookmark,null);
-            viewHolder.text_mark = (TextView) convertView.findViewById(R.id.text_mark);
-            viewHolder.progress1 = (TextView) convertView.findViewById(R.id.progress1);
-            viewHolder.mark_time = (TextView) convertView.findViewById(R.id.mark_time);
-            viewHolder.text_mark.setTypeface(typeface);
-            viewHolder.progress1.setTypeface(typeface);
-            viewHolder.mark_time.setTypeface(typeface);
+            convertView = inflater.inflate(R.layout.item_bookmark, null);
+            viewHolder.text_mark = convertView.findViewById(R.id.text_mark);
+            viewHolder.progress1 = convertView.findViewById(R.id.progress1);
+            viewHolder.mark_time = convertView.findViewById(R.id.mark_time);
             convertView.setTag(viewHolder);
-        }else {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.text_mark.setText(list.get(position).getText());
@@ -79,7 +74,6 @@ public class BookmarkAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-
-        TextView text_mark,progress1,mark_time;
+        TextView text_mark, progress1, mark_time;
     }
 }

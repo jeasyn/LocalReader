@@ -15,7 +15,6 @@ import com.example.localreader.R;
 public class ImportViewHolder extends RecyclerView.ViewHolder {
 
     public View fileView;
-    public TextView nameFirstWord;
     public TextView fileName;
     public TextView fileSize;
     public TextView fileTime;
@@ -26,7 +25,6 @@ public class ImportViewHolder extends RecyclerView.ViewHolder {
 
         super(itemView);
         fileView = itemView;
-        nameFirstWord = itemView.findViewById(R.id.tv_add_file_bg_name);
         fileName = itemView.findViewById(R.id.tv_add_file_name);
         fileSize = itemView.findViewById(R.id.tv_add_file_size);
         fileTime = itemView.findViewById(R.id.tv_add_file_time);

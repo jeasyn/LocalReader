@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ImportActivity">
+    tools:context=".ImportActivity">
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme" />
+            app:popupTheme="@style/AppTheme"
+            app:titleTextColor="@color/white_text" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -27,73 +28,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_import_book"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/ll_import_bottom_menu" />
-
-        <LinearLayout
-            android:id="@+id/ll_import_bottom_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/ll_import_bottom_import"
-                style="@style/bottom_linear_layout_style"
-                android:onClick="importListener">
-
-                <ImageView
-                    android:id="@+id/iv_import_bottom_import"
-                    android:src="@drawable/bottom_add_btn_selector"
-                    style="@style/bottom_image_view_style" />
-
-                <TextView
-                    android:id="@+id/tv_import_bottom_import"
-                    style="@style/bottom_text_view_style"
-                    android:text="加入书架"
-                    android:textColor="@color/freeze_color" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_import_bottom_delete"
-                style="@style/bottom_linear_layout_style"
-                android:onClick="deleteListener">
-
-                <ImageView
-                    android:id="@+id/iv_import_bottom_delete"
-                    style="@style/bottom_image_view_style"
-                    android:src="@drawable/bottom_delete_btn_selector" />
-
-                <TextView
-                    android:id="@+id/tv_import_bottom_delete"
-                    style="@style/bottom_text_view_style"
-                    android:text="删除"
-                    android:textColor="@color/freeze_color" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_import_bottom_select"
-                style="@style/bottom_linear_layout_style"
-                android:onClick="selectListener">
-
-                <ImageView
-                    android:id="@+id/iv_import_bottom_select"
-                    style="@style/bottom_image_view_style"
-                    android:src="@drawable/ic_bottom_select_all_cancel" />
-
-                <TextView
-                    android:id="@+id/tv_import_bottom_select"
-                    style="@style/bottom_text_view_style"
-                    android:text="全选"
-                    android:textColor="@color/black_color" />
-
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_above="@+id/ll_import"
+            android:layout_marginBottom="0dp" />
 
         <TextView
             android:id="@+id/tv_no_file"
@@ -103,6 +43,33 @@
             android:text="未扫描到TXT文件"
             android:visibility="gone"
             android:textSize="24sp" />
+
+        <LinearLayout
+            android:id="@+id/ll_import"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/btn_select_all_or_not"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/white_bg"
+                android:onClick="selectListener"
+                android:text="全选" />
+
+            <Button
+                android:id="@+id/btn_import_bookself"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#21B382"
+                android:text="导入书架(0)"
+                android:onClick="importListener"
+                android:textColor="@color/white_text" />
+        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>

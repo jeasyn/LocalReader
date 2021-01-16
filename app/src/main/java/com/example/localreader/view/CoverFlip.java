@@ -1,22 +1,21 @@
-package com.example.localreader.animation;
+package com.example.localreader.view;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.widget.Scroller;
 
 /**
  * @author xialijuan
  * @date 2021/1/9
  */
-public class CoverAnimation extends AnimationProvider {
+public class CoverFlip extends BaseFlip {
 
     private Rect mSrcRect, mDestRect;
     private GradientDrawable mBackShadowDrawableLR;
 
-    public CoverAnimation(Bitmap mCurrentBitmap, Bitmap mNextBitmap, int width, int height) {
+    public CoverFlip(Bitmap mCurrentBitmap, Bitmap mNextBitmap, int width, int height) {
         super(mCurrentBitmap, mNextBitmap, width, height);
         mSrcRect = new Rect(0, 0, mScreenWidth, mScreenHeight);
         mDestRect = new Rect(0, 0, mScreenWidth, mScreenHeight);
@@ -28,9 +27,7 @@ public class CoverAnimation extends AnimationProvider {
 
     @Override
     public void drawMove(Canvas canvas) {
-        if (getDirection().equals(AnimationProvider.Direction.next)){
-//            mSrcRect.left = (int) ( - (mScreenWidth - mTouch.x));
-//            mSrcRect.right =  mSrcRect.left + mScreenWidth;
+        if (getDirection().equals(BaseFlip.Direction.next)){
             int dis = (int) (mScreenWidth - myStartX + mTouch.x);
             if (dis > mScreenWidth){
                 dis = mScreenWidth;
@@ -67,8 +64,7 @@ public class CoverAnimation extends AnimationProvider {
     }
 
     @Override
-    public void startAnimation(Scroller scroller) {
-
+    public void startSliding(Scroller scroller) {
         int dx = 0;
         if (getDirection().equals(Direction.next)){
             if (getCancel()){
@@ -78,7 +74,6 @@ public class CoverAnimation extends AnimationProvider {
                 }
                 dx = mScreenWidth - dis;
             }else{
-//                dx = (int) - (mTouch.x + myStartX);
                 dx = (int) - (mTouch.x + (mScreenWidth - myStartX));
             }
         }else{
@@ -90,7 +85,6 @@ public class CoverAnimation extends AnimationProvider {
         }
         //滑动速度保持一致
         int duration =  (400 * Math.abs(dx)) / mScreenWidth;
-        Log.e("duration",duration + "");
         scroller.startScroll((int) mTouch.x, 0, dx, 0, duration);
     }
 }

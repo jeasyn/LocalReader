@@ -9,10 +9,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -64,8 +63,6 @@ public class PageFactory {
     private float paragraphSpace;
     //字高度
     private float fontHeight;
-    //字体
-    private Typeface typeface;
     //文字画笔
     private Paint mPaint;
     //加载画笔
@@ -89,24 +86,21 @@ public class PageFactory {
     //文件编码
 //    private String m_strCharsetName = "GBK";
     //当前是否为第一页
-    private boolean m_isfirstPage;
+    private boolean isFirstPage;
     //当前是否为最后一页
-    private boolean m_islastPage;
+    private boolean isLastPage;
     //书本widget
     private PageWidget mBookPageWidget;
     //现在的进度
     private float currentProgress;
-    //目录
-//    private List<BookCatalogue> directoryList = new ArrayList<>();
     //书本路径
     private String bookPath = "";
     //书本名字
     private String bookName = "";
-    private Book bookList;
+    private Book book;
     //书本章节
     private int currentCharter = 0;
     //当前电量
-    private int level = 0;
     private BookUtil mBookUtil;
     private PageEvent mPageEvent;
     private TRPage currentPage;
@@ -160,25 +154,21 @@ public class PageFactory {
         mPaint.setTextAlign(Paint.Align.LEFT);// 左对齐
         mPaint.setTextSize(m_fontSize);// 字体大小
         mPaint.setColor(m_textColor);// 字体颜色
-        mPaint.setTypeface(typeface);
         mPaint.setSubpixelText(true);// 设置该项为true，将有助于文本在LCD屏幕上的显示效果
 
         waitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);// 画笔
         waitPaint.setTextAlign(Paint.Align.LEFT);// 左对齐
         waitPaint.setTextSize(mContext.getResources().getDimension(R.dimen.reading_max_text_size));// 字体大小
         waitPaint.setColor(m_textColor);// 字体颜色
-        waitPaint.setTypeface(typeface);
         waitPaint.setSubpixelText(true);// 设置该项为true，将有助于文本在LCD屏幕上的显示效果
         calculateLineCount();
 
         mBatterryPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBatterryFontSize = CommonUtil.sp2px(context, 12);
+        mBatterryFontSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, context.getResources().getDisplayMetrics());
         mBatterryPaint.setTextSize(mBatterryFontSize);
-        mBatterryPaint.setTypeface(typeface);
         mBatterryPaint.setTextAlign(Paint.Align.LEFT);
         mBatterryPaint.setColor(m_textColor);
-        batteryInfoIntent = context.getApplicationContext().registerReceiver(null,
-                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));//注册广播,随时获取到电池电量信息
+        batteryInfoIntent = context.getApplicationContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));//注册广播,随时获取到电池电量信息
 
         initBg(config.getDayOrNight());
         measureMarginWidth();
@@ -227,14 +217,12 @@ public class PageFactory {
         waitPaint.setTextAlign(Paint.Align.CENTER);
 
         Rect targetRect = new Rect(0, 0, mWidth, mHeight);
-//        c.drawRect(targetRect, waitPaint);
         Paint.FontMetricsInt fontMetrics = waitPaint.getFontMetricsInt();
 
         int baseline = (targetRect.bottom + targetRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
         // 下面这行是实现水平居中，drawText对应改为传入targetRect.centerX()
         waitPaint.setTextAlign(Paint.Align.CENTER);
         c.drawText(status, targetRect.centerX(), baseline, waitPaint);
-//        c.drawText("正在打开书本...", mHeight / 2, 0, waitPaint);
         mBookPageWidget.postInvalidate();
     }
 
@@ -243,20 +231,19 @@ public class PageFactory {
             currentCharter = getCurrentCharter();
         }
         //更新数据库进度
-        if (currentPage != null && bookList != null) {
+        if (currentPage != null && book != null) {
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
                     values.put("begin", currentPage.getBegin());
-                    LitePal.update(Book.class, values, bookList.getId());
+                    LitePal.update(Book.class, values, book.getId());
                 }
             }.start();
         }
 
         Canvas c = new Canvas(bitmap);
         c.drawBitmap(getBgBitmap(), 0, 0, null);
-//        word.setLength(0);
         mPaint.setTextSize(getFontSize());
         mPaint.setColor(getTextColor());
         mBatterryPaint.setColor(getTextColor());
@@ -274,30 +261,27 @@ public class PageFactory {
 
         //画进度及时间
         float fPercent = (float) (currentPage.getBegin() * 1.0 / mBookUtil.getBookLen());//进度
+
         currentProgress = fPercent;
         if (mPageEvent != null) {
             mPageEvent.changeProgress(fPercent);
         }
         String strPercent = df.format(fPercent * 100) + "%";//进度文字
-//        int nPercentWidth = (int) mBatterryPaint.measureText("999.9%") + 1;  //Paint.measureText直接返回參數字串所佔用的寬度
         c.drawText(strPercent, mWidth / 2, mHeight - statusMarginBottom, mBatterryPaint);//x y为坐标值
-
-        Log.d("xlj",strPercent);
-        // 画电池
-        level = batteryInfoIntent.getIntExtra("level", 0);
 
         /**save()无参传入这两个方法最终都调用native_save方法，而无参方法save()默认是保存Matrix和Clip这两个信息。
          如果允许，那么尽量使用无参的save()方法，而不是使用有参的save(int saveFlags)方法传入别的Flag。*/
         c.save();
 
         c.restore();
-        //画书名
-        c.drawText(CommonUtil.subString(bookName, 12), marginWidth, statusMarginBottom + mBatterryFontSize, mBatterryPaint);
+
         //画章
         if (getDirectoryList().size() > 0) {
-            String charterName = CommonUtil.subString(getDirectoryList().get(currentCharter).getBookCatalogue(), 12);
+            String charterName = getDirectoryList().get(currentCharter).getBookCatalogue();
             int nChaterWidth = (int) mBatterryPaint.measureText(charterName) + 1;
-            c.drawText(charterName, mWidth - marginWidth - nChaterWidth, statusMarginBottom + mBatterryFontSize, mBatterryPaint);
+//            c.drawText(charterName, mWidth - marginWidth - nChaterWidth, statusMarginBottom + mBatterryFontSize, mBatterryPaint);
+            c.drawText(charterName, 0, statusMarginBottom + mBatterryFontSize+30, mBatterryPaint);
+
         }
 
         mBookPageWidget.postInvalidate();
@@ -306,14 +290,13 @@ public class PageFactory {
     //向前翻页
     public void prePage() {
         if (currentPage.getBegin() <= 0) {
-            Log.e(TAG, "当前是第一页");
-            if (!m_isfirstPage) {
-                Toast.makeText(mContext, "当前是第一页", Toast.LENGTH_SHORT).show();
+            if (!isFirstPage) {
+                Toast.makeText(mContext, "已到达开头", Toast.LENGTH_SHORT).show();
             }
-            m_isfirstPage = true;
+            isFirstPage = true;
             return;
         } else {
-            m_isfirstPage = false;
+            isFirstPage = false;
         }
 
         cancelPage = currentPage;
@@ -325,14 +308,13 @@ public class PageFactory {
     //向后翻页
     public void nextPage() {
         if (currentPage.getEnd() >= mBookUtil.getBookLen()) {
-            Log.e(TAG, "已经是最后一页了");
-            if (!m_islastPage) {
-                Toast.makeText(mContext, "已经是最后一页了", Toast.LENGTH_SHORT).show();
+            if (!isLastPage) {
+                Toast.makeText(mContext, "已到达结尾", Toast.LENGTH_SHORT).show();
             }
-            m_islastPage = true;
+            isLastPage = true;
             return;
         } else {
-            m_islastPage = false;
+            isLastPage = false;
         }
 
         cancelPage = currentPage;
@@ -340,7 +322,6 @@ public class PageFactory {
         prePage = currentPage;
         currentPage = getNextPage();
         onDraw(mBookPageWidget.getNextPage(), currentPage.getLines(), true);
-        Log.e("nextPage", "nextPagenext");
     }
 
     //取消翻页
@@ -353,14 +334,14 @@ public class PageFactory {
      *
      * @throws IOException
      */
-    public void openBook(Book bookList) throws IOException {
+    public void openBook(Book book) throws IOException {
         //清空数据
         currentCharter = 0;
 //        m_mbBufLen = 0;
         initBg(config.getDayOrNight());
 
-        this.bookList = bookList;
-        bookPath = bookList.getBookPath();
+        this.book = book;
+        bookPath = book.getBookPath();
         bookName = FileUtil.getFileName(bookPath);
 
         mStatus = Status.OPENING;
@@ -370,7 +351,7 @@ public class PageFactory {
             bookTask.cancel(true);
         }
         bookTask = new BookTask();
-        bookTask.execute(bookList.getBegin());
+        bookTask.execute(book.getBegin());
     }
 
     private class BookTask extends AsyncTask<Long, Void, Boolean> {
@@ -379,7 +360,6 @@ public class PageFactory {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            Log.e("onPostExecute", isCancelled() + "");
             if (isCancelled()) {
                 return;
             }
@@ -412,7 +392,7 @@ public class PageFactory {
         protected Boolean doInBackground(Long... params) {
             begin = params[0];
             try {
-                mBookUtil.openBook(bookList);
+                mBookUtil.openBook(book);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -427,9 +407,7 @@ public class PageFactory {
 
         TRPage trPage = new TRPage();
         trPage.setBegin(currentPage.getEnd() + 1);
-        Log.e("begin", currentPage.getEnd() + 1 + "");
         trPage.setLines(getNextLines());
-        Log.e("end", mBookUtil.getPosition() + "");
         trPage.setEnd(mBookUtil.getPosition());
         return trPage;
     }
@@ -439,9 +417,7 @@ public class PageFactory {
 
         TRPage trPage = new TRPage();
         trPage.setEnd(mBookUtil.getPosition() - 1);
-        Log.e("end", mBookUtil.getPosition() - 1 + "");
         trPage.setLines(getPreLines());
-        Log.e("begin", mBookUtil.getPosition() + "");
         trPage.setBegin(mBookUtil.getPosition());
         return trPage;
     }
@@ -470,7 +446,6 @@ public class PageFactory {
                     lines.add(line);
                     line = "";
                     width = 0;
-//                    height +=  paragraphSpace;
                     if (lines.size() == mLineCount) {
                         break;
                     }
@@ -497,9 +472,6 @@ public class PageFactory {
 
         if (!line.isEmpty() && lines.size() < mLineCount) {
             lines.add(line);
-        }
-        for (String str : lines) {
-            Log.e(TAG, str + "   ");
         }
         return lines;
     }
@@ -546,7 +518,6 @@ public class PageFactory {
             } else {
                 num = num + lines.get(i).length();
             }
-            Log.e(TAG, lines.get(i) + "   ");
         }
 
         if (num > 0) {
@@ -635,17 +606,6 @@ public class PageFactory {
         currentPage(true);
     }
 
-    //改变字体
-    public void changeTypeface(Typeface typeface) {
-        this.typeface = typeface;
-        mPaint.setTypeface(typeface);
-        mBatterryPaint.setTypeface(typeface);
-        calculateLineCount();
-        measureMarginWidth();
-        currentPage = getPageForBegin(currentPage.getBegin());
-        currentPage(true);
-    }
-
     //改变背景
     public void changeBookBg(int type) {
         setBookBg(type);
@@ -659,7 +619,6 @@ public class PageFactory {
         int color = 0;
         switch (type) {
             case Config.BOOK_BG_DEFAULT:
-                canvas = null;
                 bitmap.recycle();
                 if (getBgBitmap() != null) {
                     getBgBitmap().recycle();
@@ -705,8 +664,8 @@ public class PageFactory {
     }
 
     //设置日间或者夜间模式
-    public void setDayOrNight(Boolean isNgiht) {
-        initBg(isNgiht);
+    public void setDayOrNight(Boolean isNight) {
+        initBg(isNight);
         currentPage(false);
     }
 
@@ -714,7 +673,7 @@ public class PageFactory {
         currentCharter = 0;
         bookPath = "";
         bookName = "";
-        bookList = null;
+        book = null;
         mBookPageWidget = null;
         mPageEvent = null;
         cancelPage = null;
@@ -744,13 +703,13 @@ public class PageFactory {
     }
 
     //是否是第一页
-    public boolean isfirstPage() {
-        return m_isfirstPage;
+    public boolean isFirstPage() {
+        return isFirstPage;
     }
 
     //是否是最后一页
-    public boolean islastPage() {
-        return m_islastPage;
+    public boolean isLastPage() {
+        return isLastPage;
     }
 
     //设置页面背景
