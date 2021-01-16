@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.R;
-import com.example.localreader.util.BookShelfUtil;
-import com.example.localreader.entity.Book;
 import com.example.localreader.util.FileUtil;
 import com.example.localreader.viewholder.ImportViewHolder;
 
@@ -127,7 +125,6 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
             }
         }
 
-        holder.nameFirstWord.setText(file.getName().substring(0, 1));
         holder.fileName.setText(file.getName());
         holder.fileSize.setText(FileUtil.formatFileSize(file.length()));
         holder.fileTime.setText(FileUtil.formatFileTime(file.lastModified()));

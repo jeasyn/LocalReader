@@ -7,15 +7,11 @@
     <color name="white_bg">#FFF</color>
     <color name="black_color">#000</color>
 
-<!--    导入图书-->
     <color name="white_text">#FFF</color>
-    <color name="import_book_file_name_logo">#A0A0A0</color>
     <color name="freeze_color">#8F989F</color>
 
-<!--    书架-->
     <color name="popup_window_detail_line">#E6663F</color>
 
-<!--    阅读-->
     <color name="read_settings_add_border">#86796B</color>
 
 

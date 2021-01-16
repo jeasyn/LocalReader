@@ -1,4 +1,4 @@
-package com.example.localreader.animation;
+package com.example.localreader.view;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,9 +9,10 @@ import android.widget.Scroller;
  * @author xialijuan
  * @date 2021/1/9
  */
-public abstract class AnimationProvider {
-    public static enum Direction {
-        none(true),next(true), pre(true), up(false), down(false);
+public abstract class BaseFlip {
+
+    public enum Direction {
+        none(true), next(true), pre(true);
 
         public final boolean IsHorizontal;
 
@@ -20,16 +21,9 @@ public abstract class AnimationProvider {
         }
     }
 
-//    private Mode myMode = Mode.NoScrolling;
-
-    protected Bitmap mCurPageBitmap,mNextPageBitmap;
+    protected Bitmap mCurPageBitmap, mNextPageBitmap;
     protected float myStartX;
     protected float myStartY;
-    protected int myEndX;
-    protected int myEndY;
-    protected Direction myDirection;
-    protected float mySpeed;
-
     protected int mScreenWidth;
     protected int mScreenHeight;
 
@@ -37,7 +31,7 @@ public abstract class AnimationProvider {
     private Direction direction = Direction.none;
     private boolean isCancel = false;
 
-    public AnimationProvider(Bitmap mCurrentBitmap,Bitmap mNextBitmap,int width,int height) {
+    public BaseFlip(Bitmap mCurrentBitmap, Bitmap mNextBitmap, int width, int height) {
         this.mCurPageBitmap = mCurrentBitmap;
         this.mNextPageBitmap = mNextBitmap;
         this.mScreenWidth = width;
@@ -51,33 +45,33 @@ public abstract class AnimationProvider {
     public abstract void drawStatic(Canvas canvas);
 
     //设置开始拖拽点
-    public void setStartPoint(float x,float y){
+    public void setStartPoint(float x, float y) {
         myStartX = x;
         myStartY = y;
     }
 
     //设置拖拽点
-    public void setTouchPoint(float x,float y){
+    public void setTouchPoint(float x, float y) {
         mTouch.x = x;
         mTouch.y = y;
     }
 
     //设置方向
-    public void setDirection(Direction direction){
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 
-    public Direction getDirection(){
+    public Direction getDirection() {
         return direction;
     }
 
-    public void setCancel(boolean isCancel){
+    public void setCancel(boolean isCancel) {
         this.isCancel = isCancel;
     }
 
-    public abstract void startAnimation(Scroller scroller);
+    public abstract void startSliding(Scroller scroller);
 
-    public boolean getCancel(){
+    public boolean getCancel() {
         return isCancel;
     }
 

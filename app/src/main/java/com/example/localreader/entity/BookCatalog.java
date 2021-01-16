@@ -9,7 +9,7 @@ import org.litepal.crud.LitePalSupport;
 public class BookCatalog extends LitePalSupport {
 
     private int id;
-    private String bookpath;
+    private String bookPath;
     private String bookCatalogue;
     private long bookCatalogueStartPos;
 
@@ -21,12 +21,12 @@ public class BookCatalog extends LitePalSupport {
         this.id = id;
     }
 
-    public String getBookpath() {
-        return bookpath;
+    public String getBookPath() {
+        return bookPath;
     }
 
-    public void setBookpath(String bookpath) {
-        this.bookpath = bookpath;
+    public void setBookPath(String bookPath) {
+        this.bookPath = bookPath;
     }
 
     public String getBookCatalogue() {

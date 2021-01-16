@@ -3,9 +3,15 @@ package com.example.localreader.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.localreader.R;
 import com.example.localreader.adapter.BookmarkAdapter;
@@ -17,44 +23,43 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * @author xialijuan
  * @date 2021/1/10
  */
-public class BookmarkFragment extends BaseFragment{
+public class BookmarkFragment extends Fragment {
 
     public static final String ARGUMENT = "argument";
-
-    @BindView(R.id.rv_mark) ListView lv_bookmark;
-
-    private String bookpath;
-    private String mArgument;
+    private String bookPath;
     private List<Bookmark> bookMarksList;
     private BookmarkAdapter markAdapter;
     private PageFactory pageFactory;
+    private ListView lv_bookmark;
 
+    @Nullable
     @Override
-    protected int getLayoutRes() {
-        return R.layout.view_mark;
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.view_mark, container, false);
+        init(view);
+        initListener();
+        return view;
     }
 
-    @Override
-    protected void initData(View view) {
+    private void init(View v) {
+        lv_bookmark = v.findViewById(R.id.rv_mark);
+
         pageFactory = PageFactory.getInstance();
         Bundle bundle = getArguments();
         if (bundle != null) {
-            bookpath = bundle.getString(ARGUMENT);
+            bookPath = bundle.getString(ARGUMENT);
         }
         bookMarksList = new ArrayList<>();
-        bookMarksList = LitePal.where("bookpath = ?", bookpath).find(Bookmark.class);
+        bookMarksList = LitePal.where("bookPath = ?", bookPath).find(Bookmark.class);
         markAdapter = new BookmarkAdapter(getActivity(), bookMarksList);
         lv_bookmark.setAdapter(markAdapter);
     }
 
-    @Override
-    protected void initListener() {
+    private void initListener() {
         lv_bookmark.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,7 +84,7 @@ public class BookmarkFragment extends BaseFragment{
                             public void onClick(DialogInterface dialog, int which) {
                                 LitePal.delete(Bookmark.class,bookMarksList.get(position).getId());
                                 bookMarksList.clear();
-                                bookMarksList.addAll(LitePal.where("bookpath = ?", bookpath).find(Bookmark.class));
+                                bookMarksList.addAll(LitePal.where("bookPath = ?", bookPath).find(Bookmark.class));
                                 markAdapter.notifyDataSetChanged();
                             }
                         }).setCancelable(true).show();
@@ -90,12 +95,12 @@ public class BookmarkFragment extends BaseFragment{
 
     /**
      * 用于从Activity传递数据到Fragment
-     * @param bookpath
+     * @param bookPath
      * @return
      */
-    public static BookmarkFragment newInstance(String bookpath) {
+    public static BookmarkFragment newInstance(String bookPath) {
         Bundle bundle = new Bundle();
-        bundle.putString(ARGUMENT, bookpath);
+        bundle.putString(ARGUMENT, bookPath);
         BookmarkFragment bookMarkFragment = new BookmarkFragment();
         bookMarkFragment.setArguments(bundle);
         return bookMarkFragment;

@@ -21,10 +21,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:fitsSystemWindows="true"
-            app:popupTheme="@style/AppTheme" />
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme"
+            app:titleTextColor="@color/white_text" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -50,7 +50,7 @@ public class CatalogAdapter extends BaseAdapter {
         if(convertView==null) {
             viewHolder= new ViewHolder();
             convertView = inflater.inflate(R.layout.item_catalog,null);
-            viewHolder.catalogue_tv = (TextView)convertView.findViewById(R.id.catalogue_tv);
+            viewHolder.catalogue_tv = convertView.findViewById(R.id.catalogue_tv);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
@@ -61,7 +61,6 @@ public class CatalogAdapter extends BaseAdapter {
             viewHolder.catalogue_tv.setTextColor(mContext.getResources().getColor(R.color.read_textColor));
         }
         viewHolder.catalogue_tv.setText(bookCatalogueList.get(position).getBookCatalogue());
-        //Log.d("catalogue",bookCatalogueList.get(position).getBookCatalogue());
         return convertView;
     }
 
@@ -74,5 +73,4 @@ public class CatalogAdapter extends BaseAdapter {
     class ViewHolder {
         TextView catalogue_tv;
     }
-
 }

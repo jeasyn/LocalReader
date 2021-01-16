@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -13,10 +12,6 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
-import androidx.annotation.Nullable;
-
-import com.example.localreader.animation.AnimationProvider;
-import com.example.localreader.animation.CoverAnimation;
 import com.example.localreader.util.PageFactory;
 
 /**
@@ -47,7 +42,7 @@ public class PageWidget extends View {
 
     Bitmap mCurPageBitmap = null; // 当前页
     Bitmap mNextPageBitmap = null;
-    private AnimationProvider mAnimationProvider;
+    private BaseFlip baseFlip;
 
     Scroller mScroller;
     private int mBgColor = 0xFFCEC29C;
@@ -67,7 +62,7 @@ public class PageWidget extends View {
         initPage();
         mScroller = new Scroller(getContext(),new LinearInterpolator());
 
-        mAnimationProvider = new CoverAnimation(mCurPageBitmap,mNextPageBitmap,mScreenWidth,mScreenHeight);
+        baseFlip = new CoverFlip(mCurPageBitmap,mNextPageBitmap,mScreenWidth,mScreenHeight);
     }
 
     private void initPage(){
@@ -94,13 +89,11 @@ public class PageWidget extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        canvas.drawColor(0xFFAAAAAA);
         canvas.drawColor(mBgColor);
-        Log.e("onDraw","isNext:" + isNext + "          isRuning:" + isRuning);
         if (isRuning) {
-            mAnimationProvider.drawMove(canvas);
+            baseFlip.drawMove(canvas);
         } else {
-            mAnimationProvider.drawStatic(canvas);
+            baseFlip.drawStatic(canvas);
         }
     }
 
@@ -110,26 +103,22 @@ public class PageWidget extends View {
         if (PageFactory.getStatus() == PageFactory.Status.OPENING){
             return true;
         }
-
         int x = (int)event.getX();
         int y = (int)event.getY();
 
-        mAnimationProvider.setTouchPoint(x,y);
+        baseFlip.setTouchPoint(x,y);
         if (event.getAction() == MotionEvent.ACTION_DOWN){
             downX = (int) event.getX();
             downY = (int) event.getY();
             moveX = 0;
             moveY = 0;
             isMove = false;
-//            cancelPage = false;
             noNext = false;
             isNext = false;
             isRuning = false;
-            mAnimationProvider.setStartPoint(downX,downY);
+            baseFlip.setStartPoint(downX,downY);
             abortAnimation();
-            Log.e(TAG,"ACTION_DOWN");
         }else if (event.getAction() == MotionEvent.ACTION_MOVE){
-
             final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
             //判断是否移动了
             if (!isMove) {
@@ -139,7 +128,6 @@ public class PageWidget extends View {
             if (isMove){
                 isMove = true;
                 if (moveX == 0 && moveY ==0) {
-                    Log.e(TAG,"isMove");
                     //判断翻得是上一页还是下一页
                     if (x - downX >0){
                         isNext = false;
@@ -149,52 +137,45 @@ public class PageWidget extends View {
                     cancelPage = false;
                     if (isNext) {
                         Boolean isNext = mTouchListener.nextPage();
-//                        calcCornerXY(downX,mScreenHeight);
-                        mAnimationProvider.setDirection(AnimationProvider.Direction.next);
-
+                        baseFlip.setDirection(BaseFlip.Direction.next);
                         if (!isNext) {
                             noNext = true;
                             return true;
                         }
                     } else {
                         Boolean isPre = mTouchListener.prePage();
-                        mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
-
+                        baseFlip.setDirection(BaseFlip.Direction.pre);
                         if (!isPre) {
                             noNext = true;
                             return true;
                         }
                     }
-                    Log.e(TAG,"isNext:" + isNext);
                 }else{
                     //判断是否取消翻页
                     if (isNext){
                         if (x - moveX > 0){
                             cancelPage = true;
-                            mAnimationProvider.setCancel(true);
+                            baseFlip.setCancel(true);
                         }else {
                             cancelPage = false;
-                            mAnimationProvider.setCancel(false);
+                            baseFlip.setCancel(false);
                         }
                     }else{
                         if (x - moveX < 0){
-                            mAnimationProvider.setCancel(true);
+                            baseFlip.setCancel(true);
                             cancelPage = true;
                         }else {
-                            mAnimationProvider.setCancel(false);
+                            baseFlip.setCancel(false);
                             cancelPage = false;
                         }
                     }
-                    Log.e(TAG,"cancelPage:" + cancelPage);
                 }
-
                 moveX = x;
                 moveY = y;
                 isRuning = true;
                 this.postInvalidate();
             }
         }else if (event.getAction() == MotionEvent.ACTION_UP){
-            Log.e(TAG,"ACTION_UP");
             if (!isMove){
                 cancelPage = false;
                 //是否点击了中间
@@ -202,45 +183,35 @@ public class PageWidget extends View {
                     if (mTouchListener != null){
                         mTouchListener.center();
                     }
-                    Log.e(TAG,"center");
-//                    mCornerX = 1; // 拖拽点对应的页脚
-//                    mCornerY = 1;
-//                    mTouch.x = 0.1f;
-//                    mTouch.y = 0.1f;
                     return true;
                 }else if (x < mScreenWidth / 2){
                     isNext = false;
                 }else{
                     isNext = true;
                 }
-
                 if (isNext) {
                     Boolean isNext = mTouchListener.nextPage();
-                    mAnimationProvider.setDirection(AnimationProvider.Direction.next);
+                    baseFlip.setDirection(BaseFlip.Direction.next);
                     if (!isNext) {
                         return true;
                     }
                 } else {
                     Boolean isPre = mTouchListener.prePage();
-                    mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
+                    baseFlip.setDirection(BaseFlip.Direction.pre);
                     if (!isPre) {
                         return true;
                     }
                 }
             }
-
             if (cancelPage && mTouchListener != null){
                 mTouchListener.cancel();
             }
-
-            Log.e(TAG,"isNext:" + isNext);
             if (!noNext) {
                 isRuning = true;
-                mAnimationProvider.startAnimation(mScroller);
+                baseFlip.startSliding(mScroller);
                 this.postInvalidate();
             }
         }
-
         return true;
     }
 
@@ -249,7 +220,7 @@ public class PageWidget extends View {
         if (mScroller.computeScrollOffset()) {
             float x = mScroller.getCurrX();
             float y = mScroller.getCurrY();
-            mAnimationProvider.setTouchPoint(x,y);
+            baseFlip.setTouchPoint(x,y);
             if (mScroller.getFinalX() == x && mScroller.getFinalY() == y){
                 isRuning = false;
             }
@@ -261,7 +232,7 @@ public class PageWidget extends View {
     public void abortAnimation() {
         if (!mScroller.isFinished()) {
             mScroller.abortAnimation();
-            mAnimationProvider.setTouchPoint(mScroller.getFinalX(),mScroller.getFinalY());
+            baseFlip.setTouchPoint(mScroller.getFinalX(),mScroller.getFinalY());
             postInvalidate();
         }
     }

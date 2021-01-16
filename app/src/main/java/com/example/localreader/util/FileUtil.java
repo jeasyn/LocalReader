@@ -1,10 +1,6 @@
 package com.example.localreader.util;
 
-import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.os.Environment;
-
-import androidx.core.app.ActivityCompat;
 
 import org.mozilla.universalchardet.UniversalDetector;
 
@@ -144,23 +140,6 @@ public class FileUtil {
         return null;
     }
 
-
-    /**
-     * 删除所选的txt文件
-     *
-     * @param files
-     * @param deleteFiles
-     * @return
-     */
-    public static List<File> deleteTXT(List<File> files, List<File> deleteFiles) {
-        files.removeAll(deleteFiles);
-        for (File delete : deleteFiles) {
-            delete.delete();
-        }
-        return files;
-    }
-
-
     /**
      * 查询name文件是否被选中
      *
@@ -174,26 +153,5 @@ public class FileUtil {
             }
         }
         return false;
-    }
-
-
-    /**
-     * 动态申请SD卡读写的权限
-     * Android6.0之后系统对权限的管理更加严格了，不但要在AndroidManifest中添加，还要在应用运行的时候动态申请
-     */
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-
-    private static String[] PERMISSION_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE"};
-
-    public static void verifyStoragePermissions(Activity activity) {
-        try {
-            int permission = ActivityCompat.checkSelfPermission(activity, "android.permission.WRITE_EXTERNAL_STORAGE");
-            if (permission != PackageManager.PERMISSION_GRANTED) {//判断是否已经授予权限
-                ActivityCompat.requestPermissions(activity, PERMISSION_STORAGE, REQUEST_EXTERNAL_STORAGE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

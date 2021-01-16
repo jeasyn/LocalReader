@@ -60,8 +60,8 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BookShelfViewHolder> 
         holder.bookItem.setBackgroundResource(bg[random]);
 
         String formatBookName = bookName;
-        if (bookName.length() >= 8){
-            formatBookName = bookName.substring(0,8)+"...";
+        if (bookName.length() >= 8) {
+            formatBookName = bookName.substring(0, 8) + "...";
         }
         holder.bookName.setText(formatBookName);
 

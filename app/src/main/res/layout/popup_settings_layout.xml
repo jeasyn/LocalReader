@@ -53,7 +53,6 @@
             android:id="@+id/tv_subtract"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:onClick="lessFontSize"
             android:background="@drawable/read_settings_font_change_style"
             android:gravity="center"
             android:text="A -" />
@@ -71,7 +70,6 @@
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:onClick="addFontSize"
             android:background="@drawable/read_settings_font_change_style"
             android:gravity="center"
             android:text="A +" />

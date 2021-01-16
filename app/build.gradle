@@ -17,12 +17,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    // Butterknife requires Java 8.
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 
@@ -35,25 +29,18 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    //NavigationView
-//    implementation 'com.google.android.material:material:1.0.0'
-
     //CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //RecyclerView
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha06'
 
-    //LitePal
+    //LitePal和NavigationView
     implementation 'org.litepal.guolindev:core:3.2.2'
     implementation 'com.google.android.material:material:1.2.1'
 
     implementation 'com.umeng.analytics:analytics:6.1.4'
 
-    implementation 'com.jakewharton:butterknife:10.2.3'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
-
-//    implementation 'com.github.albfernandez:juniversalchardet:2.4.0'
-//    implementation 'org.clojars.smallrivers:juniversalchardet:1.0.3'
-
+    //UniversalDetector
+    implementation 'com.github.albfernandez:juniversalchardet:2.4.0'
 }
