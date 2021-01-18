@@ -30,9 +30,9 @@ public class BookUtil {
     //存储的字符数
     public static final int cachedSize = 30000;
 
-    protected final ArrayList<Cache> myArray = new ArrayList<>();
+    protected final ArrayList<Cache> caches = new ArrayList<>();
     //目录
-    private List<BookCatalog> directoryList = new ArrayList<>();
+    private List<BookCatalog> bookCatalogList = new ArrayList<>();
 
     private String m_strCharsetName;
     private String bookName;
@@ -54,7 +54,7 @@ public class BookUtil {
         if (bookPath == null || !bookPath.equals(book.getBookPath())) {
             cleanCacheFile();
             this.bookPath = book.getBookPath();
-            bookName = FileUtil.getFileName(bookPath);
+            bookName = book.getBookName().split(".txt")[0];
             cacheBook();
         }
     }
@@ -118,7 +118,6 @@ public class BookUtil {
             char wordChar = (char) word;
             if ((wordChar + "").equals("\n") && (((char) pre(true)) + "").equals("\r")) {
                 pre(false);
-//                line = "\r\n" + line;
                 break;
             }
             line = wordChar + line;
@@ -130,8 +129,8 @@ public class BookUtil {
         int cachePos = 0;
         int pos = 0;
         int len = 0;
-        for (int i = 0; i < myArray.size(); i++) {
-            long size = myArray.get(i).getSize();
+        for (int i = 0; i < caches.size(); i++) {
+            long size = caches.get(i).getSize();
             if (size + len - 1 >= position) {
                 cachePos = i;
                 pos = (int) (position - len);
@@ -183,8 +182,8 @@ public class BookUtil {
         InputStreamReader reader = new InputStreamReader(new FileInputStream(file), m_strCharsetName);
         int index = 0;
         bookLen = 0;
-        directoryList.clear();
-        myArray.clear();
+        bookCatalogList.clear();
+        caches.clear();
         while (true) {
             char[] buf = new char[cachedSize];
             int result = reader.read(buf);
@@ -203,7 +202,7 @@ public class BookUtil {
             cache.setSize(buf.length);
             cache.setData(new WeakReference<>(buf));
 
-            myArray.add(cache);
+            caches.add(cache);
             try {
                 File cacheBook = new File(fileName(index));
                 if (!cacheBook.exists()) {
@@ -230,17 +229,17 @@ public class BookUtil {
     public synchronized void getChapter() {
         try {
             long size = 0;
-            for (int i = 0; i < myArray.size(); i++) {
+            for (int i = 0; i < caches.size(); i++) {
                 char[] buf = block(i);
                 String bufStr = new String(buf);
                 String[] paragraphs = bufStr.split("\r\n");
                 for (String str : paragraphs) {
                     if (str.length() <= 30 && (str.matches(".*第.{1,8}章.*") || str.matches(".*第.{1,8}节.*"))) {
-                        BookCatalog bookCatalogue = new BookCatalog();
-                        bookCatalogue.setBookCatalogueStartPos(size);
-                        bookCatalogue.setBookCatalogue(str);
-                        bookCatalogue.setBookPath(bookPath);
-                        directoryList.add(bookCatalogue);
+                        BookCatalog bookCatalog = new BookCatalog();
+                        bookCatalog.setStartPosition(size);
+                        bookCatalog.setCatalog(str);
+                        bookCatalog.setBookPath(bookPath);
+                        bookCatalogList.add(bookCatalog);
                     }
                     if (str.contains("\u3000\u3000")) {
                         size += str.length() + 2;
@@ -256,8 +255,8 @@ public class BookUtil {
         }
     }
 
-    public List<BookCatalog> getDirectoryList() {
-        return directoryList;
+    public List<BookCatalog> getBookCatalogList() {
+        return bookCatalogList;
     }
 
     public long getBookLen() {
@@ -270,31 +269,30 @@ public class BookUtil {
 
     //获取书本缓存
     public char[] block(int index) {
-        if (myArray.size() == 0) {
+        if (caches.size() == 0) {
             return new char[1];
         }
-        char[] block = myArray.get(index).getData().get();
+        char[] block = caches.get(index).getData().get();
         if (block == null) {
+            InputStreamReader reader = null;
             try {
                 File file = new File(fileName(index));
                 int size = (int) file.length();
-//                if (size < 0) {
-//                    throw new RuntimeException("Error during reading " + fileName(index));
-//                }
                 block = new char[size / 2];
-                InputStreamReader reader =
-                        new InputStreamReader(
-                                new FileInputStream(file),
-                                "UTF-16LE"
-                        );
+                reader = new InputStreamReader(new FileInputStream(file), "UTF-16LE");
                 if (reader.read(block) != block.length) {
                     throw new RuntimeException("Error during reading " + fileName(index));
                 }
-                reader.close();
             } catch (IOException e) {
                 throw new RuntimeException("Error during reading " + fileName(index));
+            }finally {
+                try {
+                    if (reader != null) reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            Cache cache = myArray.get(index);
+            Cache cache = caches.get(index);
             cache.setData(new WeakReference<>(block));
         }
         return block;

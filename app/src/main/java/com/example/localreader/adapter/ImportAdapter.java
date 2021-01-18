@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Create by xlj on 2020/11/07
+ * @author xialijuan
+ * @date 2020/11/07
  */
 public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
 
@@ -120,19 +121,17 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
         //将导入书架的状态改变
         for (String name : names) {
             if (name.equals(file.getName())) {
-                holder.isSelect.setVisibility(View.GONE);
-                holder.imported.setVisibility(View.VISIBLE);
+                holder.isSelectCb.setVisibility(View.GONE);
+                holder.importedTv.setVisibility(View.VISIBLE);
             }
         }
-
-        holder.fileName.setText(file.getName());
-        holder.fileSize.setText(FileUtil.formatFileSize(file.length()));
-        holder.fileTime.setText(FileUtil.formatFileTime(file.lastModified()));
-        holder.isSelect.setChecked(FileUtil.isChecked(selectMap, file.getName()));
-
+        holder.fileNameTv.setText(file.getName());
+        holder.fileSizeTv.setText(FileUtil.formatFileSize(file.length()));
+        holder.fileTimeTv.setText(FileUtil.formatFileTime(file.lastModified()));
+        holder.isSelectCb.setChecked(FileUtil.isChecked(selectMap, file.getName()));
 
         //给单选按钮设置监听
-        holder.isSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.isSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 selectMap.put(file, isChecked);

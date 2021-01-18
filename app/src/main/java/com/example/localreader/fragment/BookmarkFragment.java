@@ -31,10 +31,10 @@ public class BookmarkFragment extends Fragment {
 
     public static final String ARGUMENT = "argument";
     private String bookPath;
-    private List<Bookmark> bookMarksList;
-    private BookmarkAdapter markAdapter;
+    private List<Bookmark> bookmarkList;
+    private BookmarkAdapter bookmarkAdapter;
     private PageFactory pageFactory;
-    private ListView lv_bookmark;
+    private ListView bookmarkLv;
 
     @Nullable
     @Override
@@ -46,46 +46,46 @@ public class BookmarkFragment extends Fragment {
     }
 
     private void init(View v) {
-        lv_bookmark = v.findViewById(R.id.rv_mark);
+        bookmarkLv = v.findViewById(R.id.rv_bookmark);
 
         pageFactory = PageFactory.getInstance();
         Bundle bundle = getArguments();
         if (bundle != null) {
             bookPath = bundle.getString(ARGUMENT);
         }
-        bookMarksList = new ArrayList<>();
-        bookMarksList = LitePal.where("bookPath = ?", bookPath).find(Bookmark.class);
-        markAdapter = new BookmarkAdapter(getActivity(), bookMarksList);
-        lv_bookmark.setAdapter(markAdapter);
+        bookmarkList = new ArrayList<>();
+        bookmarkList = LitePal.where("bookPath = ?", bookPath).find(Bookmark.class);
+        bookmarkAdapter = new BookmarkAdapter(getActivity(), bookmarkList);
+        bookmarkLv.setAdapter(bookmarkAdapter);
     }
 
     private void initListener() {
-        lv_bookmark.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        bookmarkLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pageFactory.changeChapter(bookMarksList.get(position).getBegin());
+                pageFactory.changeChapter(bookmarkList.get(position).getBegin());
                 getActivity().finish();
             }
         });
-        lv_bookmark.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        bookmarkLv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 new AlertDialog.Builder(getActivity())
                         .setTitle("提示")
-                        .setMessage("是否删除书签？")
+                        .setMessage("确定删除书签？")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         })
-                        .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                LitePal.delete(Bookmark.class,bookMarksList.get(position).getId());
-                                bookMarksList.clear();
-                                bookMarksList.addAll(LitePal.where("bookPath = ?", bookPath).find(Bookmark.class));
-                                markAdapter.notifyDataSetChanged();
+                                LitePal.delete(Bookmark.class, bookmarkList.get(position).getId());
+                                bookmarkList.clear();
+                                bookmarkList.addAll(LitePal.where("bookPath = ?", bookPath).find(Bookmark.class));
+                                bookmarkAdapter.notifyDataSetChanged();
                             }
                         }).setCancelable(true).show();
                 return false;
@@ -101,8 +101,8 @@ public class BookmarkFragment extends Fragment {
     public static BookmarkFragment newInstance(String bookPath) {
         Bundle bundle = new Bundle();
         bundle.putString(ARGUMENT, bookPath);
-        BookmarkFragment bookMarkFragment = new BookmarkFragment();
-        bookMarkFragment.setArguments(bundle);
-        return bookMarkFragment;
+        BookmarkFragment bookmarkFragment = new BookmarkFragment();
+        bookmarkFragment.setArguments(bundle);
+        return bookmarkFragment;
     }
 }

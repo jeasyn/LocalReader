@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class BookmarkAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private Context context;
     private List<Bookmark> list;
     private Config config;
     private PageFactory pageFactory;
@@ -43,37 +43,37 @@ public class BookmarkAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+        LayoutInflater inflater = LayoutInflater.from(context);
 
         final ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = inflater.inflate(R.layout.item_bookmark, null);
-            viewHolder.text_mark = convertView.findViewById(R.id.text_mark);
-            viewHolder.progress1 = convertView.findViewById(R.id.progress1);
-            viewHolder.mark_time = convertView.findViewById(R.id.mark_time);
+            viewHolder.markContent = convertView.findViewById(R.id.tv_mark_content);
+            viewHolder.markProgress = convertView.findViewById(R.id.tv_mark_progress);
+            viewHolder.markTime = convertView.findViewById(R.id.tv_mark_time);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.text_mark.setText(list.get(position).getText());
+        viewHolder.markContent.setText(list.get(position).getText());
         long begin = list.get(position).getBegin();
-        float fPercent = (float) (begin * 1.0 / pageFactory.getBookLen());
+        float percent = (float) (begin * 1.0 / pageFactory.getBookLen());
         DecimalFormat df = new DecimalFormat("#0.0");
-        String strPercent = df.format(fPercent * 100) + "%";
-        viewHolder.progress1.setText(strPercent);
-        viewHolder.mark_time.setText(list.get(position).getTime().substring(0, 16));
+        String progress = df.format(percent * 100) + "%";
+        viewHolder.markProgress.setText(progress);
+        viewHolder.markTime.setText(list.get(position).getTime().substring(0, 16));
         return convertView;
     }
 
     public BookmarkAdapter(Context context, List<Bookmark> list) {
-        mContext = context;
+        this.context = context;
         this.list = list;
         pageFactory = PageFactory.getInstance();
         config = config.getInstance();
     }
 
     class ViewHolder {
-        TextView text_mark, progress1, mark_time;
+        TextView markContent, markProgress, markTime;
     }
 }

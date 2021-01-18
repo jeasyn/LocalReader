@@ -21,21 +21,21 @@ public abstract class BaseFlip {
         }
     }
 
-    protected Bitmap mCurPageBitmap, mNextPageBitmap;
-    protected float myStartX;
-    protected float myStartY;
-    protected int mScreenWidth;
-    protected int mScreenHeight;
+    protected Bitmap curPageBitmap, nextPageBitmap;
+    protected float startX;
+    protected float startY;
+    protected int screenWidth;
+    protected int screenHeight;
 
     protected PointF mTouch = new PointF(); // 拖拽点
     private Direction direction = Direction.none;
     private boolean isCancel = false;
 
     public BaseFlip(Bitmap mCurrentBitmap, Bitmap mNextBitmap, int width, int height) {
-        this.mCurPageBitmap = mCurrentBitmap;
-        this.mNextPageBitmap = mNextBitmap;
-        this.mScreenWidth = width;
-        this.mScreenHeight = height;
+        this.curPageBitmap = mCurrentBitmap;
+        this.nextPageBitmap = mNextBitmap;
+        this.screenWidth = width;
+        this.screenHeight = height;
     }
 
     //绘制滑动页面
@@ -46,8 +46,8 @@ public abstract class BaseFlip {
 
     //设置开始拖拽点
     public void setStartPoint(float x, float y) {
-        myStartX = x;
-        myStartY = y;
+        startX = x;
+        startY = y;
     }
 
     //设置拖拽点

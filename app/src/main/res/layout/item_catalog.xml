@@ -3,14 +3,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="50dp">
 
-
     <TextView
-        android:id="@+id/catalogue_tv"
+        android:id="@+id/tv_catalog"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:singleLine="true"
         android:gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:textColor="#3B3A38"/>
+        android:layout_marginLeft="10dp" />
 
 </LinearLayout>

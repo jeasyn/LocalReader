@@ -1,6 +1,5 @@
 package com.example.localreader;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
@@ -55,19 +54,18 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     // popwindow是否显示
     private Boolean isShow = false;
     private Boolean mDayOrNight;
-    private SettingDialog mSettingDialog;
+    private SettingDialog settingsDetail;
     private PageWidget bookPage;
-    private TextView tv_progress;
-    private RelativeLayout rl_progress;
-    private TextView tv_pre;
-    private SeekBar sb_progress;
-    private TextView tv_next;
-    private LinearLayout tv_directory;
-    private LinearLayout ll_dayornight;
-    private TextView tv_dayornight;
-    private LinearLayout tv_setting;
-    private LinearLayout bookpop_bottom;
-    private RelativeLayout rl_bottom;
+    private TextView showProgressTv;
+    private RelativeLayout showProgressRl;
+    private TextView preTv;
+    private SeekBar chapterProgressSb;
+    private TextView nextTv;
+    private LinearLayout catalogTv;
+    private LinearLayout dayornightLayout;
+    private TextView dayornightTv;
+    private LinearLayout settingLayout;
+    private RelativeLayout readBottomRl;
     private Toolbar toolbar;
     private AppBarLayout appbar;
 
@@ -81,27 +79,26 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         initListener();
     }
 
-    private void initView(){
-        bookPage = findViewById(R.id.bookpage);
-        tv_progress = findViewById(R.id.tv_progress);
-        rl_progress = findViewById(R.id.rl_progress);
-        tv_pre = findViewById(R.id.tv_pre);
-        sb_progress = findViewById(R.id.sb_progress);
-        tv_next = findViewById(R.id.tv_next);
-        tv_directory = findViewById(R.id.tv_directory);
-        ll_dayornight = findViewById(R.id.ll_dayornight);
-        tv_dayornight = findViewById(R.id.tv_dayornight);
-        tv_setting = findViewById(R.id.tv_setting);
-        bookpop_bottom = findViewById(R.id.bookpop_bottom);
-        rl_bottom = findViewById(R.id.rl_bottom);
+    private void initView() {
+        bookPage = findViewById(R.id.bookPage);
+        showProgressTv = findViewById(R.id.tv_show_progress);
+        showProgressRl = findViewById(R.id.rl_show_progress);
+        preTv = findViewById(R.id.tv_read_pre);
+        chapterProgressSb = findViewById(R.id.sb_chapter_progress);
+        nextTv = findViewById(R.id.tv_read_next);
+        catalogTv = findViewById(R.id.tv_read_catalog);
+        dayornightLayout = findViewById(R.id.ll_read_day_or_night);
+        dayornightTv = findViewById(R.id.tv_read_day_or_night);
+        settingLayout = findViewById(R.id.ll_read_setting);
+        readBottomRl = findViewById(R.id.rl_read_bottom);
         toolbar = findViewById(R.id.toolbar);
         appbar = findViewById(R.id.appbar);
 
-        tv_pre.setOnClickListener(this);
-        tv_next.setOnClickListener(this);
-        tv_directory.setOnClickListener(this);
-        ll_dayornight.setOnClickListener(this);
-        tv_setting.setOnClickListener(this);
+        preTv.setOnClickListener(this);
+        nextTv.setOnClickListener(this);
+        catalogTv.setOnClickListener(this);
+        dayornightLayout.setOnClickListener(this);
+        settingLayout.setOnClickListener(this);
     }
 
     private void initData() {
@@ -121,7 +118,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         config = Config.getInstance();
         pageFactory = PageFactory.getInstance();
 
-        mSettingDialog = new SettingDialog(this);
+        settingsDetail = new SettingDialog(this);
         //获取屏幕宽高
         WindowManager manage = getWindowManager();
         Display display = manage.getDefaultDisplay();
@@ -131,12 +128,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         screenHeight = displaySize.y;
         //保持屏幕常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //初始化屏幕亮度
+        pageFactory.changeBrightness(this, config.getLight());
         //隐藏
         hideSystemUI();
-        //改变屏幕亮度
-//        if (!config.isSystemLight()) {
-//            BrightnessUtil.setBrightness(this, config.getLight());
-//        }
 
         pageFactory.setPageWidget(bookPage);
 
@@ -151,44 +146,40 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initListener() {
-        sb_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        chapterProgressSb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             float pro;
-            // 触发操作，拖动
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 pro = (float) (progress / 10000.0);
                 showProgress(pro);
             }
 
-            // 表示进度条刚开始拖动，开始拖动时候触发的操作
+            //开始拖动进度条监听
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
 
-            // 停止拖动时候
+            //停止拖动监听
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 pageFactory.changeProgress(pro);
             }
         });
 
-        mSettingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        settingsDetail.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 hideSystemUI();
             }
         });
 
-        mSettingDialog.setSettingListener(new SettingDialog.SettingListener() {
+        settingsDetail.setSettingListener(new SettingDialog.SettingListener() {
             @Override
-            public void changeSystemBright(Boolean isSystem, float brightness) {
-//                if (!isSystem) {
-//                    BrightnessUtil.setBrightness(ReadActivity.this, brightness);
-//                } else {
-//                    int bh = BrightnessUtil.getScreenBrightness(ReadActivity.this);
-//                    BrightnessUtil.setBrightness(ReadActivity.this, bh);
-//                }
+            public void changeSystemBright(float brightness) {
+                pageFactory.changeBrightness(ReadActivity.this, brightness);
+                Log.d("brightness",brightness+" "+pageFactory.getBrightness(ReadActivity.this));
             }
 
             @Override
@@ -224,7 +215,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public Boolean prePage() {
-                if (isShow){
+                if (isShow) {
                     return false;
                 }
 
@@ -237,8 +228,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public Boolean nextPage() {
-                Log.e("setTouchListener", "nextPage");
-                if (isShow){
+                if (isShow) {
                     return false;
                 }
 
@@ -272,15 +262,15 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        if (!isShow){
+        if (!isShow) {
             hideSystemUI();
         }
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
     }
 
@@ -301,13 +291,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_add_bookmark){//添加书签
+        if (id == R.id.action_add_bookmark) {//添加书签
             if (pageFactory.getCurrentPage() != null) {
-                List<Bookmark> bookMarksList = LitePal.where("bookpath = ? and begin = ?", pageFactory.getBookPath(),pageFactory.getCurrentPage().getBegin() + "").find(Bookmark.class);
+                List<Bookmark> bookMarksList = LitePal.where("bookpath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getBegin() + "").find(Bookmark.class);
 
-                if (!bookMarksList.isEmpty()){
+                if (!bookMarksList.isEmpty()) {
                     Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
 //                    item.setIcon(R.drawable.selected_bookmark);
                     Bookmark bookMarks = new Bookmark();
                     String word = "";
@@ -335,21 +325,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-
-    public static boolean openBook(final Book bookList, Activity context) {
-        if (bookList == null){
-            throw new NullPointerException("BookList can not be null");
-        }
-
-        Intent intent = new Intent(context, ReadActivity.class);
-        intent.putExtra(EXTRA_BOOK, bookList);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-        context.startActivity(intent);
-        return true;
-    }
-
-
     /**
      * 隐藏菜单。沉浸式阅读
      */
@@ -358,8 +333,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        //  | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
     }
@@ -367,67 +341,61 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private void showSystemUI() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
     }
 
-    //显示书本进度
-    public void showProgress(float progress){
-        if (rl_progress.getVisibility() != View.VISIBLE) {
-            rl_progress.setVisibility(View.VISIBLE);
+    //拖动进度条时显示书本进度
+    public void showProgress(float progress) {
+        if (showProgressRl.getVisibility() != View.VISIBLE) {
+            showProgressRl.setVisibility(View.VISIBLE);
         }
         setProgress(progress);
     }
 
-    //隐藏书本进度
-    public void hideProgress(){
-        rl_progress.setVisibility(View.GONE);
-    }
-
-    public void initDayOrNight(){
+    public void initDayOrNight() {
         mDayOrNight = config.getDayOrNight();
-        if (mDayOrNight){
-            tv_dayornight.setText("日间");
-        }else{
-            tv_dayornight.setText("夜间");
+        if (mDayOrNight) {
+            dayornightTv.setText("日间");
+        } else {
+            dayornightTv.setText("夜间");
         }
     }
 
     //改变显示模式
-    public void changeDayOrNight(){
-        if (mDayOrNight){
+    public void changeDayOrNight() {
+        if (mDayOrNight) {
             mDayOrNight = false;
-            tv_dayornight.setText("夜间");
-        }else{
+            dayornightTv.setText("夜间");
+        } else {
             mDayOrNight = true;
-            tv_dayornight.setText("日间");
+            dayornightTv.setText("日间");
         }
         config.setDayOrNight(mDayOrNight);
         pageFactory.setDayOrNight(mDayOrNight);
     }
 
-    private void setProgress(float progress){
-        DecimalFormat decimalFormat=new DecimalFormat("00.00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
-        String p=decimalFormat.format(progress * 100.0);//format 返回的是字符串
-        tv_progress.setText(p + "%");
+    private void setProgress(float progress) {
+        DecimalFormat decimalFormat = new DecimalFormat("00.00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+        String p = decimalFormat.format(progress * 100.0);//format 返回的是字符串
+        showProgressTv.setText(p + "%");
     }
 
-    public void setSeekBarProgress(float progress){
-        sb_progress.setProgress((int) (progress * 10000));
+    public void setSeekBarProgress(float progress) {
+        chapterProgressSb.setProgress((int) (progress * 10000));
     }
 
-    private void showReadSetting(){
+    private void showReadSetting() {
         isShow = true;
-        rl_progress.setVisibility(View.GONE);
+        showProgressRl.setVisibility(View.GONE);
         showSystemUI();
 
         Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_in);
         Animation topAnim = AnimationUtils.loadAnimation(this, R.anim.top_in);
-        rl_bottom.startAnimation(bottomAnim);
+        readBottomRl.startAnimation(bottomAnim);
         appbar.startAnimation(topAnim);
-        rl_bottom.setVisibility(View.VISIBLE);
+        readBottomRl.setVisibility(View.VISIBLE);
         appbar.setVisibility(View.VISIBLE);
     }
 
@@ -435,38 +403,37 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         isShow = false;
         Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_out);
         Animation topAnim = AnimationUtils.loadAnimation(this, R.anim.top_out);
-        if (rl_bottom.getVisibility() == View.VISIBLE) {
-            rl_bottom.startAnimation(bottomAnim);
+        if (readBottomRl.getVisibility() == View.VISIBLE) {
+            readBottomRl.startAnimation(bottomAnim);
         }
         if (appbar.getVisibility() == View.VISIBLE) {
             appbar.startAnimation(topAnim);
         }
-        rl_bottom.setVisibility(View.GONE);
+        readBottomRl.setVisibility(View.GONE);
         appbar.setVisibility(View.GONE);
         hideSystemUI();
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_pre:
+            case R.id.tv_read_pre:
                 pageFactory.preChapter();
                 break;
-            case R.id.tv_next:
+            case R.id.tv_read_next:
                 pageFactory.nextChapter();
                 break;
-            case R.id.tv_directory:
+            case R.id.tv_read_catalog:
                 Intent intent = new Intent(ReadActivity.this, CatalogActivity.class);
                 intent.putExtra("book_data", book);
                 startActivity(intent);
                 break;
-            case R.id.ll_dayornight:
+            case R.id.ll_read_day_or_night:
                 changeDayOrNight();
                 break;
-            case R.id.tv_setting:
+            case R.id.ll_read_setting:
                 hideReadSetting();
-                mSettingDialog.show();
+                settingsDetail.show();
                 break;
         }
     }
@@ -474,12 +441,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (isShow){
+            if (isShow) {
                 hideReadSetting();
                 return true;
             }
-            if (mSettingDialog.isShowing()){
-                mSettingDialog.hide();
+            if (settingsDetail.isShowing()) {
+                settingsDetail.hide();
                 return true;
             }
             finish();

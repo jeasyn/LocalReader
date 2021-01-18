@@ -9,19 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Create by xlj on 2020/11/07
+ * @author xialijuan
+ * @date 2020/11/07
  */
 public class BookShelfUtil {
-
-    /**
-     * 添加书架上的图书
-     *
-     * @param book
-     * @return
-     */
-    public static boolean addBook(Book book) {
-        return book.save();
-    }
 
     /**
      * 将集合中的txt文件添加到书架上
@@ -35,7 +26,7 @@ public class BookShelfUtil {
                 book.setBookName(selectFile.getName());
                 book.setBookPath(selectFile.getPath());
                 book.setBegin(0);//默认没打开书
-                BookShelfUtil.addBook(book);
+                book.save();
             }
         }
     }
@@ -47,7 +38,7 @@ public class BookShelfUtil {
      * @return
      */
     public static List<Book> deleteBooks(List<Book> selectBook) {
-        List<Book> books = queryBooks();
+        List<Book> books = LitePal.findAll(Book.class);
         for (Book book : selectBook) {
             for (Book book1 : books) {
                 if (book.getId() == book1.getId()) {
@@ -60,15 +51,6 @@ public class BookShelfUtil {
         return books;
     }
 
-    /**
-     * 查询数据库中的所有图书
-     *
-     * @return
-     */
-    public static List<Book> queryBooks() {
-        List<Book> books = LitePal.findAll(Book.class);
-        return books;
-    }
 
     /**
      * 通过id查询数据库的图书
@@ -77,7 +59,7 @@ public class BookShelfUtil {
      * @return
      */
     public static Book queryBookById(int id) {
-        List<Book> books = queryBooks();
+        List<Book> books = LitePal.findAll(Book.class);
         for (Book book : books) {
             if (book.getId() == id) {
                 return book;
@@ -92,7 +74,7 @@ public class BookShelfUtil {
      * @return
      */
     public static List<String> getBookShelfName() {
-        List<Book> books = queryBooks();
+        List<Book> books = LitePal.findAll(Book.class);
         List<String> bookNames = new ArrayList<>();
         for (Book book : books) {
             bookNames.add(book.getBookName());

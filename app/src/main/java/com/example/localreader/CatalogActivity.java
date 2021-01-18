@@ -9,14 +9,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.localreader.adapter.MyPagerAdapter;
 import com.example.localreader.entity.Book;
-import com.example.localreader.util.PageFactory;
 import com.google.android.material.tabs.TabLayout;
 
 public class CatalogActivity extends AppCompatActivity {
 
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
-    private MyPagerAdapter mAdapter;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private MyPagerAdapter pagerAdapter;
     private Book book;
 
     @Override
@@ -27,8 +26,8 @@ public class CatalogActivity extends AppCompatActivity {
         book = (Book) getIntent().getSerializableExtra("book_data");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         toolbar.setTitle(book.getBookName().split(".txt")[0]);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_title_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,16 +36,15 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
-
         initView();
     }
 
     private void initView() {
-        mTabLayout = findViewById(R.id.tabLayout);
-        mViewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
 
-        mAdapter = new MyPagerAdapter(getSupportFragmentManager(),book.getBookPath());
-        mViewPager.setAdapter(mAdapter);
-        mTabLayout.setupWithViewPager(mViewPager, true);
+        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(),book.getBookPath());
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager, true);
     }
 }

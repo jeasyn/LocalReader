@@ -19,10 +19,10 @@ import com.example.localreader.util.PageFactory;
  * @date 2021/1/9
  */
 public class PageWidget extends View {
-    private final static String TAG = "BookPageWidget";
-    private int mScreenWidth = 0; // 屏幕宽
-    private int mScreenHeight = 0; // 屏幕高
-    private Context mContext;
+    private final static String TAG = "PageWidget";
+    private int screenWidth = 0; // 屏幕宽
+    private int screenHeight = 0; // 屏幕高
+    private Context context;
 
     //是否移动了
     private Boolean isMove = false;
@@ -38,14 +38,14 @@ public class PageWidget extends View {
     private int moveX = 0;
     private int moveY = 0;
     //翻页动画是否在执行
-    private Boolean isRuning =false;
+    private Boolean isRunning =false;
 
-    Bitmap mCurPageBitmap = null; // 当前页
-    Bitmap mNextPageBitmap = null;
+    Bitmap curPageBitmap = null; // 当前页
+    Bitmap nextPageBitmap = null;
     private BaseFlip baseFlip;
 
-    Scroller mScroller;
-    private int mBgColor = 0xFFCEC29C;
+    Scroller scroller;
+    private int bgColor = 0xFFCEC29C;
     private TouchListener mTouchListener;
 
     public PageWidget(Context context) {
@@ -58,39 +58,38 @@ public class PageWidget extends View {
 
     public PageWidget(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
+        this.context = context;
         initPage();
-        mScroller = new Scroller(getContext(),new LinearInterpolator());
-
-        baseFlip = new CoverFlip(mCurPageBitmap,mNextPageBitmap,mScreenWidth,mScreenHeight);
+        scroller = new Scroller(getContext(),new LinearInterpolator());
+        baseFlip = new CoverFlip(curPageBitmap, nextPageBitmap, screenWidth, screenHeight);
     }
 
     private void initPage(){
-        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics metric = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(metric);
-        mScreenWidth = metric.widthPixels;
-        mScreenHeight = metric.heightPixels;
-        mCurPageBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.RGB_565);      //android:LargeHeap=true  use in  manifest application
-        mNextPageBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.RGB_565);
+        screenWidth = metric.widthPixels;
+        screenHeight = metric.heightPixels;
+        curPageBitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.RGB_565);
+        nextPageBitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.RGB_565);
     }
 
     public Bitmap getCurPage(){
-        return mCurPageBitmap;
+        return curPageBitmap;
     }
 
     public Bitmap getNextPage(){
-        return mNextPageBitmap;
+        return nextPageBitmap;
     }
 
     public void setBgColor(int color){
-        mBgColor = color;
+        bgColor = color;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawColor(mBgColor);
-        if (isRuning) {
+        canvas.drawColor(bgColor);
+        if (isRunning) {
             baseFlip.drawMove(canvas);
         } else {
             baseFlip.drawStatic(canvas);
@@ -115,7 +114,7 @@ public class PageWidget extends View {
             isMove = false;
             noNext = false;
             isNext = false;
-            isRuning = false;
+            isRunning = false;
             baseFlip.setStartPoint(downX,downY);
             abortAnimation();
         }else if (event.getAction() == MotionEvent.ACTION_MOVE){
@@ -124,7 +123,6 @@ public class PageWidget extends View {
             if (!isMove) {
                 isMove = Math.abs(downX - x) > slop || Math.abs(downY - y) > slop;
             }
-
             if (isMove){
                 isMove = true;
                 if (moveX == 0 && moveY ==0) {
@@ -172,19 +170,19 @@ public class PageWidget extends View {
                 }
                 moveX = x;
                 moveY = y;
-                isRuning = true;
+                isRunning = true;
                 this.postInvalidate();
             }
         }else if (event.getAction() == MotionEvent.ACTION_UP){
             if (!isMove){
                 cancelPage = false;
                 //是否点击了中间
-                if (downX > mScreenWidth / 5 && downX < mScreenWidth * 4 / 5 && downY > mScreenHeight / 3 && downY < mScreenHeight * 2 / 3){
+                if (downX > screenWidth / 5 && downX < screenWidth * 4 / 5 && downY > screenHeight / 3 && downY < screenHeight * 2 / 3){
                     if (mTouchListener != null){
                         mTouchListener.center();
                     }
                     return true;
-                }else if (x < mScreenWidth / 2){
+                }else if (x < screenWidth / 2){
                     isNext = false;
                 }else{
                     isNext = true;
@@ -207,8 +205,8 @@ public class PageWidget extends View {
                 mTouchListener.cancel();
             }
             if (!noNext) {
-                isRuning = true;
-                baseFlip.startSliding(mScroller);
+                isRunning = true;
+                baseFlip.startSliding(scroller);
                 this.postInvalidate();
             }
         }
@@ -217,12 +215,12 @@ public class PageWidget extends View {
 
     @Override
     public void computeScroll() {
-        if (mScroller.computeScrollOffset()) {
-            float x = mScroller.getCurrX();
-            float y = mScroller.getCurrY();
+        if (scroller.computeScrollOffset()) {
+            float x = scroller.getCurrX();
+            float y = scroller.getCurrY();
             baseFlip.setTouchPoint(x,y);
-            if (mScroller.getFinalX() == x && mScroller.getFinalY() == y){
-                isRuning = false;
+            if (scroller.getFinalX() == x && scroller.getFinalY() == y){
+                isRunning = false;
             }
             postInvalidate();
         }
@@ -230,15 +228,15 @@ public class PageWidget extends View {
     }
 
     public void abortAnimation() {
-        if (!mScroller.isFinished()) {
-            mScroller.abortAnimation();
-            baseFlip.setTouchPoint(mScroller.getFinalX(),mScroller.getFinalY());
+        if (!scroller.isFinished()) {
+            scroller.abortAnimation();
+            baseFlip.setTouchPoint(scroller.getFinalX(), scroller.getFinalY());
             postInvalidate();
         }
     }
 
     public boolean isRunning(){
-        return isRuning;
+        return isRunning;
     }
 
     public void setTouchListener(TouchListener mTouchListener){

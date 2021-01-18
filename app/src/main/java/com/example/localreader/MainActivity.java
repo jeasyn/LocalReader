@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initData() {
-        books = BookShelfUtil.queryBooks();
+        books = LitePal.findAll(Book.class);
         showNoFilePoint();
         bookShelfRv.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
         adapter = new BookShelfAdapter(books);
@@ -232,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
 
     //打开图书
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener() {

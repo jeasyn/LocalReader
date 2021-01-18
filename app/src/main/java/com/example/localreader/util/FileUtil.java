@@ -14,13 +14,14 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Create by xlj on 2020/11/07
+ * @author xialijuan
+ * @date 2020/11/07
  */
 public class FileUtil {
 
-
     /**
      * 获取文件编码
+     *
      * @param fileName
      * @return
      * @throws IOException
@@ -39,23 +40,6 @@ public class FileUtil {
         detector.reset();
         return charset;
     }
-
-    /**
-     * 根据路径获取文件名
-     * @param pathandname
-     * @return
-     */
-    public static String getFileName(String pathandname){
-        int start=pathandname.lastIndexOf("/");
-        int end=pathandname.lastIndexOf(".");
-        if(start!=-1 && end!=-1){
-            return pathandname.substring(start+1,end);
-        }else{
-            return "";
-        }
-
-    }
-
 
     /**
      * 格式化文件大小
@@ -131,8 +115,8 @@ public class FileUtil {
      */
     public static File getFileByName(String name) {
         String path = Environment.getExternalStorageDirectory().toString();
-        List<File> txts = FileUtil.getLocalTXT(new File(path));
-        for (File file : txts) {
+        List<File> txtFileList = FileUtil.getLocalTXT(new File(path));
+        for (File file : txtFileList) {
             if (name.equals(file.getName())) {
                 return file;
             }

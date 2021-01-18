@@ -12,38 +12,37 @@ import android.widget.Scroller;
  */
 public class CoverFlip extends BaseFlip {
 
-    private Rect mSrcRect, mDestRect;
-    private GradientDrawable mBackShadowDrawableLR;
+    private Rect srcRect, destRect;
+    private GradientDrawable backShadowDrawableLR;
 
-    public CoverFlip(Bitmap mCurrentBitmap, Bitmap mNextBitmap, int width, int height) {
-        super(mCurrentBitmap, mNextBitmap, width, height);
-        mSrcRect = new Rect(0, 0, mScreenWidth, mScreenHeight);
-        mDestRect = new Rect(0, 0, mScreenWidth, mScreenHeight);
+    public CoverFlip(Bitmap currentBitmap, Bitmap nextBitmap, int width, int height) {
+        super(currentBitmap, nextBitmap, width, height);
+        srcRect = new Rect(0, 0, screenWidth, screenHeight);
+        destRect = new Rect(0, 0, screenWidth, screenHeight);
         int[] mBackShadowColors = new int[] { 0x66000000,0x00000000};
-        mBackShadowDrawableLR = new GradientDrawable(
-                GradientDrawable.Orientation.LEFT_RIGHT, mBackShadowColors);
-        mBackShadowDrawableLR.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        backShadowDrawableLR = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, mBackShadowColors);
+        backShadowDrawableLR.setGradientType(GradientDrawable.LINEAR_GRADIENT);
     }
 
     @Override
     public void drawMove(Canvas canvas) {
         if (getDirection().equals(BaseFlip.Direction.next)){
-            int dis = (int) (mScreenWidth - myStartX + mTouch.x);
-            if (dis > mScreenWidth){
-                dis = mScreenWidth;
+            int dis = (int) (screenWidth - startX + mTouch.x);
+            if (dis > screenWidth){
+                dis = screenWidth;
             }
             //计算bitmap截取的区域
-            mSrcRect.left = mScreenWidth - dis;
+            srcRect.left = screenWidth - dis;
             //计算bitmap在canvas显示的区域
-            mDestRect.right = dis;
-            canvas.drawBitmap(mNextPageBitmap,0,0,null);
-            canvas.drawBitmap(mCurPageBitmap,mSrcRect,mDestRect,null);
+            destRect.right = dis;
+            canvas.drawBitmap(nextPageBitmap,0,0,null);
+            canvas.drawBitmap(curPageBitmap, srcRect, destRect,null);
             addShadow(dis,canvas);
         }else{
-            mSrcRect.left = (int) (mScreenWidth - mTouch.x);
-            mDestRect.right = (int) mTouch.x;
-            canvas.drawBitmap(mCurPageBitmap,0,0,null);
-            canvas.drawBitmap(mNextPageBitmap,mSrcRect,mDestRect,null);
+            srcRect.left = (int) (screenWidth - mTouch.x);
+            destRect.right = (int) mTouch.x;
+            canvas.drawBitmap(curPageBitmap,0,0,null);
+            canvas.drawBitmap(nextPageBitmap, srcRect, destRect,null);
             addShadow((int) mTouch.x,canvas);
         }
     }
@@ -51,16 +50,16 @@ public class CoverFlip extends BaseFlip {
     @Override
     public void drawStatic(Canvas canvas) {
         if (getCancel()){
-            canvas.drawBitmap(mCurPageBitmap, 0, 0, null);
+            canvas.drawBitmap(curPageBitmap, 0, 0, null);
         }else {
-            canvas.drawBitmap(mNextPageBitmap, 0, 0, null);
+            canvas.drawBitmap(nextPageBitmap, 0, 0, null);
         }
     }
 
     //添加阴影
     public void addShadow(int left,Canvas canvas) {
-        mBackShadowDrawableLR.setBounds(left, 0, left + 30 , mScreenHeight);
-        mBackShadowDrawableLR.draw(canvas);
+        backShadowDrawableLR.setBounds(left, 0, left + 30 , screenHeight);
+        backShadowDrawableLR.draw(canvas);
     }
 
     @Override
@@ -68,23 +67,23 @@ public class CoverFlip extends BaseFlip {
         int dx = 0;
         if (getDirection().equals(Direction.next)){
             if (getCancel()){
-                int dis = (int) ((mScreenWidth - myStartX) + mTouch.x);
-                if (dis > mScreenWidth){
-                    dis = mScreenWidth;
+                int dis = (int) ((screenWidth - startX) + mTouch.x);
+                if (dis > screenWidth){
+                    dis = screenWidth;
                 }
-                dx = mScreenWidth - dis;
+                dx = screenWidth - dis;
             }else{
-                dx = (int) - (mTouch.x + (mScreenWidth - myStartX));
+                dx = (int) - (mTouch.x + (screenWidth - startX));
             }
         }else{
             if (getCancel()){
                 dx = (int) - mTouch.x;
             }else{
-                dx = (int) (mScreenWidth - mTouch.x);
+                dx = (int) (screenWidth - mTouch.x);
             }
         }
         //滑动速度保持一致
-        int duration =  (400 * Math.abs(dx)) / mScreenWidth;
+        int duration =  (400 * Math.abs(dx)) / screenWidth;
         scroller.startScroll((int) mTouch.x, 0, dx, 0, duration);
     }
 }

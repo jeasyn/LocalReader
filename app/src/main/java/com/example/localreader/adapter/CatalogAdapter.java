@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CatalogAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private Context context;
     private List<BookCatalog> bookCatalogueList;
     private Config config;
     private int currentCharter = 0;
@@ -45,32 +45,32 @@ public class CatalogAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+        LayoutInflater inflater = LayoutInflater.from(context);
         final ViewHolder viewHolder;
         if(convertView==null) {
             viewHolder= new ViewHolder();
             convertView = inflater.inflate(R.layout.item_catalog,null);
-            viewHolder.catalogue_tv = convertView.findViewById(R.id.catalogue_tv);
+            viewHolder.catalog = convertView.findViewById(R.id.tv_catalog);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder)convertView.getTag();
         }
         if (currentCharter == position){
-            viewHolder.catalogue_tv.setTextColor(mContext.getResources().getColor(R.color.colorAccent));
+            viewHolder.catalog.setTextColor(context.getResources().getColor(R.color.colorAccent));
         }else{
-            viewHolder.catalogue_tv.setTextColor(mContext.getResources().getColor(R.color.read_textColor));
+            viewHolder.catalog.setTextColor(context.getResources().getColor(R.color.read_textColor));
         }
-        viewHolder.catalogue_tv.setText(bookCatalogueList.get(position).getBookCatalogue());
+        viewHolder.catalog.setText(bookCatalogueList.get(position).getCatalog());
         return convertView;
     }
 
     public CatalogAdapter(Context context, List<BookCatalog> bookCatalogueList) {
-        mContext = context;
+        this.context = context;
         this.bookCatalogueList = bookCatalogueList;
         config = config.getInstance();
     }
 
     class ViewHolder {
-        TextView catalogue_tv;
+        TextView catalog;
     }
 }
