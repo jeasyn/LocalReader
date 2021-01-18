@@ -21,7 +21,6 @@ import java.io.InputStream;
  */
 public class MyApplication extends LitePalApplication {
     public static volatile Context applicationContext = null;
-
     private String mSampleDirPath;
     public static final String SAMPLE_DIR_NAME = "baiduTTS";
     public static final String TEXT_MODEL_NAME = "bd_etts_text.dat";

@@ -27,9 +27,10 @@
         android:id="@+id/rv_book_shelf"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ll_main_bottom"
-        android:layout_marginTop="56dp"
-        android:layout_marginBottom="1dp">
+        android:layout_below="@+id/appbar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="51dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -37,7 +38,6 @@
             android:id="@+id/tv_point_add_book"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="56dp"
             android:gravity="center"
             android:text="还未添加图书哦！"
             android:textSize="24sp"

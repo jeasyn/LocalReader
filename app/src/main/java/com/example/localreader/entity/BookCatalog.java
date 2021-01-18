@@ -10,8 +10,8 @@ public class BookCatalog extends LitePalSupport {
 
     private int id;
     private String bookPath;
-    private String bookCatalogue;
-    private long bookCatalogueStartPos;
+    private String catalog;
+    private long startPosition;
 
     public int getId() {
         return id;
@@ -29,19 +29,19 @@ public class BookCatalog extends LitePalSupport {
         this.bookPath = bookPath;
     }
 
-    public String getBookCatalogue() {
-        return bookCatalogue;
+    public String getCatalog() {
+        return catalog;
     }
 
-    public void setBookCatalogue(String bookCatalogue) {
-        this.bookCatalogue = bookCatalogue;
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
     }
 
-    public long getBookCatalogueStartPos() {
-        return bookCatalogueStartPos;
+    public long getStartPosition() {
+        return startPosition;
     }
 
-    public void setBookCatalogueStartPos(long bookCatalogueStartPos) {
-        this.bookCatalogueStartPos = bookCatalogueStartPos;
+    public void setStartPosition(long startPosition) {
+        this.startPosition = startPosition;
     }
 }

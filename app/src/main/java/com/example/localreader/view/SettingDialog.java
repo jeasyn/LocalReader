@@ -2,14 +2,16 @@ package com.example.localreader.view;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.example.localreader.R;
 import com.example.localreader.entity.Config;
@@ -21,34 +23,27 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class SettingDialog extends Dialog implements View.OnClickListener {
 
-
     private Config config;
-    private Boolean isSystem;
-    private SettingListener mSettingListener;
     private int FONT_SIZE_MIN;
     private int FONT_SIZE_MAX;
     private int currentFontSize;
-    private SeekBar sb_brightness;
-    private TextView tv_size;
-    private TextView tv_add;
+    private SeekBar brightnessSB;
+    private TextView showSizeTv;
+    private TextView moreSizeTv;
     private FloatingActionButton iv_bg_default;
     private FloatingActionButton iv_bg1;
     private FloatingActionButton iv_bg2;
     private FloatingActionButton iv_bg3;
     private FloatingActionButton iv_bg4;
-    private TextView tv_subtract;
+    private TextView lessSizeTv;
+    private SettingListener mSettingListener;
 
-    private SettingDialog(Context context, boolean flag, DialogInterface.OnCancelListener listener) {
-        super(context, flag, listener);
+    public SettingDialog(@NonNull Context context) {
+        this(context,R.style.setting_dialog);
     }
 
-    public SettingDialog(Context context) {
-        this(context, R.style.setting_dialog);
-    }
-
-    public SettingDialog(Context context, int themeResId) {
+    public SettingDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
-
     }
 
     @Override
@@ -56,8 +51,6 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         getWindow().setGravity(Gravity.BOTTOM);
         setContentView(R.layout.popup_settings_layout);
-
-        initView();
 
         WindowManager m = getWindow().getWindowManager();
         Display d = m.getDefaultDisplay();
@@ -70,20 +63,21 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
 
         config = Config.getInstance();
 
-        //初始化亮度
-        isSystem = config.isSystemLight();
+        initView();
+
+        //初始化进度条的位置
         setBrightness(config.getLight());
 
         //初始化字体大小
         currentFontSize = (int) config.getFontSize();
-        tv_size.setText(currentFontSize + "");
+        showSizeTv.setText(currentFontSize + "");
 
-        sb_brightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        //拖动亮度进度条使数据和进度条位置一样
+        brightnessSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (progress > 10) {
-                    changeBright(false, progress);
-                }
+                changeBrightnessProgress(progress);
+                Log.d("progress",progress+"");
             }
 
             @Override
@@ -99,18 +93,18 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initView() {
-        sb_brightness = findViewById(R.id.sb_brightness);
-        tv_size = findViewById(R.id.tv_size);
-        tv_subtract = findViewById(R.id.tv_subtract);
-        tv_add = findViewById(R.id.tv_add);
+        brightnessSB = findViewById(R.id.sb_brightness);
+        showSizeTv = findViewById(R.id.tv_show_font_size);
+        lessSizeTv = findViewById(R.id.tv_less_font_size);
+        moreSizeTv = findViewById(R.id.tv_more_font_size);
         iv_bg_default = findViewById(R.id.iv_bg_default);
         iv_bg1 = findViewById(R.id.iv_bg_1);
         iv_bg2 = findViewById(R.id.iv_bg_2);
         iv_bg3 = findViewById(R.id.iv_bg_3);
         iv_bg4 = findViewById(R.id.iv_bg_4);
 
-        tv_subtract.setOnClickListener(this);
-        tv_add.setOnClickListener(this);
+        lessSizeTv.setOnClickListener(this);
+        moreSizeTv.setOnClickListener(this);
         iv_bg_default.setOnClickListener(this);
         iv_bg1.setOnClickListener(this);
         iv_bg2.setOnClickListener(this);
@@ -128,16 +122,16 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
 
     //设置亮度
     public void setBrightness(float brightness) {
-        sb_brightness.setProgress((int) (brightness * 100));
+        brightnessSB.setProgress((int) (brightness * 100));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_subtract:
-                subtractFontSize();
+            case R.id.tv_less_font_size:
+                lessFontSize();
                 break;
-            case R.id.tv_add:
+            case R.id.tv_more_font_size:
                 addFontSize();
                 break;
             case R.id.iv_bg_default:
@@ -162,7 +156,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     private void addFontSize() {
         if (currentFontSize < FONT_SIZE_MAX) {
             currentFontSize += 1;
-            tv_size.setText(currentFontSize + "");
+            showSizeTv.setText(currentFontSize + "");
             config.setFontSize(currentFontSize);
             if (mSettingListener != null) {
                 mSettingListener.changeFontSize(currentFontSize);
@@ -171,10 +165,10 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     //变小书本字体
-    private void subtractFontSize() {
+    private void lessFontSize() {
         if (currentFontSize > FONT_SIZE_MIN) {
             currentFontSize -= 1;
-            tv_size.setText(currentFontSize + "");
+            showSizeTv.setText(currentFontSize + "");
             config.setFontSize(currentFontSize);
             if (mSettingListener != null) {
                 mSettingListener.changeFontSize(currentFontSize);
@@ -182,13 +176,12 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    //改变亮度
-    public void changeBright(Boolean isSystem, int brightness) {
+    //改变亮度进度条位置
+    private void changeBrightnessProgress(int brightness) {
         float light = (float) (brightness / 100.0);
-        config.setSystemLight(isSystem);
         config.setLight(light);
         if (mSettingListener != null) {
-            mSettingListener.changeSystemBright(isSystem, light);
+            mSettingListener.changeSystemBright(light);
         }
     }
 
@@ -197,7 +190,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     public interface SettingListener {
-        void changeSystemBright(Boolean isSystem, float brightness);
+        void changeSystemBright(float brightness);
 
         void changeFontSize(int fontSize);
 

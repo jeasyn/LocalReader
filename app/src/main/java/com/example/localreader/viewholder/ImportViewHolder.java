@@ -10,25 +10,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.localreader.R;
 
 /**
- * Create by xlj on 2020/11/16
+ * @author xialijuan
+ * @date 2020/11/16
  */
 public class ImportViewHolder extends RecyclerView.ViewHolder {
 
     public View fileView;
-    public TextView fileName;
-    public TextView fileSize;
-    public TextView fileTime;
-    public CheckBox isSelect;
-    public TextView imported;
+    public TextView fileNameTv;
+    public TextView fileSizeTv;
+    public TextView fileTimeTv;
+    public CheckBox isSelectCb;
+    public TextView importedTv;
 
     public ImportViewHolder(@NonNull View itemView) {
 
         super(itemView);
         fileView = itemView;
-        fileName = itemView.findViewById(R.id.tv_add_file_name);
-        fileSize = itemView.findViewById(R.id.tv_add_file_size);
-        fileTime = itemView.findViewById(R.id.tv_add_file_time);
-        isSelect = itemView.findViewById(R.id.cb_selected_book);
-        imported = itemView.findViewById(R.id.tv_imported_book);
+        fileNameTv = itemView.findViewById(R.id.tv_add_file_name);
+        fileSizeTv = itemView.findViewById(R.id.tv_add_file_size);
+        fileTimeTv = itemView.findViewById(R.id.tv_add_file_time);
+        isSelectCb = itemView.findViewById(R.id.cb_selected_book);
+        importedTv = itemView.findViewById(R.id.tv_imported_book);
     }
 }

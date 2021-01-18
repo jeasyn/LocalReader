@@ -26,8 +26,8 @@ public class CatalogFragment extends Fragment {
 
     public static final String ARGUMENT = "argument";
     private PageFactory pageFactory;
-    ArrayList<BookCatalog> catalogueList = new ArrayList<>();
-    private ListView lv_catalogue;
+    ArrayList<BookCatalog> catalogList = new ArrayList<>();
+    private ListView catalogLv;
 
     @Nullable
     @Override
@@ -39,21 +39,21 @@ public class CatalogFragment extends Fragment {
     }
 
     private void init(View v) {
-        lv_catalogue = v.findViewById(R.id.rv_catalog);
+        catalogLv = v.findViewById(R.id.rv_catalog);
 
         pageFactory = PageFactory.getInstance();
-        catalogueList.addAll(pageFactory.getDirectoryList());
-        CatalogAdapter catalogueAdapter = new CatalogAdapter(getContext(), catalogueList);
-        catalogueAdapter.setCharter(pageFactory.getCurrentCharter());
-        lv_catalogue.setAdapter(catalogueAdapter);
-        catalogueAdapter.notifyDataSetChanged();
+        catalogList.addAll(pageFactory.getDirectoryList());
+        CatalogAdapter catalogAdapter = new CatalogAdapter(getContext(), catalogList);
+        catalogAdapter.setCharter(pageFactory.getCurrentCharter());
+        catalogLv.setAdapter(catalogAdapter);
+        catalogAdapter.notifyDataSetChanged();
     }
 
     private void initListener() {
-        lv_catalogue.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        catalogLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pageFactory.changeChapter(catalogueList.get(position).getBookCatalogueStartPos());
+                pageFactory.changeChapter(catalogList.get(position).getStartPosition());
                 getActivity().finish();
             }
         });

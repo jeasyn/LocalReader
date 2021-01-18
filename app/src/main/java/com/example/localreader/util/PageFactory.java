@@ -1,5 +1,7 @@
 package com.example.localreader.util;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
@@ -140,7 +143,6 @@ public class PageFactory {
         mHeight = metric.heightPixels;
 
         df = new DecimalFormat("#0.0");
-
         marginWidth = mContext.getResources().getDimension(R.dimen.readingMarginWidth);
         marginHeight = mContext.getResources().getDimension(R.dimen.readingMarginHeight);
         statusMarginBottom = mContext.getResources().getDimension(R.dimen.reading_status_margin_bottom);
@@ -230,7 +232,7 @@ public class PageFactory {
         if (getDirectoryList().size() > 0 && updateCharter) {
             currentCharter = getCurrentCharter();
         }
-        //更新数据库进度
+        //更新Book数据库中的数据
         if (currentPage != null && book != null) {
             new Thread() {
                 @Override
@@ -277,7 +279,7 @@ public class PageFactory {
 
         //画章
         if (getDirectoryList().size() > 0) {
-            String charterName = getDirectoryList().get(currentCharter).getBookCatalogue();
+            String charterName = getDirectoryList().get(currentCharter).getCatalog();
             int nChaterWidth = (int) mBatterryPaint.measureText(charterName) + 1;
 //            c.drawText(charterName, mWidth - marginWidth - nChaterWidth, statusMarginBottom + mBatterryFontSize, mBatterryPaint);
             c.drawText(charterName, 0, statusMarginBottom + mBatterryFontSize+30, mBatterryPaint);
@@ -342,7 +344,7 @@ public class PageFactory {
 
         this.book = book;
         bookPath = book.getBookPath();
-        bookName = FileUtil.getFileName(bookPath);
+        bookName = book.getBookName().split(".txt")[0];
 
         mStatus = Status.OPENING;
         drawStatus(mBookPageWidget.getCurPage());
@@ -527,20 +529,19 @@ public class PageFactory {
                 mBookUtil.setPosition(mBookUtil.getPosition() + num);
             }
         }
-
         return reLines;
     }
 
     //上一章
     public void preChapter() {
-        if (mBookUtil.getDirectoryList().size() > 0) {
+        if (mBookUtil.getBookCatalogList().size() > 0) {
             int num = currentCharter;
             if (num == 0) {
                 num = getCurrentCharter();
             }
             num--;
             if (num >= 0) {
-                long begin = mBookUtil.getDirectoryList().get(num).getBookCatalogueStartPos();
+                long begin = mBookUtil.getBookCatalogList().get(num).getStartPosition();
                 currentPage = getPageForBegin(begin);
                 currentPage(true);
                 currentCharter = num;
@@ -556,7 +557,7 @@ public class PageFactory {
         }
         num++;
         if (num < getDirectoryList().size()) {
-            long begin = getDirectoryList().get(num).getBookCatalogueStartPos();
+            long begin = getDirectoryList().get(num).getStartPosition();
             currentPage = getPageForBegin(begin);
             currentPage(true);
             currentCharter = num;
@@ -568,7 +569,7 @@ public class PageFactory {
         int num = 0;
         for (int i = 0; getDirectoryList().size() > i; i++) {
             BookCatalog bookCatalogue = getDirectoryList().get(i);
-            if (currentPage.getEnd() >= bookCatalogue.getBookCatalogueStartPos()) {
+            if (currentPage.getEnd() >= bookCatalogue.getStartPosition()) {
                 num = i;
             } else {
                 break;
@@ -583,17 +584,36 @@ public class PageFactory {
         onDraw(mBookPageWidget.getNextPage(), currentPage.getLines(), updateChapter);
     }
 
-    //改变进度
     public void changeProgress(float progress) {
         long begin = (long) (mBookUtil.getBookLen() * progress);
         currentPage = getPageForBegin(begin);
         currentPage(true);
     }
 
-    //改变进度
+    //改变章节进度
     public void changeChapter(long begin) {
         currentPage = getPageForBegin(begin);
         currentPage(true);
+    }
+
+    //改变亮度
+    public void changeBrightness(Activity activity,float brightness){
+        WindowManager.LayoutParams attributes = activity.getWindow().getAttributes();
+        attributes.screenBrightness = brightness;
+        activity.getWindow().setAttributes(attributes);
+    }
+
+    //获取系统亮度
+    public int getBrightness(Activity activity){
+        int brightness = 0;
+        ContentResolver cr = activity.getContentResolver();
+        try {
+            brightness = Settings.System.getInt(cr,Settings.System.SCREEN_BRIGHTNESS);
+            Settings.System.getFloat(cr, Settings.System.SCREEN_BRIGHTNESS);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return brightness;
     }
 
     //改变字体大小
@@ -695,7 +715,7 @@ public class PageFactory {
 
     //获取书本的章
     public List<BookCatalog> getDirectoryList() {
-        return mBookUtil.getDirectoryList();
+        return mBookUtil.getBookCatalogList();
     }
 
     public String getBookPath() {

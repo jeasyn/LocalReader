@@ -5,16 +5,17 @@ import org.litepal.crud.LitePalSupport;
 import java.io.Serializable;
 
 /**
- * Create by xlj on 2020/11/07
+ * @author xialijuan
+ * @date 2020/11/07
  */
 public class Book extends LitePalSupport implements Serializable {
 
     private int id;
     private String bookName;
     private String bookPath;
-    private String charset;
+    private String charset;//文件编码
     private long begin;
-    private String progress;//读书的进度
+    private int bookBg;//图书封面
 
     public int getId() {
         return id;
@@ -56,11 +57,11 @@ public class Book extends LitePalSupport implements Serializable {
         this.begin = begin;
     }
 
-    public String getProgress() {
-        return progress;
+    public int getBookBg() {
+        return bookBg;
     }
 
-    public void setProgress(String progress) {
-        this.progress = progress;
+    public void setBookBg(int bookBg) {
+        this.bookBg = bookBg;
     }
 }

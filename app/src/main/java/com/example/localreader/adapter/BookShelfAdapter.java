@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.R;
-import com.example.localreader.util.BookShelfUtil;
 import com.example.localreader.entity.Book;
+import com.example.localreader.util.BookShelfUtil;
 import com.example.localreader.viewholder.BookShelfViewHolder;
 
 import java.util.ArrayList;
@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Create by xlj on 2020/10/26
+ * @author xialijuan
+ * @date 2020/10/26
  */
 public class BookShelfAdapter extends RecyclerView.Adapter<BookShelfViewHolder> {
 
@@ -54,35 +55,33 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BookShelfViewHolder> 
     public void onBindViewHolder(@NonNull final BookShelfViewHolder holder, int position) {
         Book book = books.get(position);
         String bookName = book.getBookName().split(".txt")[0];
-        holder.bookItem.setText(bookName);
+        holder.bookItemTv.setText(bookName);
 
-        int random = new Random().nextInt(3);
-        holder.bookItem.setBackgroundResource(bg[random]);
-
-        String formatBookName = bookName;
-        if (bookName.length() >= 8) {
-            formatBookName = bookName.substring(0, 8) + "...";
+        if (book.getBookBg() == 0){//如果没有封面，则设置封面
+            int random = new Random().nextInt(3);
+            book.setBookBg(random);
+            book.save();
         }
-        holder.bookName.setText(formatBookName);
+        holder.bookItemTv.setBackgroundResource(bg[book.getBookBg()]);
+        holder.bookNameTv.setText(bookName);
 
         holder.bookView.setTag(book.getId());
+        holder.bookView.setOnLongClickListener(mItemLongClickListener);
         if (isShowItem) {
-            holder.bookSelect.setVisibility(View.VISIBLE);
-            holder.bookSelect.setSelected(getItemSelected(book.getId()));
+            holder.bookSelectIv.setVisibility(View.VISIBLE);
+            holder.bookSelectIv.setSelected(getItemSelected(book.getId()));
             holder.bookView.setOnClickListener(mItemSelectedClickListener);
         } else {
             mBooleanArray.clear();
-            holder.bookSelect.setVisibility(View.GONE);
+            holder.bookSelectIv.setVisibility(View.GONE);
             holder.bookView.setOnClickListener(mOnItemClickListener);
         }
-        holder.bookView.setOnLongClickListener(mItemLongClickListener);
     }
 
     @Override
     public int getItemCount() {
         return books.size();
     }
-
 
     //点击图书监听
     public void setOnItemClickListener(View.OnClickListener mOnItemClickListener) {

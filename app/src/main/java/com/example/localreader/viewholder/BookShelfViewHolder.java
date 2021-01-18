@@ -10,22 +10,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.localreader.R;
 
 /**
- * Create by xlj on 2020/11/17
+ * @author xialijuan
+ * @date 2020/11/17
  */
 public class BookShelfViewHolder extends RecyclerView.ViewHolder {
 
     public View bookView;
-    public TextView bookItem;
-    public ImageView bookSelect;
-    public TextView bookName;
-    public TextView bookProgress;
+    public TextView bookItemTv;
+    public ImageView bookSelectIv;
+    public TextView bookNameTv;
+    public TextView bookProgressTv;
 
     public BookShelfViewHolder(@NonNull View itemView) {
         super(itemView);
         bookView = itemView;
-        bookItem = itemView.findViewById(R.id.tv_book);
-        bookSelect = itemView.findViewById(R.id.iv_book_select);
-        bookName = itemView.findViewById(R.id.tv_book_name);
-        bookProgress = itemView.findViewById(R.id.tv_show_progress);
+        bookItemTv = itemView.findViewById(R.id.tv_book);
+        bookSelectIv = itemView.findViewById(R.id.iv_book_select);
+        bookNameTv = itemView.findViewById(R.id.tv_book_name);
+        bookProgressTv = itemView.findViewById(R.id.tv_show_progress);
     }
 }

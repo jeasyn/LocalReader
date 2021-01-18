@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ImportActivity">
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_height="wrap_content"
@@ -32,7 +31,7 @@
             android:id="@+id/rv_import_book"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/ll_import"
+            android:layout_above="@+id/ll_import_bottom"
             android:layout_marginBottom="0dp" />
 
         <TextView
@@ -45,7 +44,7 @@
             android:textSize="24sp" />
 
         <LinearLayout
-            android:id="@+id/ll_import"
+            android:id="@+id/ll_import_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -61,11 +60,11 @@
                 android:text="全选" />
 
             <Button
-                android:id="@+id/btn_import_bookself"
+                android:id="@+id/btn_import_book_self"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#21B382"
+                android:background="@color/colorPrimary"
                 android:text="导入书架(0)"
                 android:onClick="importListener"
                 android:textColor="@color/white_text" />
