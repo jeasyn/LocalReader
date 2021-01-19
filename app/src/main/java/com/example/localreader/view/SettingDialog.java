@@ -66,7 +66,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         initView();
 
         //初始化进度条的位置
-        setBrightness(config.getLight());
+        setBrightnessProgress(config.getLight());
 
         //初始化字体大小
         currentFontSize = (int) config.getFontSize();
@@ -76,7 +76,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         brightnessSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                changeBrightnessProgress(progress);
+                changeBrightnessProgress(false,progress);
                 Log.d("progress",progress+"");
             }
 
@@ -120,8 +120,8 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    //设置亮度
-    public void setBrightness(float brightness) {
+    //设置亮度进度条的位置
+    public void setBrightnessProgress(float brightness) {
         brightnessSB.setProgress((int) (brightness * 100));
     }
 
@@ -177,11 +177,11 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     //改变亮度进度条位置
-    private void changeBrightnessProgress(int brightness) {
+    private void changeBrightnessProgress(boolean isSystem,int brightness) {
         float light = (float) (brightness / 100.0);
         config.setLight(light);
         if (mSettingListener != null) {
-            mSettingListener.changeSystemBright(light);
+            mSettingListener.changeSystemBright(isSystem, light);
         }
     }
 
@@ -190,7 +190,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     public interface SettingListener {
-        void changeSystemBright(float brightness);
+        void changeSystemBright(boolean isSystem, float brightness);
 
         void changeFontSize(int fontSize);
 
