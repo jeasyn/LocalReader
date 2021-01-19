@@ -7,7 +7,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -129,6 +128,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         //保持屏幕常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //初始化屏幕亮度
+        if (!config.isSystemLight()) {
+            pageFactory.changeBrightness(this, config.getLight());
+        }
         pageFactory.changeBrightness(this, config.getLight());
         //隐藏
         hideSystemUI();
@@ -177,9 +179,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         settingsDetail.setSettingListener(new SettingDialog.SettingListener() {
             @Override
-            public void changeSystemBright(float brightness) {
-                pageFactory.changeBrightness(ReadActivity.this, brightness);
-                Log.d("brightness",brightness+" "+pageFactory.getBrightness(ReadActivity.this));
+            public void changeSystemBright(boolean isSystem,float brightness) {
+                if (!isSystem) {
+                    pageFactory.changeBrightness(ReadActivity.this, brightness);
+                } else {
+                    int bh = pageFactory.getBrightness(ReadActivity.this);
+                    pageFactory.changeBrightness(ReadActivity.this, bh);
+                }
             }
 
             @Override

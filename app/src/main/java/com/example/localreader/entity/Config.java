@@ -15,6 +15,7 @@ public class Config {
     private final static String FONT_SIZE_KEY = "fontsize";
     private final static String NIGHT_KEY = "night";
     private final static String LIGHT_KEY = "light";
+    private final static String SYSTEM_LIGHT_KEY = "systemlight";
 
     public final static int BOOK_BG_DEFAULT = 0;
     public final static int BOOK_BG_1 = 1;
@@ -93,5 +94,9 @@ public class Config {
     public void setLight(float light) {
         this.light = light;
         sp.edit().putFloat(LIGHT_KEY,light).commit();
+    }
+
+    public Boolean isSystemLight(){
+        return sp.getBoolean(SYSTEM_LIGHT_KEY,true);
     }
 }
