@@ -39,7 +39,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     private SettingListener mSettingListener;
 
     public SettingDialog(@NonNull Context context) {
-        this(context,R.style.setting_dialog);
+        this(context, R.style.setting_dialog);
     }
 
     public SettingDialog(@NonNull Context context, int themeResId) {
@@ -66,7 +66,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         initView();
 
         //初始化进度条的位置
-        setBrightnessProgress(config.getLight());
+        changeBrightnessProgress((int) (config.getLight() * 100));
 
         //初始化字体大小
         currentFontSize = (int) config.getFontSize();
@@ -76,8 +76,8 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         brightnessSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                changeBrightnessProgress(false,progress);
-                Log.d("progress",progress+"");
+                changeBrightnessProgress(progress);
+                Log.d("progress", progress + "");
             }
 
             @Override
@@ -118,11 +118,6 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         if (mSettingListener != null) {
             mSettingListener.changeBookBg(type);
         }
-    }
-
-    //设置亮度进度条的位置
-    public void setBrightnessProgress(float brightness) {
-        brightnessSB.setProgress((int) (brightness * 100));
     }
 
     @Override
@@ -177,11 +172,13 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     //改变亮度进度条位置
-    private void changeBrightnessProgress(boolean isSystem,int brightness) {
+    private void changeBrightnessProgress(int brightness) {
+        Log.d("brightness", brightness + "");
+        brightnessSB.setProgress(brightness);
         float light = (float) (brightness / 100.0);
         config.setLight(light);
         if (mSettingListener != null) {
-            mSettingListener.changeSystemBright(isSystem, light);
+            mSettingListener.changeSystemBright(light);
         }
     }
 
@@ -190,7 +187,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     public interface SettingListener {
-        void changeSystemBright(boolean isSystem, float brightness);
+        void changeSystemBright(float brightness);
 
         void changeFontSize(int fontSize);
 

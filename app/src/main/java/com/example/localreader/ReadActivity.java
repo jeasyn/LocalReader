@@ -128,8 +128,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         //保持屏幕常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //初始化屏幕亮度
-        if (!config.isSystemLight()) {
-            pageFactory.changeBrightness(this, config.getLight());
+        if (config.getLight() == 0) {
+            float light = ((100 * pageFactory.getBrightness(this)) / 255);
+            config.setLight((float) (light * 1.0 / 100));
         }
         pageFactory.changeBrightness(this, config.getLight());
         //隐藏
@@ -179,13 +180,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         settingsDetail.setSettingListener(new SettingDialog.SettingListener() {
             @Override
-            public void changeSystemBright(boolean isSystem,float brightness) {
-                if (!isSystem) {
-                    pageFactory.changeBrightness(ReadActivity.this, brightness);
-                } else {
-                    int bh = pageFactory.getBrightness(ReadActivity.this);
-                    pageFactory.changeBrightness(ReadActivity.this, bh);
-                }
+            public void changeSystemBright(float brightness) {
+                pageFactory.changeBrightness(ReadActivity.this, brightness);
             }
 
             @Override
