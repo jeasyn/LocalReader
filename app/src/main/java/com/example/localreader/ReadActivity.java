@@ -357,27 +357,28 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initDayOrNight() {
-        mDayOrNight = config.getDayOrNight();
+        mDayOrNight = config.isNight();
         if (mDayOrNight) {
+            dayOrNightIv.setImageResource(R.drawable.read_icon_day_mode);
             dayOrNightTv.setText(getResources().getString(R.string.read_day_mode));
         } else {
+            dayOrNightIv.setImageResource(R.drawable.read_icon_night_mode);
             dayOrNightTv.setText(getResources().getString(R.string.read_night_mode));
         }
     }
 
     //改变显示模式
     public void changeDayOrNight() {
-//        mDayOrNight = config.getDayOrNight();
         if (mDayOrNight) {
             mDayOrNight = false;
             dayOrNightTv.setText(getResources().getString(R.string.read_night_mode));
-            dayOrNightIv.setImageResource(R.drawable.read_icon_day_mode);
+            dayOrNightIv.setImageResource(R.drawable.read_icon_night_mode);
         } else {
             mDayOrNight = true;
             dayOrNightTv.setText(getResources().getString(R.string.read_day_mode));
-            dayOrNightIv.setImageResource(R.drawable.read_icon_night_mode);
+            dayOrNightIv.setImageResource(R.drawable.read_icon_day_mode);
         }
-        config.setDayOrNight(mDayOrNight);
+        config.setNight(mDayOrNight);
         pageFactory.setDayOrNight(mDayOrNight);
     }
 
