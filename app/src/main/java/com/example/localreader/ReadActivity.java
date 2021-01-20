@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -50,9 +51,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private Book book;
     private PageFactory pageFactory;
     private int screenWidth, screenHeight;
-    // popwindow是否显示
-    private Boolean isShow = false;
-    private Boolean mDayOrNight;
+    private boolean isShow = false;
+    private boolean mDayOrNight;
     private SettingDialog settingsDetail;
     private PageWidget bookPage;
     private TextView showProgressTv;
@@ -61,12 +61,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private SeekBar chapterProgressSb;
     private TextView nextTv;
     private LinearLayout catalogTv;
-    private LinearLayout dayornightLayout;
-    private TextView dayornightTv;
+    private LinearLayout dayOrNightLayout;
+    private TextView dayOrNightTv;
     private LinearLayout settingLayout;
     private RelativeLayout readBottomRl;
     private Toolbar toolbar;
     private AppBarLayout appbar;
+    private ImageView dayOrNightIv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,12 +83,13 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         bookPage = findViewById(R.id.bookPage);
         showProgressTv = findViewById(R.id.tv_show_progress);
         showProgressRl = findViewById(R.id.rl_show_progress);
-        preTv = findViewById(R.id.tv_read_pre);
+        preTv = findViewById(R.id.tv_read_up_chapter);
         chapterProgressSb = findViewById(R.id.sb_chapter_progress);
-        nextTv = findViewById(R.id.tv_read_next);
+        nextTv = findViewById(R.id.tv_read_next_chapter);
         catalogTv = findViewById(R.id.tv_read_catalog);
-        dayornightLayout = findViewById(R.id.ll_read_day_or_night);
-        dayornightTv = findViewById(R.id.tv_read_day_or_night);
+        dayOrNightLayout = findViewById(R.id.ll_read_day_or_night);
+        dayOrNightTv = findViewById(R.id.tv_read_day_or_night);
+        dayOrNightIv = findViewById(R.id.iv_read_day_or_night);
         settingLayout = findViewById(R.id.ll_read_setting);
         readBottomRl = findViewById(R.id.rl_read_bottom);
         toolbar = findViewById(R.id.toolbar);
@@ -96,7 +98,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         preTv.setOnClickListener(this);
         nextTv.setOnClickListener(this);
         catalogTv.setOnClickListener(this);
-        dayornightLayout.setOnClickListener(this);
+        dayOrNightLayout.setOnClickListener(this);
         settingLayout.setOnClickListener(this);
     }
 
@@ -142,7 +144,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             pageFactory.openBook(book);
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "打开电子书失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.read_load_fail), Toast.LENGTH_SHORT).show();
         }
 
         initDayOrNight();
@@ -279,10 +281,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        pageFactory.clear();
+        pageFactory.initData();
         bookPage = null;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -300,8 +301,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 if (!bookMarksList.isEmpty()) {
                     Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
                 } else {
-//                    item.setIcon(R.drawable.selected_bookmark);
-                    Bookmark bookMarks = new Bookmark();
+                    Bookmark bookmark = new Bookmark();
                     String word = "";
                     for (String line : pageFactory.getCurrentPage().getLines()) {
                         word += line;
@@ -309,11 +309,11 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     try {
                         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm ss");
                         String time = sf.format(new Date());
-                        bookMarks.setTime(time);
-                        bookMarks.setBegin(pageFactory.getCurrentPage().getBegin());
-                        bookMarks.setText(word);
-                        bookMarks.setBookPath(pageFactory.getBookPath());
-                        bookMarks.save();
+                        bookmark.setTime(time);
+                        bookmark.setBegin(pageFactory.getCurrentPage().getBegin());
+                        bookmark.setText(word);
+                        bookmark.setBookPath(pageFactory.getBookPath());
+                        bookmark.save();
 
                         Toast.makeText(ReadActivity.this, "书签添加成功", Toast.LENGTH_SHORT).show();
                     } catch (SQLException e) {
@@ -328,7 +328,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * 隐藏菜单。沉浸式阅读
+     * 隐藏菜单，沉浸式阅读
      */
     private void hideSystemUI() {
         getWindow().getDecorView().setSystemUiVisibility(
@@ -359,20 +359,23 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     public void initDayOrNight() {
         mDayOrNight = config.getDayOrNight();
         if (mDayOrNight) {
-            dayornightTv.setText("日间");
+            dayOrNightTv.setText(getResources().getString(R.string.read_day_mode));
         } else {
-            dayornightTv.setText("夜间");
+            dayOrNightTv.setText(getResources().getString(R.string.read_night_mode));
         }
     }
 
     //改变显示模式
     public void changeDayOrNight() {
+//        mDayOrNight = config.getDayOrNight();
         if (mDayOrNight) {
             mDayOrNight = false;
-            dayornightTv.setText("夜间");
+            dayOrNightTv.setText(getResources().getString(R.string.read_night_mode));
+            dayOrNightIv.setImageResource(R.drawable.read_icon_day_mode);
         } else {
             mDayOrNight = true;
-            dayornightTv.setText("日间");
+            dayOrNightTv.setText(getResources().getString(R.string.read_day_mode));
+            dayOrNightIv.setImageResource(R.drawable.read_icon_night_mode);
         }
         config.setDayOrNight(mDayOrNight);
         pageFactory.setDayOrNight(mDayOrNight);
@@ -392,7 +395,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         isShow = true;
         showProgressRl.setVisibility(View.GONE);
         showSystemUI();
-
         Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_in);
         Animation topAnim = AnimationUtils.loadAnimation(this, R.anim.top_in);
         readBottomRl.startAnimation(bottomAnim);
@@ -419,10 +421,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_read_pre:
+            case R.id.tv_read_up_chapter:
                 pageFactory.preChapter();
                 break;
-            case R.id.tv_read_next:
+            case R.id.tv_read_next_chapter:
                 pageFactory.nextChapter();
                 break;
             case R.id.tv_read_catalog:

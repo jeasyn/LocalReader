@@ -9,6 +9,7 @@
         android:layout_height="50dp"
         android:singleLine="true"
         android:gravity="center_vertical"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
 </LinearLayout>

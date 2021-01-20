@@ -31,7 +31,6 @@ public class ImportActivity extends AppCompatActivity {
     private TextView noFilePointTv;
     private List<String> bookShelfNames;
     private int actualSize; //减去书架上的个数（最多选中文件个数）
-    private Button selectFileBtn;
     private Button importBookshelfBtn;
 
     @Override
@@ -43,7 +42,7 @@ public class ImportActivity extends AppCompatActivity {
         initData();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("本地导入");
+        toolbar.setTitle(getString(R.string.import_toolbar_title));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_title_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -57,7 +56,6 @@ public class ImportActivity extends AppCompatActivity {
     public void initView() {
         recyclerView = findViewById(R.id.rv_import_book);
         noFilePointTv = findViewById(R.id.tv_no_file);
-        selectFileBtn = findViewById(R.id.btn_select_all_or_not);
         importBookshelfBtn = findViewById(R.id.btn_import_book_self);
     }
 
@@ -94,7 +92,7 @@ public class ImportActivity extends AppCompatActivity {
     };
 
     //导入书架按钮监听
-    public void importListener(View v) {
+    public void importBookShelf(View v) {
         if (adapter.getSelectNum() != 0) {
             List<File> selectFiles = adapter.getSelectFile();
             BookShelfUtil.importBooks(selectFiles);
@@ -105,7 +103,7 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     //全选按钮监听（全选or全不选）
-    public void selectListener(View v) {
+    public void selectFiles(View v) {
         if (LitePal.findAll(Book.class).size() == sdCardFiles.size()) return;
         if (adapter.getSelectNum() != actualSize) {
             adapter.selectAll();

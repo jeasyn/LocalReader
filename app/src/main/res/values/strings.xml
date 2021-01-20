@@ -1,3 +1,39 @@
 <resources>
     <string name="app_name">我的阅读</string>
+    <string name="back_app">再按一次退出我的阅读</string>
+
+    <string name="main_toolbar_title">书架</string>
+    <string name="main_point_add_book">还未添加图书哦！</string>
+    <string name="main_no_read">未读</string>
+    <string name="main_delete">删除</string>
+    <string name="main_cancel">取消</string>
+    <string name="main_select_all">全选</string>
+    <string name="main_no_select_all">全不选</string>
+    <string name="main_detail">详细信息</string>
+    <string name="main_popup_detail">详细信息</string>
+
+    <string name="import_toolbar_title">本地导入</string>
+    <string name="import_no_search_file">未扫描到TXT文件</string>
+    <string name="import_select_or_no_select_file">全选</string>
+    <string name="import_import_bookshelf">导入书架(0)</string>
+    <string name="import_already_import">已导入</string>
+
+    <string name="read_up_chapter">上一章</string>
+    <string name="read_next_chapter">下一章</string>
+    <string name="read_catalog">目录</string>
+    <string name="read_night_mode">夜间</string>
+    <string name="read_day_mode">日间</string>
+    <string name="read_settings">设置</string>
+
+    <string name="read_settings_brightness">亮度</string>
+    <string name="read_settings_font_size">字号</string>
+    <string name="read_settings_less_font_size">A -</string>
+    <string name="read_settings_more_font_size">A +</string>
+    <string name="read_settings_topic">主题</string>
+
+    <string name="read_loading">加载中...</string>
+    <string name="read_load_fail">加载失败！</string>
+    <string name="read_to_head">已到达开头</string>
+    <string name="read_to_end">已到达结尾</string>
+
 </resources>

@@ -18,7 +18,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/icon_txtfile" />
+            android:src="@drawable/import_icon_txtfile" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="-60dp"
-            android:text="已导入"
+            android:text="@string/import_already_import"
             android:visibility="gone"
             android:textColor="@color/colorAccent" />
     </LinearLayout>

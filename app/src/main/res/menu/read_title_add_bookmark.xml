@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_add_bookmark"
-        android:icon="@drawable/no_select_bookmark"
+        android:icon="@drawable/read_no_select_bookmark"
         android:orderInCategory="90"
         android:title="书签"
         app:showAsAction="ifRoom" />

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="#fff"
+    android:background="@color/read_settings_bg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,20 +17,32 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:gravity="center_vertical"
-            android:text="亮度" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/read_settings_brightness" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/read_icon_brightness_left" />
 
         <SeekBar
             android:id="@+id/sb_brightness"
             android:layout_width="wrap_content"
-            android:clickable="true"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="20dp"
-            android:layout_weight="4"
+            android:layout_weight="5"
+            android:clickable="true"
             android:max="100" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/read_icon_brightness_right" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -43,42 +55,49 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:text="字号" />
+            android:text="@string/read_settings_font_size" />
 
         <TextView
             android:id="@+id/tv_less_font_size"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/read_settings_font_change_style"
             android:gravity="center"
-            android:text="A -" />
+            android:layout_weight="1"
+            android:text="@string/read_settings_less_font_size" />
 
         <TextView
             android:id="@+id/tv_show_font_size"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="60"
-            android:textColor="#000" />
+            android:layout_weight="2"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/tv_more_font_size"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
+            android:layout_weight="1"
             android:background="@drawable/read_settings_font_change_style"
             android:gravity="center"
-            android:text="A +" />
+            android:text="@string/read_settings_more_font_size" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -86,14 +105,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="主题" />
+            android:text="@string/read_settings_topic" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/iv_bg_default"
+            android:id="@+id/fb_bg_white"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@color/read_bg_default"
-            app:backgroundTint="@color/read_bg_default" />
+            android:src="@color/read_bg_white"
+            app:backgroundTint="@color/read_bg_white" />
 
         <View
             android:layout_width="0dp"
@@ -101,11 +120,11 @@
             android:layout_weight="1"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/iv_bg_1"
+            android:id="@+id/fb_bg_yellow"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@color/read_bg_1"
-            app:backgroundTint="@color/read_bg_1" />
+            android:src="@color/read_bg_yellow"
+            app:backgroundTint="@color/read_bg_yellow" />
 
         <View
             android:layout_width="0dp"
@@ -113,11 +132,11 @@
             android:layout_weight="1"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/iv_bg_2"
+            android:id="@+id/fb_bg_gray"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@color/read_bg_2"
-            app:backgroundTint="@color/read_bg_2" />
+            android:src="@color/read_bg_gray"
+            app:backgroundTint="@color/read_bg_gray" />
 
         <View
             android:layout_width="0dp"
@@ -125,11 +144,11 @@
             android:layout_weight="1"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/iv_bg_3"
+            android:id="@+id/fb_bg_green"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@color/read_bg_3"
-            app:backgroundTint="@color/read_bg_3" />
+            android:src="@color/read_bg_green"
+            app:backgroundTint="@color/read_bg_green" />
 
         <View
             android:layout_width="0dp"
@@ -137,11 +156,12 @@
             android:layout_weight="1"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/iv_bg_4"
+            android:id="@+id/fb_bg_blue"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@color/read_bg_4"
-            app:backgroundTint="@color/read_bg_4" />
+            android:layout_weight="1"
+            android:src="@color/read_bg_blue"
+            app:backgroundTint="@color/read_bg_blue" />
     </LinearLayout>
 
 </LinearLayout>

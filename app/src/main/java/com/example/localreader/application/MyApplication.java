@@ -70,7 +70,7 @@ public class MyApplication extends LitePalApplication {
                 String path = dest;
                 fos = new FileOutputStream(path);
                 byte[] buffer = new byte[1024];
-                int size = 0;
+                int size;
                 while ((size = is.read(buffer, 0, 1024)) >= 0) {
                     fos.write(buffer, 0, size);
                 }

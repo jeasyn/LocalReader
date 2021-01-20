@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -47,7 +46,7 @@
         android:ellipsize="end"
         android:lines="1"
         android:text="name"
-        android:textColor="@color/black_color"
+        android:textColor="@android:color/black"
         android:textSize="12sp" />
 
     <TextView
@@ -56,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="10dp"
-        android:text="未读"
+        android:text="@string/main_no_read"
         android:textSize="10sp" />
 
 </LinearLayout>

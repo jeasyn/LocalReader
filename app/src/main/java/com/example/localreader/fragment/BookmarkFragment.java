@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class BookmarkFragment extends Fragment {
 
-    public static final String ARGUMENT = "argument";
+    private static final String ARGUMENT = "argument";
     private String bookPath;
     private List<Bookmark> bookmarkList;
     private BookmarkAdapter bookmarkAdapter;
