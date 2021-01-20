@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         inflater = getLayoutInflater();
         view = inflater.inflate(R.layout.popup_window_book_detail, null);
 
-        setTitle("书架");
+        setTitle(getString(R.string.main_toolbar_title));
 
         initViews();
         initData();
@@ -99,14 +100,14 @@ public class MainActivity extends AppCompatActivity {
 
         deleteLayout = findViewById(R.id.ll_main_bottom_delete);
         cancelLayout = findViewById(R.id.ll_main_bottom_cancel);
-        selectLayout = findViewById(R.id.ll_main_bottom_select);
+        selectLayout = findViewById(R.id.ll_main_bottom_select_all);
         detailLayout = findViewById(R.id.ll_main_bottom_detail);
 
         deleteImg = findViewById(R.id.iv_main_bottom_delete);
         deleteTv = findViewById(R.id.tv_main_bottom_delete);
 
-        selectImg = findViewById(R.id.iv_main_bottom_select);
-        selectTv = findViewById(R.id.tv_main_bottom_select);
+        selectImg = findViewById(R.id.iv_main_bottom_select_all);
+        selectTv = findViewById(R.id.tv_main_bottom_select_all);
 
         detailImg = findViewById(R.id.iv_main_bottom_detail);
         detailTv = findViewById(R.id.tv_main_bottom_detail);
@@ -142,30 +143,30 @@ public class MainActivity extends AppCompatActivity {
         int selectSize = adapter.getSelectSize();//选中个数
         int maxSize = books.size();//可选的最大个数
         if (selectSize == maxSize && selectSize != 0) {
-            selectTv.setText("全不选");
-            selectImg.setImageResource(R.drawable.ic_bottom_select_all);
+            selectTv.setText(getResources().getString(R.string.main_no_select_all));
+            selectImg.setImageResource(R.drawable.main_icon_bottom_select_all);
         } else if (books.size() == 0) {
-            selectImg.setImageResource(R.drawable.ic_bottom_no_select);
-            selectTv.setTextColor(getResources().getColor(R.color.freeze_color));
+            selectImg.setImageResource(R.drawable.main_icon_bottom_no_select);
+            selectTv.setTextColor(getResources().getColor(R.color.main_bottom_freeze_color));
         } else {
-            selectTv.setText("全选");
-            selectImg.setImageResource(R.drawable.ic_bottom_select_all_cancel);
+            selectTv.setText(getResources().getString(R.string.main_select_all));
+            selectImg.setImageResource(R.drawable.main_icon_bottom_select_all_cancel);
         }
 
         if (selectSize == 0) {
-            deleteImg.setImageResource(R.drawable.ic_bottom_no_delete);
-            deleteTv.setTextColor(getResources().getColor(R.color.freeze_color));
+            deleteImg.setImageResource(R.drawable.main_icon_bottom_no_delete);
+            deleteTv.setTextColor(getResources().getColor(R.color.main_bottom_freeze_color));
         } else {
-            deleteImg.setImageResource(R.drawable.ic_bottom_delete);
-            deleteTv.setTextColor(getResources().getColor(R.color.black_color));
+            deleteImg.setImageResource(R.drawable.main_icon_bottom_delete);
+            deleteTv.setTextColor(Color.BLACK);
         }
 
         if (selectSize == 1) {
-            detailImg.setImageResource(R.drawable.ic_bottom_detail);
-            detailTv.setTextColor(getResources().getColor(R.color.black_color));
+            detailImg.setImageResource(R.drawable.main_icon_bottom_detail);
+            detailTv.setTextColor(Color.BLACK);
         } else {
-            detailImg.setImageResource(R.drawable.ic_bottom_no_detail);
-            detailTv.setTextColor(getResources().getColor(R.color.freeze_color));
+            detailImg.setImageResource(R.drawable.main_icon_bottom_no_detail);
+            detailTv.setTextColor(getResources().getColor(R.color.main_bottom_freeze_color));
         }
     }
 
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             if (adapter.getSelectSize() == 0) return;
             AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
             dialog.setTitle("警告");
-            dialog.setMessage("确定删除选中的书籍？");
+            dialog.setMessage("确认删除选中的书籍？");
             dialog.setCancelable(false);//设置为false时，点击返回键无效
             dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
@@ -202,16 +203,16 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             hideBottomLayout();
             //设置为默认状态
-            selectTv.setText("全选");
-            selectImg.setImageResource(R.drawable.ic_bottom_select_all_cancel);
-            detailImg.setImageResource(R.drawable.ic_bottom_detail);
-            detailTv.setTextColor(getResources().getColor(R.color.black_color));
+            selectTv.setText(getResources().getString(R.string.main_select_all));
+            selectImg.setImageResource(R.drawable.main_icon_bottom_select_all_cancel);
+            detailImg.setImageResource(R.drawable.main_icon_bottom_detail);
+            detailTv.setTextColor(Color.BLACK);
         }
     };
     private View.OnClickListener mSelectListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if ("全选".equals(selectTv.getText())) {
+            if (getResources().getString(R.string.main_select_all).equals(selectTv.getText())) {
                 adapter.selectAll();
             } else {
                 adapter.unSelectAll();
@@ -357,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
         Timer timer;//声明一个定时器
         if (!isExit) {
             isExit = true;
-            Toast.makeText(MainActivity.this, "再按一次退出我的阅读", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.back_app), Toast.LENGTH_SHORT).show();
             timer = new Timer();
             //执行定时任务，两秒内如果没有再次按下，则不会退出
             timer.schedule(new TimerTask() {

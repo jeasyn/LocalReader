@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white_bg"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <TextView
@@ -13,14 +13,14 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:text="详细信息"
-        android:textColor="@color/black_color"
+        android:text="@string/main_popup_detail"
+        android:textColor="@android:color/black"
         android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/popup_window_detail_line" />
+        android:background="@color/main_popup_detail_line" />
 
     <TextView
         android:id="@+id/tv_file_path"
@@ -30,7 +30,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:text="path"
-        android:textColor="@color/black_color" />
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/tv_file_size"
@@ -39,7 +39,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:text="size"
-        android:textColor="@color/black_color" />
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/tv_file_time"
@@ -49,5 +49,5 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
         android:text="time"
-        android:textColor="@color/black_color" />
+        android:textColor="@android:color/black" />
 </LinearLayout>

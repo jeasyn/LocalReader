@@ -30,11 +30,11 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     private SeekBar brightnessSB;
     private TextView showSizeTv;
     private TextView moreSizeTv;
-    private FloatingActionButton iv_bg_default;
-    private FloatingActionButton iv_bg1;
-    private FloatingActionButton iv_bg2;
-    private FloatingActionButton iv_bg3;
-    private FloatingActionButton iv_bg4;
+    private FloatingActionButton whiteBgFb;
+    private FloatingActionButton yellowBgFb;
+    private FloatingActionButton grayBgFb;
+    private FloatingActionButton greenBgFb;
+    private FloatingActionButton blueBgFb;
     private TextView lessSizeTv;
     private SettingListener mSettingListener;
 
@@ -97,19 +97,19 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         showSizeTv = findViewById(R.id.tv_show_font_size);
         lessSizeTv = findViewById(R.id.tv_less_font_size);
         moreSizeTv = findViewById(R.id.tv_more_font_size);
-        iv_bg_default = findViewById(R.id.iv_bg_default);
-        iv_bg1 = findViewById(R.id.iv_bg_1);
-        iv_bg2 = findViewById(R.id.iv_bg_2);
-        iv_bg3 = findViewById(R.id.iv_bg_3);
-        iv_bg4 = findViewById(R.id.iv_bg_4);
+        whiteBgFb = findViewById(R.id.fb_bg_white);
+        yellowBgFb = findViewById(R.id.fb_bg_yellow);
+        grayBgFb = findViewById(R.id.fb_bg_gray);
+        greenBgFb = findViewById(R.id.fb_bg_green);
+        blueBgFb = findViewById(R.id.fb_bg_blue);
 
         lessSizeTv.setOnClickListener(this);
         moreSizeTv.setOnClickListener(this);
-        iv_bg_default.setOnClickListener(this);
-        iv_bg1.setOnClickListener(this);
-        iv_bg2.setOnClickListener(this);
-        iv_bg3.setOnClickListener(this);
-        iv_bg4.setOnClickListener(this);
+        whiteBgFb.setOnClickListener(this);
+        yellowBgFb.setOnClickListener(this);
+        grayBgFb.setOnClickListener(this);
+        greenBgFb.setOnClickListener(this);
+        blueBgFb.setOnClickListener(this);
     }
 
     //设置字体
@@ -129,20 +129,20 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             case R.id.tv_more_font_size:
                 addFontSize();
                 break;
-            case R.id.iv_bg_default:
-                setBookBg(Config.BOOK_BG_DEFAULT);
+            case R.id.fb_bg_white:
+                setBookBg(Config.BOOK_BG_WHITE);
                 break;
-            case R.id.iv_bg_1:
-                setBookBg(Config.BOOK_BG_1);
+            case R.id.fb_bg_yellow:
+                setBookBg(Config.BOOK_BG_YELLOW);
                 break;
-            case R.id.iv_bg_2:
-                setBookBg(Config.BOOK_BG_2);
+            case R.id.fb_bg_gray:
+                setBookBg(Config.BOOK_BG_GRAY);
                 break;
-            case R.id.iv_bg_3:
-                setBookBg(Config.BOOK_BG_3);
+            case R.id.fb_bg_green:
+                setBookBg(Config.BOOK_BG_GREEN);
                 break;
-            case R.id.iv_bg_4:
-                setBookBg(Config.BOOK_BG_4);
+            case R.id.fb_bg_blue:
+                setBookBg(Config.BOOK_BG_BLUE);
                 break;
         }
     }

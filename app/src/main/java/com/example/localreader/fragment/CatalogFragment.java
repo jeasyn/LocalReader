@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class CatalogFragment extends Fragment {
 
-    public static final String ARGUMENT = "argument";
+    private static final String ARGUMENT = "argument";
     private PageFactory pageFactory;
     ArrayList<BookCatalog> catalogList = new ArrayList<>();
     private ListView catalogLv;

@@ -58,7 +58,7 @@ public class CatalogAdapter extends BaseAdapter {
         if (currentCharter == position){
             viewHolder.catalog.setTextColor(context.getResources().getColor(R.color.colorAccent));
         }else{
-            viewHolder.catalog.setTextColor(context.getResources().getColor(R.color.read_textColor));
+            viewHolder.catalog.setTextColor(context.getResources().getColor(R.color.read_default_text));
         }
         viewHolder.catalog.setText(bookCatalogueList.get(position).getCatalog());
         return convertView;

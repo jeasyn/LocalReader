@@ -4,32 +4,31 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorAccent">#D81B60</color>
 
-    <color name="white_bg">#FFF</color>
-    <color name="black_color">#000</color>
+    <color name="toolbar">#FFF</color>
 
-    <color name="white_text">#FFF</color>
-    <color name="freeze_color">#8F989F</color>
+    <color name="main_bottom_freeze_color">#8F989F</color>
 
-    <color name="popup_window_detail_line">#E6663F</color>
+    <color name="main_popup_detail_line">#E6663F</color>
 
-    <color name="read_settings_add_border">#86796B</color>
+    <color name="read_bottom_bg">#FFF</color>
 
+    <color name="read_catalog_bookmark_content">#3D3C3A</color>
+    <color name="read_catalog_bookmark_progress_and_time">#B4B4B4</color>
 
-    <color name="read_bg_default">#CEC29C</color>
-    <color name="read_bg_1">#CCEBCC</color>
-    <color name="read_bg_2">#37342F</color>
-    <color name="read_bg_3">#D1CEC5</color>
-    <color name="read_bg_4">#001C27</color>
+    <color name="read_settings_bg">#FFF</color>
 
-    <color name="read_font_default">#2C2C2C</color>
-    <color name="read_font_1">#2F332D</color>
-    <color name="read_font_2">#92918C</color>
-    <color name="read_font_3">#383429</color>
-    <color name="read_font_4">#627176</color>
+    <color name="read_default_text">#413E3E</color>
 
-    <color name="read_dialog_bg">#2C2C2C</color>
-    <color name="read_dialog_button_select">#E25754</color>
+    <color name="read_bg_white">#F3F4EE</color>
+    <color name="read_bg_yellow">#CBBD98</color>
+    <color name="read_bg_gray">#393534</color>
+    <color name="read_bg_green">#CBE7CE</color>
+    <color name="read_bg_blue">#051C2A</color>
 
-    <color name="read_textColor">#3B3A38</color>
+    <color name="read_font_color_by_white">#3B3B3A</color>
+    <color name="read_font_color_by_yellow">#433F31</color>
+    <color name="read_font_color_by_gray">#908F8A</color>
+    <color name="read_font_color_by_green">#393A39</color>
+    <color name="read_font_color_by_blue">#647279</color>
 
 </resources>

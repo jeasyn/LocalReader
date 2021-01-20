@@ -1,12 +1,10 @@
 package com.example.localreader.entity;
 
-import org.litepal.crud.LitePalSupport;
-
 /**
  * @author xialijuan
  * @date 2021/1/9
  */
-public class BookCatalog extends LitePalSupport {
+public class BookCatalog {
 
     private int id;
     private String bookPath;

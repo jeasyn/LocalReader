@@ -12,12 +12,12 @@
         <ImageView
             android:id="@+id/iv_main_bottom_delete"
             style="@style/bottom_image_view_style"
-            app:srcCompat="@drawable/ic_bottom_delete" />
+            app:srcCompat="@drawable/main_icon_bottom_delete" />
 
         <TextView
             android:id="@+id/tv_main_bottom_delete"
             style="@style/bottom_text_view_style"
-            android:text="删除" />
+            android:text="@string/main_delete" />
 
     </LinearLayout>
 
@@ -27,26 +27,26 @@
 
         <ImageView
             style="@style/bottom_image_view_style"
-            app:srcCompat="@drawable/ic_bottom_cancel" />
+            app:srcCompat="@drawable/main_icon_bottom_cancel" />
 
         <TextView
             style="@style/bottom_text_view_style"
-            android:text="取消" />
+            android:text="@string/main_cancel" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_main_bottom_select"
+        android:id="@+id/ll_main_bottom_select_all"
         style="@style/bottom_linear_layout_style">
 
         <ImageView
-            android:id="@+id/iv_main_bottom_select"
+            android:id="@+id/iv_main_bottom_select_all"
             style="@style/bottom_image_view_style"
-            app:srcCompat="@drawable/ic_bottom_select_all_cancel" />
+            app:srcCompat="@drawable/main_icon_bottom_select_all_cancel" />
 
         <TextView
-            android:id="@+id/tv_main_bottom_select"
+            android:id="@+id/tv_main_bottom_select_all"
             style="@style/bottom_text_view_style"
-            android:text="全选" />
+            android:text="@string/main_select_all" />
     </LinearLayout>
 
     <LinearLayout
@@ -56,12 +56,12 @@
         <ImageView
             android:id="@+id/iv_main_bottom_detail"
             style="@style/bottom_image_view_style"
-            app:srcCompat="@drawable/ic_bottom_detail" />
+            app:srcCompat="@drawable/main_icon_bottom_detail" />
 
         <TextView
             android:id="@+id/tv_main_bottom_detail"
             style="@style/bottom_text_view_style"
-            android:text="详细信息" />
+            android:text="@string/main_detail" />
     </LinearLayout>
 
 </LinearLayout>

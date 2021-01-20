@@ -6,7 +6,7 @@ import java.util.List;
  * @author xialijuan
  * @date 2021/1/9
  */
-public class TRPage {
+public class Page {
     private long begin;
     private long end;
     private List<String> lines;

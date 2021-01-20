@@ -25,7 +25,7 @@
             android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
             app:popupTheme="@style/AppTheme"
-            app:titleTextColor="@color/white_text" />
+            app:titleTextColor="@color/toolbar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginBottom="20dp"
-                android:background="#FFF"
+                android:background="@color/read_bottom_bg"
                 android:padding="20dp">
 
                 <TextView
@@ -64,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
-                android:background="#FFF"
+                android:background="@color/read_bottom_bg"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -72,12 +72,12 @@
                     android:layout_height="70dp"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/tv_read_pre"
+                        android:id="@+id/tv_read_up_chapter"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="上一章"
+                        android:text="@string/read_up_chapter"
                         android:textAlignment="center"
                         android:textSize="16sp"
                         android:layout_gravity="center_vertical" />
@@ -93,12 +93,12 @@
                     </SeekBar>
 
                     <TextView
-                        android:id="@+id/tv_read_next"
+                        android:id="@+id/tv_read_next_chapter"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_weight="1"
-                        android:text="下一章"
+                        android:text="@string/read_next_chapter"
                         android:textAlignment="center"
                         android:textSize="16sp"
                         android:layout_gravity="center_vertical" />
@@ -123,14 +123,14 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:padding="3dp"
-                            android:src="@drawable/ic_read_catalog" />
+                            android:src="@drawable/read_icon_catalog" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="3dp"
-                            android:text="目录"
+                            android:text="@string/read_catalog"
                             android:textSize="15sp" />
                     </LinearLayout>
 
@@ -142,11 +142,12 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/iv_read_day_or_night"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:padding="3dp"
-                            android:src="@drawable/ic_read_night_mode" />
+                            android:src="@drawable/read_icon_night_mode" />
 
                         <TextView
                             android:id="@+id/tv_read_day_or_night"
@@ -154,7 +155,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="3dp"
-                            android:text="夜间"
+                            android:text="@string/read_night_mode"
                             android:textSize="15sp" />
                     </LinearLayout>
 
@@ -170,14 +171,14 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:padding="3dp"
-                            android:src="@drawable/ic_read_settings" />
+                            android:src="@drawable/read_icon_settings" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="3dp"
-                            android:text="设置"
+                            android:text="@string/read_settings"
                             android:textSize="15sp" />
                     </LinearLayout>
 
