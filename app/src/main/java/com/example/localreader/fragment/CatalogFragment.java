@@ -53,7 +53,7 @@ public class CatalogFragment extends Fragment {
         catalogLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pageFactory.changeChapter(catalogList.get(position).getStartPosition());
+                pageFactory.changeChapter(catalogList.get(position).getPosition());
                 getActivity().finish();
             }
         });

@@ -25,7 +25,8 @@ public class BookShelfUtil {
                 Book book = new Book();
                 book.setBookName(selectFile.getName());
                 book.setBookPath(selectFile.getPath());
-                book.setBegin(0);//默认没打开书
+                book.setProgress("0.0%");
+                book.setPosition(0);//默认没打开书
                 book.save();
             }
         }

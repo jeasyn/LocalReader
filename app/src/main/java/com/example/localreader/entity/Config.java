@@ -57,7 +57,7 @@ public class Config {
 
     public float getFontSize(){
         if (fontSize == 0){
-            fontSize = sp.getFloat(FONT_SIZE, context.getResources().getDimension(R.dimen.reading_default_text_size));
+            fontSize = sp.getFloat(FONT_SIZE, context.getResources().getDimension(R.dimen.read_default_text_size));
         }
         return fontSize;
     }

@@ -105,6 +105,7 @@ public class PageFactory {
     ContentValues values = new ContentValues();
 
     private static Status mStatus = Status.OPENING;
+    private String progress;
 
     public enum Status {
         OPENING,
@@ -135,10 +136,10 @@ public class PageFactory {
         mHeight = metric.heightPixels;
 
         df = new DecimalFormat("#0.0");
-        marginWidth = this.context.getResources().getDimension(R.dimen.readingMarginWidth);
-        marginHeight = this.context.getResources().getDimension(R.dimen.readingMarginHeight);
-        statusMarginBottom = this.context.getResources().getDimension(R.dimen.reading_status_margin_bottom);
-        lineSpace = context.getResources().getDimension(R.dimen.reading_line_spacing);
+        marginWidth = this.context.getResources().getDimension(R.dimen.read_margin_width);
+        marginHeight = this.context.getResources().getDimension(R.dimen.read_margin_height);
+        statusMarginBottom = this.context.getResources().getDimension(R.dimen.read_status_margin_bottom);
+        lineSpace = context.getResources().getDimension(R.dimen.read_line_spacing);
         mVisibleWidth = mWidth - marginWidth * 2;
         mVisibleHeight = mHeight - marginHeight * 2;
 
@@ -151,7 +152,7 @@ public class PageFactory {
 
         waitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);// 画笔
         waitPaint.setTextAlign(Paint.Align.LEFT);// 左对齐
-        waitPaint.setTextSize(this.context.getResources().getDimension(R.dimen.reading_max_text_size));// 字体大小
+        waitPaint.setTextSize(this.context.getResources().getDimension(R.dimen.read_max_text_size));// 字体大小
         waitPaint.setColor(m_textColor);// 字体颜色
         waitPaint.setSubpixelText(true);// 设置该项为true，将有助于文本在LCD屏幕上的显示效果
         calculateLineCount();
@@ -229,7 +230,7 @@ public class PageFactory {
                 @Override
                 public void run() {
                     super.run();
-                    values.put("begin", currentPage.getBegin());
+                    values.put("position", currentPage.getPosition());
                     LitePal.update(Book.class, values, book.getId());
                 }
             }.start();
@@ -253,14 +254,13 @@ public class PageFactory {
         }
 
         //画进度及时间
-        float fPercent = (float) (currentPage.getBegin() * 1.0 / mBookUtil.getBookLen());//进度
-
-//        currentProgress = fPercent;
+        float fPercent = (float) (currentPage.getPosition() * 1.0 / mBookUtil.getBookLen());//进度
         if (mPageEvent != null) {
             mPageEvent.changeProgress(fPercent);
         }
-        String strPercent = df.format(fPercent * 100) + "%";//进度文字
-        c.drawText(strPercent, mWidth / 2, mHeight - statusMarginBottom, paint);//x y为坐标值
+        //进度文字
+        progress = df.format(fPercent * 100) + "%";
+        c.drawText(progress, mWidth / 2, mHeight - statusMarginBottom, paint);//x y为坐标值
 
         /**save()无参传入这两个方法最终都调用native_save方法，而无参方法save()默认是保存Matrix和Clip这两个信息。
          如果允许，那么尽量使用无参的save()方法，而不是使用有参的save(int saveFlags)方法传入别的Flag。*/
@@ -271,18 +271,15 @@ public class PageFactory {
         //画章
         if (getDirectoryList().size() > 0) {
             String charterName = getDirectoryList().get(currentCharter).getCatalog();
-            int nChaterWidth = (int) paint.measureText(charterName) + 1;
-//            c.drawText(charterName, mWidth - marginWidth - nChaterWidth, statusMarginBottom + mBatterryFontSize, paint);
             c.drawText(charterName, 0, statusMarginBottom + mBatterryFontSize+30, paint);
-
         }
 
         mBookPageWidget.postInvalidate();
     }
 
     //向前翻页
-    public void prePage() {
-        if (currentPage.getBegin() <= 0) {
+    public void upPage() {
+        if (currentPage.getPosition() <= 0) {
             if (!isFirstPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_head), Toast.LENGTH_SHORT).show();
             }
@@ -343,7 +340,7 @@ public class PageFactory {
             bookTask.cancel(true);
         }
         bookTask = new BookTask();
-        bookTask.execute(book.getBegin());
+        bookTask.execute(book.getPosition());
     }
 
     private class BookTask extends AsyncTask<Long, Void, Boolean> {
@@ -396,25 +393,25 @@ public class PageFactory {
         mBookUtil.setPosition(currentPage.getEnd());
 
         Page page = new Page();
-        page.setBegin(currentPage.getEnd() + 1);
+        page.setPosition(currentPage.getEnd() + 1);
         page.setLines(getNextLines());
         page.setEnd(mBookUtil.getPosition());
         return page;
     }
 
     public Page getPrePage() {
-        mBookUtil.setPosition(currentPage.getBegin());
+        mBookUtil.setPosition(currentPage.getPosition());
 
         Page page = new Page();
         page.setEnd(mBookUtil.getPosition() - 1);
         page.setLines(getPreLines());
-        page.setBegin(mBookUtil.getPosition());
+        page.setPosition(mBookUtil.getPosition());
         return page;
     }
 
     public Page getPageForBegin(long begin) {
         Page page = new Page();
-        page.setBegin(begin);
+        page.setPosition(begin);
 
         mBookUtil.setPosition(begin - 1);
         page.setLines(getNextLines());
@@ -525,7 +522,7 @@ public class PageFactory {
             }
             num--;
             if (num >= 0) {
-                long begin = mBookUtil.getBookCatalogList().get(num).getStartPosition();
+                long begin = mBookUtil.getBookCatalogList().get(num).getPosition();
                 currentPage = getPageForBegin(begin);
                 currentPage(true);
                 currentCharter = num;
@@ -541,7 +538,7 @@ public class PageFactory {
         }
         num++;
         if (num < getDirectoryList().size()) {
-            long begin = getDirectoryList().get(num).getStartPosition();
+            long begin = getDirectoryList().get(num).getPosition();
             currentPage = getPageForBegin(begin);
             currentPage(true);
             currentCharter = num;
@@ -553,7 +550,7 @@ public class PageFactory {
         int num = 0;
         for (int i = 0; getDirectoryList().size() > i; i++) {
             BookCatalog bookCatalogue = getDirectoryList().get(i);
-            if (currentPage.getEnd() >= bookCatalogue.getStartPosition()) {
+            if (currentPage.getEnd() >= bookCatalogue.getPosition()) {
                 num = i;
             } else {
                 break;
@@ -606,7 +603,7 @@ public class PageFactory {
         mPaint.setTextSize(m_fontSize);
         calculateLineCount();
         measureMarginWidth();
-        currentPage = getPageForBegin(currentPage.getBegin());
+        currentPage = getPageForBegin(currentPage.getPosition());
         currentPage(true);
     }
 
@@ -736,6 +733,10 @@ public class PageFactory {
 
     public void setPageWidget(PageWidget mBookPageWidget) {
         this.mBookPageWidget = mBookPageWidget;
+    }
+
+    public String getProgress() {
+        return progress;
     }
 
     public void setPageEvent(PageEvent pageEvent) {

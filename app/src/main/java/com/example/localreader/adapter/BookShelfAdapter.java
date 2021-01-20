@@ -57,13 +57,23 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BookShelfViewHolder> 
         String bookName = book.getBookName().split(".txt")[0];
         holder.bookItemTv.setText(bookName);
 
-        if (book.getBookBg() == 0){//如果没有封面，则设置封面
+        if (book.getBookBg() == 0) {//如果没有封面，则设置封面
             int random = new Random().nextInt(3);
             book.setBookBg(random);
             book.save();
         }
         holder.bookItemTv.setBackgroundResource(bg[book.getBookBg()]);
         holder.bookNameTv.setText(bookName);
+
+        String progress = book.getProgress();
+        if (progress.equals("0.0%")) {
+            progress = "未读";
+        } else if (progress.equals("100.0%")) {
+            progress = "已读完";
+        } else {
+            progress = "已读" + progress;
+        }
+        holder.bookProgressTv.setText(progress);
 
         holder.bookView.setTag(book.getId());
         holder.bookView.setOnLongClickListener(mItemLongClickListener);

@@ -236,7 +236,7 @@ public class BookUtil {
                 for (String str : paragraphs) {
                     if (str.length() <= 30 && (str.matches(".*第.{1,8}章.*") || str.matches(".*第.{1,8}节.*"))) {
                         BookCatalog bookCatalog = new BookCatalog();
-                        bookCatalog.setStartPosition(size);
+                        bookCatalog.setPosition(size);
                         bookCatalog.setCatalog(str);
                         bookCatalog.setBookPath(bookPath);
                         bookCatalogList.add(bookCatalog);

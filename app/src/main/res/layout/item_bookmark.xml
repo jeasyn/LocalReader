@@ -23,20 +23,14 @@
 
         <TextView
             android:id="@+id/tv_mark_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="0.0%"
-            android:textColor="@color/read_catalog_bookmark_progress_and_time"
-            android:textSize="8sp" />
+            android:layout_weight="1"
+            style="@style/read_catalog_bookmark_progress_and_time" />
 
         <TextView
             android:id="@+id/tv_mark_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="2020-01-01"
-            android:textColor="@color/read_catalog_bookmark_progress_and_time"
-            android:textSize="8sp" />
+            style="@style/read_catalog_bookmark_progress_and_time" />
     </LinearLayout>
 
 </LinearLayout>

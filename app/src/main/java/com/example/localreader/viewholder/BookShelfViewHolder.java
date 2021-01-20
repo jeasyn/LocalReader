@@ -27,6 +27,6 @@ public class BookShelfViewHolder extends RecyclerView.ViewHolder {
         bookItemTv = itemView.findViewById(R.id.tv_book);
         bookSelectIv = itemView.findViewById(R.id.iv_book_select);
         bookNameTv = itemView.findViewById(R.id.tv_book_name);
-        bookProgressTv = itemView.findViewById(R.id.tv_show_progress);
+        bookProgressTv = itemView.findViewById(R.id.tv_main_show_progress);
     }
 }
