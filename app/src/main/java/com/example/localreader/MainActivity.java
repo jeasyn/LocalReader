@@ -8,7 +8,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -373,13 +375,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 动态申请SD卡读写的权限
-     * Android6.0之后系统对权限的管理更加严格了，不但要在AndroidManifest中添加，还要在应用运行的时候动态申请
+     * 动态申请SD卡读写的权限，Android6.0之后系统对权限的管理更加严格了，不但要在AndroidManifest中添加，还要在应用运行的时候动态申请
      */
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
-    private static String[] PERMISSION_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE"};
+    private static String[] PERMISSION_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE"};
 
     public static void verifyStoragePermissions(Activity activity) {
         try {
@@ -389,6 +389,29 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//已被授予权限
+                } else {//拒绝授予权限，弹出框，让用户去应用详情页手动设置权限
+                    new AlertDialog.Builder(this)
+                            .setTitle("警告")
+                            .setMessage("存储权限是必须的，若拒绝，则部分功能无法正常运行！")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Uri uri = Uri.parse("package:" + getPackageName());
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,uri);
+                                    startActivity(intent);
+                                }
+                            }).show();
+                }
+            }
         }
     }
 }

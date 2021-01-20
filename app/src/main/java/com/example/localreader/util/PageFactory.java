@@ -163,7 +163,7 @@ public class PageFactory {
         paint.setColor(m_textColor);
         context.getApplicationContext().registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));//注册广播,随时获取到电池电量信息
 
-        initBg(config.getDayOrNight());
+        initBg(config.isNight());
         measureMarginWidth();
     }
 
@@ -330,7 +330,7 @@ public class PageFactory {
     public void openBook(Book book) throws IOException {
         //清空数据
         currentCharter = 0;
-        initBg(config.getDayOrNight());
+        initBg(config.isNight());
 
         this.book = book;
         bookPath = book.getBookPath();
