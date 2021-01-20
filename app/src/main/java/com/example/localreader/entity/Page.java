@@ -7,16 +7,16 @@ import java.util.List;
  * @date 2021/1/9
  */
 public class Page {
-    private long begin;
-    private long end;
+    private long position;//最后一次读的位置
+    private long end;//文件结尾的位置
     private List<String> lines;
 
-    public long getBegin() {
-        return begin;
+    public long getPosition() {
+        return position;
     }
 
-    public void setBegin(long begin) {
-        this.begin = begin;
+    public void setPosition(long position) {
+        this.position = position;
     }
 
     public long getEnd() {

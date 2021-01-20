@@ -39,7 +39,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     private SettingListener mSettingListener;
 
     public SettingDialog(@NonNull Context context) {
-        this(context, R.style.setting_dialog);
+        this(context, R.style.read_setting_popup);
     }
 
     public SettingDialog(@NonNull Context context, int themeResId) {
@@ -58,8 +58,8 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         p.width = d.getWidth();
         getWindow().setAttributes(p);
 
-        FONT_SIZE_MIN = (int) getContext().getResources().getDimension(R.dimen.reading_min_text_size);
-        FONT_SIZE_MAX = (int) getContext().getResources().getDimension(R.dimen.reading_max_text_size);
+        FONT_SIZE_MIN = (int) getContext().getResources().getDimension(R.dimen.read_min_text_size);
+        FONT_SIZE_MAX = (int) getContext().getResources().getDimension(R.dimen.read_max_text_size);
 
         config = Config.getInstance();
 

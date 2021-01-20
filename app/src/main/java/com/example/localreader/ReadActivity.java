@@ -223,7 +223,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                     return false;
                 }
 
-                pageFactory.prePage();
+                pageFactory.upPage();
                 if (pageFactory.isFirstPage()) {
                     return false;
                 }
@@ -296,7 +296,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
         if (id == R.id.action_add_bookmark) {//添加书签
             if (pageFactory.getCurrentPage() != null) {
-                List<Bookmark> bookMarksList = LitePal.where("bookpath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getBegin() + "").find(Bookmark.class);
+                List<Bookmark> bookMarksList = LitePal.where("bookPath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getPosition() + "").find(Bookmark.class);
 
                 if (!bookMarksList.isEmpty()) {
                     Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
@@ -310,8 +310,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm ss");
                         String time = sf.format(new Date());
                         bookmark.setTime(time);
-                        bookmark.setBegin(pageFactory.getCurrentPage().getBegin());
-                        bookmark.setText(word);
+                        bookmark.setPosition(pageFactory.getCurrentPage().getPosition());
+                        bookmark.setPartContent(word);
                         bookmark.setBookPath(pageFactory.getBookPath());
                         bookmark.save();
 
@@ -454,6 +454,15 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                 settingsDetail.hide();
                 return true;
             }
+
+            //退出阅读前保存阅读进度
+            List<Book> books = LitePal.where("bookPath = ?", pageFactory.getBookPath()).find(Book.class);
+            if (books.size() == 1){
+                Book openedBook = books.get(0);
+                openedBook.setProgress(pageFactory.getProgress());
+                openedBook.save();
+            }
+            startActivity(new Intent(this,MainActivity.class));
             finish();
         }
         return super.onKeyDown(keyCode, event);

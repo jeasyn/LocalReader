@@ -97,7 +97,7 @@ public class ImportActivity extends AppCompatActivity {
             List<File> selectFiles = adapter.getSelectFile();
             BookShelfUtil.importBooks(selectFiles);
             initData();
-            refreshData();
+            adapter.notifyDataSetChanged();//通知adapter数据已发生变化
             startActivity(new Intent(this, MainActivity.class));
         }
     }
@@ -110,11 +110,6 @@ public class ImportActivity extends AppCompatActivity {
         } else {
             adapter.unSelectAll();
         }
-        refreshData();
-    }
-
-    //通知adapter数据已发生变化
-    public void refreshData() {
         adapter.notifyDataSetChanged();
     }
 }

@@ -63,7 +63,7 @@ public class BookmarkFragment extends Fragment {
         bookmarkLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pageFactory.changeChapter(bookmarkList.get(position).getBegin());
+                pageFactory.changeChapter(bookmarkList.get(position).getPosition());
                 getActivity().finish();
             }
         });

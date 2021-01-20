@@ -9,7 +9,7 @@ public class BookCatalog {
     private int id;
     private String bookPath;
     private String catalog;
-    private long startPosition;
+    private long position;//最后一次读的位置
 
     public int getId() {
         return id;
@@ -35,11 +35,11 @@ public class BookCatalog {
         this.catalog = catalog;
     }
 
-    public long getStartPosition() {
-        return startPosition;
+    public long getPosition() {
+        return position;
     }
 
-    public void setStartPosition(long startPosition) {
-        this.startPosition = startPosition;
+    public void setPosition(long position) {
+        this.position = position;
     }
 }

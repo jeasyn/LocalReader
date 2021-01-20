@@ -7,11 +7,8 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        style="@style/main_popup_text"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
         android:text="@string/main_popup_detail"
         android:textColor="@android:color/black"
@@ -24,29 +21,20 @@
 
     <TextView
         android:id="@+id/tv_file_path"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        style="@style/main_popup_text"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
         android:text="path"
         android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/tv_file_size"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        style="@style/main_popup_text"
         android:text="size"
         android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/tv_file_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        style="@style/main_popup_text"
         android:layout_marginBottom="20dp"
         android:text="time"
         android:textColor="@android:color/black" />

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ImportActivity">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/head"/>
 
@@ -22,19 +18,14 @@
 
         <TextView
             android:id="@+id/tv_no_file"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/import_no_search_file"
+            style="@style/no_file_or_no_book_point"
             android:visibility="gone"
-            android:textSize="24sp" />
+            android:text="@string/import_no_search_file" />
 
         <LinearLayout
             android:id="@+id/ll_import_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true">
+            style="@style/bottom_layout_position"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_select_all_or_not"

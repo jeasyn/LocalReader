@@ -9,10 +9,10 @@ import org.litepal.crud.LitePalSupport;
 public class Bookmark extends LitePalSupport {
 
     private int id ;
-    private long begin;//书签记录页面的结束点位置
-    private String text;//书签的部分文字
-    private String time;//添加书签的时间
     private String bookPath;
+    private String partContent;//书签显示的部分文字
+    private long position;//书签记录页面最后一次读的位置
+    private String time;//添加书签的时间
 
     public int getId() {
         return id;
@@ -22,20 +22,28 @@ public class Bookmark extends LitePalSupport {
         this.id = id;
     }
 
-    public long getBegin() {
-        return begin;
+    public String getBookPath() {
+        return bookPath;
     }
 
-    public void setBegin(long begin) {
-        this.begin = begin;
+    public void setBookPath(String bookPath) {
+        this.bookPath = bookPath;
     }
 
-    public String getText() {
-        return text;
+    public String getPartContent() {
+        return partContent;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setPartContent(String partContent) {
+        this.partContent = partContent;
+    }
+
+    public long getPosition() {
+        return position;
+    }
+
+    public void setPosition(long position) {
+        this.position = position;
     }
 
     public String getTime() {
@@ -44,13 +52,5 @@ public class Bookmark extends LitePalSupport {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String getBookPath() {
-        return bookPath;
-    }
-
-    public void setBookPath(String bookPath) {
-        this.bookPath = bookPath;
     }
 }

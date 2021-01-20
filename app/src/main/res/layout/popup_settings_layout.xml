@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:background="@color/read_settings_bg"
     android:orientation="vertical">
@@ -31,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:clickable="true"
             android:max="100" />
 
         <ImageView
@@ -61,11 +59,8 @@
 
         <TextView
             android:id="@+id/tv_less_font_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:background="@drawable/read_settings_font_change_style"
-            android:gravity="center"
-            android:layout_weight="1"
+            style="@style/read_settings_font_size_btn"
             android:text="@string/read_settings_less_font_size" />
 
         <TextView
@@ -79,12 +74,9 @@
 
         <TextView
             android:id="@+id/tv_more_font_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:layout_weight="1"
             android:background="@drawable/read_settings_font_change_style"
-            android:gravity="center"
+            style="@style/read_settings_font_size_btn"
             android:text="@string/read_settings_more_font_size" />
 
         <View
@@ -109,8 +101,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fb_bg_white"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            style="@style/read_settings_bg"
             android:src="@color/read_bg_white"
             app:backgroundTint="@color/read_bg_white" />
 
@@ -121,8 +112,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fb_bg_yellow"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            style="@style/read_settings_bg"
             android:src="@color/read_bg_yellow"
             app:backgroundTint="@color/read_bg_yellow" />
 
@@ -133,8 +123,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fb_bg_gray"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            style="@style/read_settings_bg"
             android:src="@color/read_bg_gray"
             app:backgroundTint="@color/read_bg_gray" />
 
@@ -145,8 +134,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fb_bg_green"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            style="@style/read_settings_bg"
             android:src="@color/read_bg_green"
             app:backgroundTint="@color/read_bg_green" />
 
@@ -157,8 +145,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fb_bg_blue"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            style="@style/read_settings_bg"
             android:layout_weight="1"
             android:src="@color/read_bg_blue"
             app:backgroundTint="@color/read_bg_blue" />

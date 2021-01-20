@@ -7,60 +7,60 @@
 
     <LinearLayout
         android:id="@+id/ll_main_bottom_delete"
-        style="@style/bottom_linear_layout_style">
+        style="@style/main_popup_bottom_linear_layout_style">
 
         <ImageView
             android:id="@+id/iv_main_bottom_delete"
-            style="@style/bottom_image_view_style"
+            style="@style/main_popup_bottom_image_view_style"
             app:srcCompat="@drawable/main_icon_bottom_delete" />
 
         <TextView
             android:id="@+id/tv_main_bottom_delete"
-            style="@style/bottom_text_view_style"
+            style="@style/main_popup_bottom_text_view_style"
             android:text="@string/main_delete" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_main_bottom_cancel"
-        style="@style/bottom_linear_layout_style">
+        style="@style/main_popup_bottom_linear_layout_style">
 
         <ImageView
-            style="@style/bottom_image_view_style"
+            style="@style/main_popup_bottom_image_view_style"
             app:srcCompat="@drawable/main_icon_bottom_cancel" />
 
         <TextView
-            style="@style/bottom_text_view_style"
+            style="@style/main_popup_bottom_text_view_style"
             android:text="@string/main_cancel" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_main_bottom_select_all"
-        style="@style/bottom_linear_layout_style">
+        style="@style/main_popup_bottom_linear_layout_style">
 
         <ImageView
             android:id="@+id/iv_main_bottom_select_all"
-            style="@style/bottom_image_view_style"
+            style="@style/main_popup_bottom_image_view_style"
             app:srcCompat="@drawable/main_icon_bottom_select_all_cancel" />
 
         <TextView
             android:id="@+id/tv_main_bottom_select_all"
-            style="@style/bottom_text_view_style"
+            style="@style/main_popup_bottom_text_view_style"
             android:text="@string/main_select_all" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_main_bottom_detail"
-        style="@style/bottom_linear_layout_style">
+        style="@style/main_popup_bottom_linear_layout_style">
 
         <ImageView
             android:id="@+id/iv_main_bottom_detail"
-            style="@style/bottom_image_view_style"
+            style="@style/main_popup_bottom_image_view_style"
             app:srcCompat="@drawable/main_icon_bottom_detail" />
 
         <TextView
             android:id="@+id/tv_main_bottom_detail"
-            style="@style/bottom_text_view_style"
+            style="@style/main_popup_bottom_text_view_style"
             android:text="@string/main_detail" />
     </LinearLayout>
 

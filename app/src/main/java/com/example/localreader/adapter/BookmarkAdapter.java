@@ -44,7 +44,6 @@ public class BookmarkAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-
         final ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -56,8 +55,9 @@ public class BookmarkAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.markContent.setText(list.get(position).getText());
-        long begin = list.get(position).getBegin();
+        Bookmark bookmark = list.get(position);
+        viewHolder.markContent.setText(bookmark.getPartContent());
+        long begin = list.get(position).getPosition();
         float percent = (float) (begin * 1.0 / pageFactory.getBookLen());
         DecimalFormat df = new DecimalFormat("#0.0");
         String progress = df.format(percent * 100) + "%";
