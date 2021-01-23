@@ -19,15 +19,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
  * @author xialijuan
- * @date 2021/1/10
+ * @date 2020/12/18
  */
 public class SettingDialog extends Dialog implements View.OnClickListener {
 
     private Config config;
-    private int FONT_SIZE_MIN;
-    private int FONT_SIZE_MAX;
+    private Context context;
+    private int fontSizeMin;
+    private int fontSizeMax;
     private int currentFontSize;
-    private SeekBar brightnessSB;
+    private SeekBar brightnessSb;
     private TextView showSizeTv;
     private TextView moreSizeTv;
     private FloatingActionButton whiteBgFb;
@@ -56,24 +57,27 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         Display d = m.getDefaultDisplay();
         WindowManager.LayoutParams p = getWindow().getAttributes();
         p.width = d.getWidth();
+
+//        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
         getWindow().setAttributes(p);
 
-        FONT_SIZE_MIN = (int) getContext().getResources().getDimension(R.dimen.read_min_text_size);
-        FONT_SIZE_MAX = (int) getContext().getResources().getDimension(R.dimen.read_max_text_size);
+        fontSizeMin = (int) getContext().getResources().getDimension(R.dimen.read_min_text_size);
+        fontSizeMax = (int) getContext().getResources().getDimension(R.dimen.read_max_text_size);
 
         config = Config.getInstance();
 
         initView();
 
-        //初始化进度条的位置
+        // 初始化进度条的位置
         changeBrightnessProgress((int) (config.getLight() * 100));
 
-        //初始化字体大小
+        // 初始化字体大小
         currentFontSize = (int) config.getFontSize();
         showSizeTv.setText(currentFontSize + "");
 
-        //拖动亮度进度条使数据和进度条位置一样
-        brightnessSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        // 拖动亮度进度条使数据和进度条位置一样
+        brightnessSb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 changeBrightnessProgress(progress);
@@ -93,7 +97,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initView() {
-        brightnessSB = findViewById(R.id.sb_brightness);
+        brightnessSb = findViewById(R.id.sb_brightness);
         showSizeTv = findViewById(R.id.tv_show_font_size);
         lessSizeTv = findViewById(R.id.tv_less_font_size);
         moreSizeTv = findViewById(R.id.tv_more_font_size);
@@ -112,11 +116,15 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         blueBgFb.setOnClickListener(this);
     }
 
-    //设置字体
-    public void setBookBg(int type) {
-        config.setBookBg(type);
+    /**
+     * 设置字体
+     *
+     * @param bg
+     */
+    public void setBookBg(int bg) {
+        config.setBookBg(bg);
         if (mSettingListener != null) {
-            mSettingListener.changeBookBg(type);
+            mSettingListener.changeBookBg(bg);
         }
     }
 
@@ -144,12 +152,16 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
             case R.id.fb_bg_blue:
                 setBookBg(Config.BOOK_BG_BLUE);
                 break;
+            default:
+                break;
         }
     }
 
-    //变大书本字体
+    /**
+     * 变大书本字号
+     */
     private void addFontSize() {
-        if (currentFontSize < FONT_SIZE_MAX) {
+        if (currentFontSize < fontSizeMax) {
             currentFontSize += 1;
             showSizeTv.setText(currentFontSize + "");
             config.setFontSize(currentFontSize);
@@ -159,9 +171,11 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    //变小书本字体
+    /**
+     * 变小书本字号
+     */
     private void lessFontSize() {
-        if (currentFontSize > FONT_SIZE_MIN) {
+        if (currentFontSize > fontSizeMin) {
             currentFontSize -= 1;
             showSizeTv.setText(currentFontSize + "");
             config.setFontSize(currentFontSize);
@@ -171,10 +185,13 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    //改变亮度进度条位置
+    /**
+     * 改变亮度进度条位置
+     * @param brightness
+     */
     private void changeBrightnessProgress(int brightness) {
         Log.d("brightness", brightness + "");
-        brightnessSB.setProgress(brightness);
+        brightnessSb.setProgress(brightness);
         float light = (float) (brightness / 100.0);
         config.setLight(light);
         if (mSettingListener != null) {
@@ -187,10 +204,22 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     public interface SettingListener {
+        /**
+         * 改变亮度
+         * @param brightness
+         */
         void changeSystemBright(float brightness);
 
+        /**
+         * 改变字号
+         * @param fontSize
+         */
         void changeFontSize(int fontSize);
 
-        void changeBookBg(int type);
+        /**
+         * 换读书背景
+         * @param bg
+         */
+        void changeBookBg(int bg);
     }
 }

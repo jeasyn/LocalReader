@@ -17,13 +17,12 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2021/1/10
+ * @date 2020/12/10
  */
 public class BookmarkAdapter extends BaseAdapter {
 
     private Context context;
     private List<Bookmark> list;
-    private Config config;
     private PageFactory pageFactory;
 
     @Override
@@ -70,7 +69,7 @@ public class BookmarkAdapter extends BaseAdapter {
         this.context = context;
         this.list = list;
         pageFactory = PageFactory.getInstance();
-        config = config.getInstance();
+        Config.getInstance();
     }
 
     class ViewHolder {

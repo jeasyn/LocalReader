@@ -26,24 +26,31 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
     private List<File> files;
     private HashMap<File, Boolean> selectMap = new HashMap<>();
     private List<String> names;
-
     private CheckedChangeListener mCheckedChangeListener;
+
 
     public ImportAdapter(List<File> files) {
         this.files = files;
     }
 
-    //全选
+    /**
+     * 全选
+     */
     public void selectAll() {
         initCheck(true);
     }
 
-    //全不选
+    /**
+     * 全不选
+     */
     public void unSelectAll() {
         initCheck(false);
     }
 
-    //更改集合存储状态（排除已导入的）
+    /**
+     * 更改集合存储状态（排除已导入的）
+     * @param states
+     */
     public void initCheck(boolean states) {
         for (File file : files) {
             boolean flag = true;
@@ -56,16 +63,22 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
                 selectMap.put(file, states);
             }
         }
-        //集合元素改变后，可以动态更新
+        // 集合元素改变后，可以动态更新
         notifyDataSetChanged();
     }
 
-    //被选中的个数
+    /**
+     * 被选中的个数
+     * @return
+     */
     public int getSelectNum() {
         return getSelectFile().size();
     }
 
-    //被选中的文件集合
+    /**
+     * 被选中的文件集合
+     * @return
+     */
     public List<File> getSelectFile() {
         List<File> fileList = new ArrayList<>();
         for (File file : selectMap.keySet()) {
@@ -88,7 +101,10 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
         return fileList;
     }
 
-    //获取添加到书架的书名集合
+    /**
+     * 获取添加到书架的书名集合
+     * @param names
+     */
     public void getBookShelfNames(List<String> names) {
         this.names = names;
         notifyDataSetChanged();
@@ -101,24 +117,30 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
         return new ImportViewHolder(view);
     }
 
-    /*
-     由于RecyclerView的onBindViewHolder()方法，只有在getItemViewType()返回类型不同时才会调用，
-     这点是跟ListView的getView()方法不同的地方，所以如果想要每次都调用onBindViewHolder()刷新item数据，
-     就要重写getItemViewType()，让其返回position，否则很容易产生数据错乱的现象。
+    /**
+     * 由于RecyclerView的onBindViewHolder()方法，只有在getItemViewType()返回类型不同时才会调用，
+     *      这点是跟ListView的getView()方法不同的地方，所以如果想要每次都调用onBindViewHolder()刷新item数据，
+     *      就要重写getItemViewType()，让其返回position，否则很容易产生数据错乱的现象。
+     * @param position
+     * @return
      */
     @Override
     public int getItemViewType(int position) {
         return position;
     }
 
-    //每次滑动都会调用
+    /**
+     * 每次滑动都会调用
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull ImportViewHolder holder, final int position) {
         final File file = files.get(position);
         holder.fileView.setTag(file);
         holder.fileView.setOnClickListener(mOnItemClickListener);
 
-        //将导入书架的状态改变
+        // 将导入书架的状态改变
         for (String name : names) {
             if (name.equals(file.getName())) {
                 holder.isSelectCb.setVisibility(View.GONE);
@@ -130,7 +152,9 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
         holder.fileTimeTv.setText(FileUtil.formatFileTime(file.lastModified()));
         holder.isSelectCb.setChecked(FileUtil.isChecked(selectMap, file.getName()));
 
-        //给单选按钮设置监听
+        /**
+         * 给单选按钮设置监听
+         */
         holder.isSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -151,7 +175,8 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
         @Override
         public void onClick(View v) {
             File file = (File) v.getTag();
-            if (!FileUtil.isChecked(selectMap, file.getName())) {//不是选中状态
+            if (!FileUtil.isChecked(selectMap, file.getName())) {
+                // 不是选中状态
                 selectMap.put(file, true);
             } else {
                 selectMap.put(file, false);
@@ -161,6 +186,12 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
     };
 
     public interface CheckedChangeListener {
+        /**
+         * checkbox状态监听
+         * @param position
+         * @param buttonView
+         * @param isChecked
+         */
         void onCheckedChanged(int position, CompoundButton buttonView, boolean isChecked);
     }
 

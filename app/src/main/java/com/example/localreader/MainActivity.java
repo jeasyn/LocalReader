@@ -6,12 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.Display;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,13 +30,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.adapter.BookShelfAdapter;
 import com.example.localreader.entity.Book;
+import com.example.localreader.entity.Config;
 import com.example.localreader.util.BookShelfUtil;
+import com.example.localreader.util.BookUtil;
 import com.example.localreader.util.FileUtil;
+import com.example.localreader.util.PageFactory;
 
 import org.litepal.LitePal;
 
@@ -46,12 +49,14 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * @author xialijuan
+ */
 public class MainActivity extends AppCompatActivity {
 
     private List<Book> books;
     private static BookShelfAdapter adapter;
     private RecyclerView bookShelfRv;
-    private TextView pointTv;
     private LinearLayout bottomLayout;
     private LinearLayout deleteLayout;
     private LinearLayout cancelLayout;
@@ -78,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
         //创建LitePal数据库
         LitePal.getDatabase();
+        Config.createConfig(this);
+        PageFactory.createPageFactory(this);
 
         //申请读取文件权限
         verifyStoragePermissions(this);
@@ -97,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void initViews() {
         bookShelfRv = findViewById(R.id.rv_book_shelf);
-        pointTv = findViewById(R.id.tv_point_add_book);
         bottomLayout = findViewById(R.id.ll_main_bottom);
 
         deleteLayout = findViewById(R.id.ll_main_bottom_delete);
@@ -126,56 +132,56 @@ public class MainActivity extends AppCompatActivity {
 
     public void initData() {
         books = LitePal.findAll(Book.class);
-        showNoFilePoint();
         bookShelfRv.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
-        adapter = new BookShelfAdapter(books);
+        adapter = new BookShelfAdapter(books, this);
 
         bookShelfRv.setAdapter(adapter);
 
         adapter.setOnItemClickListener(mOnItemClickListener);
         adapter.setItemLongClickListener(mItemLongClickListener);
         adapter.setOnItemClickSelectListener(mItemSelectedClickListener);
-    }
-
-    public void showNoFilePoint() {
-        pointTv.setVisibility(books.size() == 0 ? View.VISIBLE : View.GONE);
+        adapter.setImportListener(mImportListener);
     }
 
     private void changeBtnState() {
-        int selectSize = adapter.getSelectSize();//选中个数
-        int maxSize = books.size();//可选的最大个数
+        // 选中个数
+        int selectSize = adapter.getSelectSize();
+        // 可选的最大个数
+        int maxSize = books.size();
         if (selectSize == maxSize && selectSize != 0) {
             selectTv.setText(getResources().getString(R.string.main_no_select_all));
-            selectImg.setImageResource(R.drawable.main_icon_bottom_select_all);
+            selectImg.setImageResource(R.drawable.main_bottom_select_all);
         } else if (books.size() == 0) {
-            selectImg.setImageResource(R.drawable.main_icon_bottom_no_select);
-            selectTv.setTextColor(getResources().getColor(R.color.main_bottom_freeze_color));
+            selectImg.setImageResource(R.drawable.main_bottom_no_select);
+            selectTv.setTextColor(ContextCompat.getColor(this,R.color.main_bottom_freeze_color));
         } else {
             selectTv.setText(getResources().getString(R.string.main_select_all));
-            selectImg.setImageResource(R.drawable.main_icon_bottom_select_all_cancel);
+            selectImg.setImageResource(R.drawable.main_bottom_select_all_cancel);
         }
 
         if (selectSize == 0) {
-            deleteImg.setImageResource(R.drawable.main_icon_bottom_no_delete);
-            deleteTv.setTextColor(getResources().getColor(R.color.main_bottom_freeze_color));
+            deleteImg.setImageResource(R.drawable.main_bottom_no_delete);
+            deleteTv.setTextColor(ContextCompat.getColor(this,R.color.main_bottom_freeze_color));
         } else {
-            deleteImg.setImageResource(R.drawable.main_icon_bottom_delete);
+            deleteImg.setImageResource(R.drawable.main_bottom_delete);
             deleteTv.setTextColor(Color.BLACK);
         }
 
         if (selectSize == 1) {
-            detailImg.setImageResource(R.drawable.main_icon_bottom_detail);
+            detailImg.setImageResource(R.drawable.main_bottom_detail);
             detailTv.setTextColor(Color.BLACK);
         } else {
-            detailImg.setImageResource(R.drawable.main_icon_bottom_no_detail);
-            detailTv.setTextColor(getResources().getColor(R.color.main_bottom_freeze_color));
+            detailImg.setImageResource(R.drawable.main_bottom_no_detail);
+            detailTv.setTextColor(ContextCompat.getColor(this,R.color.main_bottom_freeze_color));
         }
     }
 
     private View.OnClickListener mDeleteBookListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (adapter.getSelectSize() == 0) return;
+            if (adapter.getSelectSize() == 0) {
+                return;
+            }
             AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
             dialog.setTitle("警告");
             dialog.setMessage("确认删除选中的书籍？");
@@ -186,10 +192,10 @@ public class MainActivity extends AppCompatActivity {
                     List<Book> selectBooks = adapter.getSelectBook();
                     if (books != null) {
                         books.clear();
+                        BookUtil.deleteBookmarks(selectBooks);
                         books.addAll(BookShelfUtil.deleteBooks(selectBooks));
                     }
                     if (books.size() == 0) {
-                        showNoFilePoint();
                         hideBottomLayout();
                     }
                     changeBtnState();
@@ -206,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
             hideBottomLayout();
             //设置为默认状态
             selectTv.setText(getResources().getString(R.string.main_select_all));
-            selectImg.setImageResource(R.drawable.main_icon_bottom_select_all_cancel);
-            detailImg.setImageResource(R.drawable.main_icon_bottom_detail);
+            selectImg.setImageResource(R.drawable.main_bottom_select_all_cancel);
+            detailImg.setImageResource(R.drawable.main_bottom_detail);
             detailTv.setTextColor(Color.BLACK);
         }
     };
@@ -236,7 +242,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    //打开图书
+    /**
+     * 打开图书
+     */
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -245,6 +253,18 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, ReadActivity.class);
             intent.putExtra("book_data", book);
             startActivity(intent);
+        }
+    };
+
+    /**
+     * 导入图书
+     */
+    private View.OnClickListener mImportListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!adapter.isShowItem()) {//底部菜单弹出来后，不能添加图书
+                startActivity(new Intent(MainActivity.this, ImportActivity.class));
+            }
         }
     };
 
@@ -259,7 +279,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    //监听选中图书个数
+    /**
+     * 监听选中图书个数
+     */
     private View.OnClickListener mItemSelectedClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -268,7 +290,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    //显示底部菜单
+    /**
+     * 显示底部菜单
+     */
     private void showBottomLayout() {
         isHideBottom = true;
         Animation mAnimationBottomIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bottom_in);
@@ -276,16 +300,21 @@ public class MainActivity extends AppCompatActivity {
         bottomLayout.startAnimation(mAnimationBottomIn);
     }
 
-    //隐藏底部菜单
+    /**
+     * 隐藏底部菜单
+     */
     private void hideBottomLayout() {
         isHideBottom = false;
-        adapter.animState(false);//隐藏复选框
+        // 隐藏复选框
+        adapter.animState(false);
         Animation mAnimationBottomOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bottom_out);
         bottomLayout.setVisibility(View.GONE);
         bottomLayout.startAnimation(mAnimationBottomOut);
     }
 
-    //导入时直接隐藏，无需动画
+    /**
+     * 导入时直接隐藏，无需动画
+     */
     public void directHideBottom() {
         adapter.animState(false);
         bottomLayout.setVisibility(View.GONE);
@@ -295,19 +324,19 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-
-    //弹出详细信息菜单
+    /**
+     * 弹出详细信息菜单
+     */
     private void popupWindow() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point point = new Point();
-        display.getSize(point);
-        int width = point.x;
-
+        // 获取屏幕宽高
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int width = displayMetrics.widthPixels;
         popupWindow = new PopupWindow(view, 2 * width / 3, WindowManager.LayoutParams.WRAP_CONTENT);
-        //点击空白处，隐藏popup窗口
+        // 点击空白处，隐藏popup窗口
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        WindowManager.LayoutParams params = getWindow().getAttributes();//创建当前界面的一个参数对象
+        // 创建当前界面的一个参数对象
+        WindowManager.LayoutParams params = getWindow().getAttributes();
         params.alpha = 0.3f;
         getWindow().setAttributes(params);
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -322,20 +351,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //在Toolbar上放添加按钮
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.title_import_book, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    //Toolbar上按钮监听
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add:
                 startActivity(new Intent(this, ImportActivity.class));
                 directHideBottom();
+                break;
+            default:
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -357,19 +386,21 @@ public class MainActivity extends AppCompatActivity {
     boolean isExit = false;
 
     private void exit() {
-        Timer timer;//声明一个定时器
+        // 声明一个定时器
+        Timer timer;
         if (!isExit) {
             isExit = true;
             Toast.makeText(MainActivity.this, getResources().getString(R.string.back_app), Toast.LENGTH_SHORT).show();
             timer = new Timer();
-            //执行定时任务，两秒内如果没有再次按下，则不会退出
+            // 执行定时任务，两秒内如果没有再次按下，则不会退出
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     isExit = false;
                 }
             }, 2000);
-        } else {//两秒内再次按下返回键，则直接退出程序
+        } else {
+            // 两秒内再次按下返回键，则直接退出程序
             finish();
         }
     }
@@ -384,7 +415,8 @@ public class MainActivity extends AppCompatActivity {
     public static void verifyStoragePermissions(Activity activity) {
         try {
             int permission = ActivityCompat.checkSelfPermission(activity, "android.permission.WRITE_EXTERNAL_STORAGE");
-            if (permission != PackageManager.PERMISSION_GRANTED) {//判断是否已经授予权限
+            // 判断是否已经授予权限
+            if (permission != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(activity, PERMISSION_STORAGE, REQUEST_EXTERNAL_STORAGE);
             }
         } catch (Exception e) {
@@ -397,8 +429,10 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_EXTERNAL_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {//已被授予权限
-                } else {//拒绝授予权限，弹出框，让用户去应用详情页手动设置权限
+                // 已被授予权限
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    // 拒绝授予权限，弹出框，让用户去应用详情页手动设置权限
                     new AlertDialog.Builder(this)
                             .setTitle("警告")
                             .setMessage("存储权限是必须的，若拒绝，则部分功能无法正常运行！")
@@ -406,12 +440,15 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     Uri uri = Uri.parse("package:" + getPackageName());
-                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,uri);
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
                                     startActivity(intent);
                                 }
                             }).show();
                 }
+                break;
             }
+            default:
+                break;
         }
     }
 }

@@ -4,11 +4,17 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2021/1/9
+ * @date 2020/12/17
  */
 public class Page {
-    private long position;//最后一次读的位置
-    private long end;//文件结尾的位置
+    /**
+     * 最后一次读的位置
+     */
+    private long position;
+    /**
+     * 文件结尾的位置
+     */
+    private long end;
     private List<String> lines;
 
     public long getPosition() {

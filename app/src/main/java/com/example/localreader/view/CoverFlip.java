@@ -8,20 +8,20 @@ import android.widget.Scroller;
 
 /**
  * @author xialijuan
- * @date 2021/1/9
+ * @date 2020/12/18
  */
 public class CoverFlip extends BaseFlip {
 
     private Rect srcRect, destRect;
-    private GradientDrawable backShadowDrawableLR;
+    private GradientDrawable drawable;
 
     public CoverFlip(Bitmap currentBitmap, Bitmap nextBitmap, int width, int height) {
         super(currentBitmap, nextBitmap, width, height);
         srcRect = new Rect(0, 0, screenWidth, screenHeight);
         destRect = new Rect(0, 0, screenWidth, screenHeight);
         int[] mBackShadowColors = new int[] { 0x66000000,0x00000000};
-        backShadowDrawableLR = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, mBackShadowColors);
-        backShadowDrawableLR.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        drawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, mBackShadowColors);
+        drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
     }
 
     @Override
@@ -31,9 +31,9 @@ public class CoverFlip extends BaseFlip {
             if (dis > screenWidth){
                 dis = screenWidth;
             }
-            //计算bitmap截取的区域
+            // 计算bitmap截取的区域
             srcRect.left = screenWidth - dis;
-            //计算bitmap在canvas显示的区域
+            // 计算bitmap在canvas显示的区域
             destRect.right = dis;
             canvas.drawBitmap(nextPageBitmap,0,0,null);
             canvas.drawBitmap(curPageBitmap, srcRect, destRect,null);
@@ -56,10 +56,14 @@ public class CoverFlip extends BaseFlip {
         }
     }
 
-    //添加阴影
+    /**
+     * 添加阴影
+     * @param left
+     * @param canvas
+     */
     public void addShadow(int left,Canvas canvas) {
-        backShadowDrawableLR.setBounds(left, 0, left + 30 , screenHeight);
-        backShadowDrawableLR.draw(canvas);
+        drawable.setBounds(left, 0, left + 30 , screenHeight);
+        drawable.draw(canvas);
     }
 
     @Override
@@ -82,7 +86,7 @@ public class CoverFlip extends BaseFlip {
                 dx = (int) (screenWidth - mTouch.x);
             }
         }
-        //滑动速度保持一致
+        // 滑动速度保持一致
         int duration =  (400 * Math.abs(dx)) / screenWidth;
         scroller.startScroll((int) mTouch.x, 0, dx, 0, duration);
     }

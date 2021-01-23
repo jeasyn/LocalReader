@@ -31,12 +31,6 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_point_add_book"
-            android:text="@string/main_point_add_book"
-            style="@style/no_file_or_no_book_point"
-            android:visibility="gone" />
-
     </RelativeLayout>
 
 </LinearLayout>

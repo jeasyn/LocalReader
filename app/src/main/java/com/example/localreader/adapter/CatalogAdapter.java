@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.example.localreader.R;
 import com.example.localreader.entity.BookCatalog;
 import com.example.localreader.entity.Config;
@@ -15,13 +17,12 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2021/1/10
+ * @date 2020/12/10
  */
 public class CatalogAdapter extends BaseAdapter {
 
     private Context context;
     private List<BookCatalog> bookCatalogueList;
-    private Config config;
     private int currentCharter = 0;
 
     @Override
@@ -56,9 +57,9 @@ public class CatalogAdapter extends BaseAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
         }
         if (currentCharter == position){
-            viewHolder.catalog.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            viewHolder.catalog.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
         }else{
-            viewHolder.catalog.setTextColor(context.getResources().getColor(R.color.read_default_text));
+            viewHolder.catalog.setTextColor(ContextCompat.getColor(context,R.color.read_default_text));
         }
         viewHolder.catalog.setText(bookCatalogueList.get(position).getCatalog());
         return convertView;
@@ -67,7 +68,7 @@ public class CatalogAdapter extends BaseAdapter {
     public CatalogAdapter(Context context, List<BookCatalog> bookCatalogueList) {
         this.context = context;
         this.bookCatalogueList = bookCatalogueList;
-        config = config.getInstance();
+        Config.getInstance();
     }
 
     class ViewHolder {

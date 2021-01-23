@@ -101,7 +101,7 @@
 
                         <ImageView
                             style="@style/read_bottom_popup_menu_image_view"
-                            android:src="@drawable/read_icon_catalog" />
+                            android:src="@drawable/read_catalog" />
 
                         <TextView
                             style="@style/read_bottom_popup_menu_text_view"
@@ -116,7 +116,7 @@
                         <ImageView
                             android:id="@+id/iv_read_day_or_night"
                             style="@style/read_bottom_popup_menu_image_view"
-                            android:src="@drawable/read_icon_night_mode" />
+                            android:src="@drawable/read_night_mode" />
 
                         <TextView
                             android:id="@+id/tv_read_day_or_night"

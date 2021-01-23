@@ -7,14 +7,17 @@ import com.example.localreader.R;
 
 /**
  * @author xialijuan
- * @date 2021/1/9
+ * @date 2020/11/20
  */
 public class Config {
 
     private Context context;
     private static Config config;
     private SharedPreferences sp;
-    private final static String SP_NAME = "config";///在shared_prefs生成的xml文件名
+    /**
+     * 在shared_prefs生成的xml文件名
+     */
+    private final static String SP_NAME = "config";
     private final static String READ_BG = "read_bg";
     private final static String FONT_SIZE = "font_size";
     private final static String IS_NIGHT = "is_night";
@@ -24,11 +27,17 @@ public class Config {
     public final static int BOOK_BG_GRAY = 2;
     public final static int BOOK_BG_GREEN = 3;
     public final static int BOOK_BG_BLUE = 4;
-
-    private boolean night;//true：夜间模式，false：日间模式
-    //字体大小
+    /**
+     * true：夜间模式，false：日间模式
+     */
+    private boolean night;
+    /**
+     * 字体大小
+     */
     private float fontSize = 0;
-    //亮度值
+    /**
+     * 亮度值
+     */
     private float light = 0;
 
     private Config(Context context){
@@ -47,12 +56,12 @@ public class Config {
         return config;
     }
 
-    public int getBookBgType(){
+    public int getBookBg(){
         return sp.getInt(READ_BG,BOOK_BG_WHITE);
     }
 
-    public void setBookBg(int type){
-        sp.edit().putInt(READ_BG,type).commit();
+    public void setBookBg(int bg){
+        sp.edit().putInt(READ_BG,bg).commit();
     }
 
     public float getFontSize(){

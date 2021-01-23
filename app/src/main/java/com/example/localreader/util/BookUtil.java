@@ -1,11 +1,13 @@
 package com.example.localreader.util;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 
 import com.example.localreader.entity.Book;
 import com.example.localreader.entity.BookCatalog;
+import com.example.localreader.entity.Bookmark;
 import com.example.localreader.entity.Cache;
 
 import org.litepal.LitePal;
@@ -22,27 +24,35 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2021/1/9
+ * @date 2021/1/12
  */
 public class BookUtil {
 
-    private static final String cachedPath = Environment.getExternalStorageDirectory() + "/LocalReader/";
-    //存储的字符数
-    public static final int cachedSize = 30000;
+    private Context context;
+    private static final String CACHED_PATH = Environment.getExternalStorageDirectory() + "/LocalReader/";
+    /**
+     * 存储的字符数
+     */
+    public static final int CACHED_SIZE = 30000;
 
     protected final ArrayList<Cache> caches = new ArrayList<>();
-    //目录
+    /**
+     * 目录
+     */
     private List<BookCatalog> bookCatalogList = new ArrayList<>();
 
-    private String m_strCharsetName;
+    private String strCharsetName;
     private String bookName;
     private String bookPath;
     private long bookLen;
     private long position;
     private Book mBook;
+//    private final String CACHED_PATH = context.getExternalFilesDir(null);
 
-    public BookUtil() {
-        File file = new File(cachedPath);
+    public BookUtil(Context context) {
+        this.context = context;
+        // 路径/storage/emulated/0/LocalReader/
+        File file = new File(CACHED_PATH);
         if (!file.exists()) {
             file.mkdir();
         }
@@ -50,7 +60,7 @@ public class BookUtil {
 
     public synchronized void openBook(Book book) throws IOException {
         this.mBook = book;
-        //如果当前缓存不是要打开的书本就缓存书本同时删除缓存
+        // 如果当前缓存不是要打开的书本就缓存书本同时删除缓存
         if (bookPath == null || !bookPath.equals(book.getBookPath())) {
             cleanCacheFile();
             this.bookPath = book.getBookPath();
@@ -59,9 +69,25 @@ public class BookUtil {
         }
     }
 
-    //清除文件缓存
+    /**
+     * 删除书签
+     * @param selectBooks
+     * @return
+     */
+    public static void deleteBookmarks(List<Book> selectBooks){
+        for (Book selectBook : selectBooks) {
+           List<Bookmark> temp = LitePal.where("bookPath = ?", selectBook.getBookPath()).find(Bookmark.class);
+            for (Bookmark bookmark : temp) {
+                LitePal.delete(Bookmark.class,bookmark.getId());
+            }
+        }
+    }
+
+    /**
+     * 清除文件缓存
+     */
     private void cleanCacheFile() {
-        File file = new File(cachedPath);
+        File file = new File(CACHED_PATH);
         if (!file.exists()) {
             file.mkdir();
         } else {
@@ -96,7 +122,7 @@ public class BookUtil {
                 break;
             }
             char wordChar = (char) word;
-            if ((wordChar + "").equals("\r") && (((char) next(true)) + "").equals("\n")) {
+            if ("\r".equals(wordChar + "") && "\n".equals(((char) next(true)) + "")) {
                 next(false);
                 break;
             }
@@ -116,7 +142,7 @@ public class BookUtil {
                 break;
             }
             char wordChar = (char) word;
-            if ((wordChar + "").equals("\n") && (((char) pre(true)) + "").equals("\r")) {
+            if ("\n".equals(wordChar + "") && "\r".equals(((char) pre(true)) + "")) {
                 pre(false);
                 break;
             }
@@ -164,28 +190,31 @@ public class BookUtil {
         this.position = position;
     }
 
-    //缓存书本
+    /**
+     * 缓存书本
+     * @throws IOException
+     */
     private void cacheBook() throws IOException {
         if (TextUtils.isEmpty(mBook.getCharset())) {
-            m_strCharsetName = FileUtil.getCharset(bookPath);
-            if (m_strCharsetName == null) {
-                m_strCharsetName = "utf-8";
+            strCharsetName = FileUtil.getCharset(bookPath);
+            if (strCharsetName == null) {
+                strCharsetName = "utf-8";
             }
             ContentValues values = new ContentValues();
-            values.put("charset", m_strCharsetName);
+            values.put("charset", strCharsetName);
             LitePal.update(Book.class, values, mBook.getId());
         } else {
-            m_strCharsetName = mBook.getCharset();
+            strCharsetName = mBook.getCharset();
         }
 
         File file = new File(bookPath);
-        InputStreamReader reader = new InputStreamReader(new FileInputStream(file), m_strCharsetName);
+        InputStreamReader reader = new InputStreamReader(new FileInputStream(file), strCharsetName);
         int index = 0;
         bookLen = 0;
         bookCatalogList.clear();
         caches.clear();
         while (true) {
-            char[] buf = new char[cachedSize];
+            char[] buf = new char[CACHED_SIZE];
             int result = reader.read(buf);
             if (result == -1) {
                 reader.close();
@@ -225,7 +254,9 @@ public class BookUtil {
         }.start();
     }
 
-    //获取章节
+    /**
+     * 获取章节名称
+     */
     public synchronized void getChapter() {
         try {
             long size = 0;
@@ -234,7 +265,8 @@ public class BookUtil {
                 String bufStr = new String(buf);
                 String[] paragraphs = bufStr.split("\r\n");
                 for (String str : paragraphs) {
-                    if (str.length() <= 30 && (str.matches(".*第.{1,8}章.*") || str.matches(".*第.{1,8}节.*"))) {
+                    boolean success = str.matches(".*第.{1,8}章.*") || str.matches(".*第.{1,8}节.*");
+                    if (str.length() <= 30 && success) {
                         BookCatalog bookCatalog = new BookCatalog();
                         bookCatalog.setPosition(size);
                         bookCatalog.setCatalog(str);
@@ -264,10 +296,14 @@ public class BookUtil {
     }
 
     protected String fileName(int index) {
-        return cachedPath + bookName + index;
+        return CACHED_PATH + bookName + index;
     }
 
-    //获取书本缓存
+    /**
+     * 获取书本缓存
+     * @param index
+     * @return
+     */
     public char[] block(int index) {
         if (caches.size() == 0) {
             return new char[1];
@@ -287,7 +323,9 @@ public class BookUtil {
                 throw new RuntimeException("Error during reading " + fileName(index));
             }finally {
                 try {
-                    if (reader != null) reader.close();
+                    if (reader != null) {
+                        reader.close();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

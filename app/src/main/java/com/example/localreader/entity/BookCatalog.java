@@ -2,14 +2,17 @@ package com.example.localreader.entity;
 
 /**
  * @author xialijuan
- * @date 2021/1/9
+ * @date 2020/12/15
  */
 public class BookCatalog {
 
     private int id;
     private String bookPath;
     private String catalog;
-    private long position;//最后一次读的位置
+    /**
+     * 最后一次读的位置
+     */
+    private long position;
 
     public int getId() {
         return id;
