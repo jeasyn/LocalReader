@@ -4,15 +4,24 @@ import org.litepal.crud.LitePalSupport;
 
 /**
  * @author xialijuan
- * @date 2021/1/9
+ * @date 2021/12/05
  */
 public class Bookmark extends LitePalSupport {
 
     private int id ;
     private String bookPath;
-    private String partContent;//书签显示的部分文字
-    private long position;//书签记录页面最后一次读的位置
-    private String time;//添加书签的时间
+    /**
+     * 书签显示的部分文字
+     */
+    private String partContent;
+    /**
+     * 书签记录页面最后一次读的位置
+     */
+    private long position;
+    /**
+     * 添加书签的时间
+     */
+    private String time;
 
     public int getId() {
         return id;

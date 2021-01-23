@@ -6,17 +6,29 @@ import java.io.Serializable;
 
 /**
  * @author xialijuan
- * @date 2020/11/07
+ * @date 2020/11/11
  */
 public class Book extends LitePalSupport implements Serializable {
 
     private int id;
     private String bookName;
     private String bookPath;
-    private String charset;//文件编码
-    private long position;//最后一次读的位置
-    private String progress;//读书进度
-    private int bookBg;//图书封面
+    /**
+     * 文件编码
+     */
+    private String charset;
+    /**
+     * 最后一次读的位置
+     */
+    private long position;
+    /**
+     * 读书进度
+     */
+    private String progress;
+    /**
+     * 图书封面
+     */
+    private int bookBg;
 
     public int getId() {
         return id;

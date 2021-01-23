@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/tv_no_file"
-            style="@style/no_file_or_no_book_point"
+            style="@style/no_file_point"
             android:visibility="gone"
             android:text="@string/import_no_search_file" />
 

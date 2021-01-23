@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/read_icon_brightness_left" />
+            app:srcCompat="@drawable/read_brightness_left" />
 
         <SeekBar
             android:id="@+id/sb_brightness"
@@ -35,7 +35,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/read_icon_brightness_right" />
+            app:srcCompat="@drawable/read_brightness_right" />
 
         <View
             android:layout_width="0dp"

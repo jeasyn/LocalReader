@@ -5,15 +5,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.R;
 
 /**
  * @author xialijuan
- * @date 2020/11/17
+ * @date 2020/11/11
  */
-public class BookShelfViewHolder extends RecyclerView.ViewHolder {
+public class BookShelfViewHolder extends BaseViewHolder {
 
     public View bookView;
     public TextView bookItemTv;

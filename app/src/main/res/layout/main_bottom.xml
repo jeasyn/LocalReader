@@ -12,7 +12,7 @@
         <ImageView
             android:id="@+id/iv_main_bottom_delete"
             style="@style/main_popup_bottom_image_view_style"
-            app:srcCompat="@drawable/main_icon_bottom_delete" />
+            app:srcCompat="@drawable/main_bottom_delete" />
 
         <TextView
             android:id="@+id/tv_main_bottom_delete"
@@ -27,7 +27,7 @@
 
         <ImageView
             style="@style/main_popup_bottom_image_view_style"
-            app:srcCompat="@drawable/main_icon_bottom_cancel" />
+            app:srcCompat="@drawable/main_bottom_cancel" />
 
         <TextView
             style="@style/main_popup_bottom_text_view_style"
@@ -41,7 +41,7 @@
         <ImageView
             android:id="@+id/iv_main_bottom_select_all"
             style="@style/main_popup_bottom_image_view_style"
-            app:srcCompat="@drawable/main_icon_bottom_select_all_cancel" />
+            app:srcCompat="@drawable/main_bottom_select_all_cancel" />
 
         <TextView
             android:id="@+id/tv_main_bottom_select_all"
@@ -56,7 +56,7 @@
         <ImageView
             android:id="@+id/iv_main_bottom_detail"
             style="@style/main_popup_bottom_image_view_style"
-            app:srcCompat="@drawable/main_icon_bottom_detail" />
+            app:srcCompat="@drawable/main_bottom_detail" />
 
         <TextView
             android:id="@+id/tv_main_bottom_detail"

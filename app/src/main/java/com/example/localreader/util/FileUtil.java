@@ -15,13 +15,16 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2020/11/07
+ * @date 2020/11/08
  */
 public class FileUtil {
 
+    private static long BYTE_SIZE = 1024;
+    private static long KB_SIZE = 1048576;
+    private static long MB_SIZE = 1073741824;
+
     /**
      * 获取文件编码
-     *
      * @param fileName
      * @return
      * @throws IOException
@@ -43,7 +46,6 @@ public class FileUtil {
 
     /**
      * 格式化文件大小
-     *
      * @param size
      * @return
      */
@@ -57,21 +59,20 @@ public class FileUtil {
 
         String fileSizeString;
 
-        if (size < 1024) {
+        if (size < BYTE_SIZE) {
             fileSizeString = dFormat.format((double) size) + "B";
-        } else if (size < 1048576) {
-            fileSizeString = dFormat.format((double) size / 1024) + "KB";
-        } else if (size < 1073741824) {
-            fileSizeString = dFormat.format((double) size / 1048576) + "MB";
+        } else if (size < KB_SIZE) {
+            fileSizeString = dFormat.format((double) size / BYTE_SIZE) + "KB";
+        } else if (size < MB_SIZE) {
+            fileSizeString = dFormat.format((double) size / KB_SIZE) + "MB";
         } else {
-            fileSizeString = dFormat.format((double) size / 1073741824) + "GB";
+            fileSizeString = dFormat.format((double) size / MB_SIZE) + "GB";
         }
         return fileSizeString;
     }
 
     /**
      * 格式化文件时间
-     *
      * @param time
      * @return
      */
@@ -83,10 +84,9 @@ public class FileUtil {
 
     /**
      * 查询所有txt文件
-     *
      * @return
      */
-    public static List<File> getLocalTXT(File file) {
+    public static List<File> getLocalTxt(File file) {
         List<File> txtList = new ArrayList<>();
         try {
             File[] files = file.listFiles();
@@ -97,7 +97,7 @@ public class FileUtil {
                             txtList.add(files[i]);
                         }
                     } else {
-                        getLocalTXT(files[i]);
+                        getLocalTxt(files[i]);
                     }
                 }
             }
@@ -109,13 +109,12 @@ public class FileUtil {
 
     /**
      * 通过name查找文件
-     *
      * @param name
      * @return
      */
     public static File getFileByName(String name) {
         String path = Environment.getExternalStorageDirectory().toString();
-        List<File> txtFileList = FileUtil.getLocalTXT(new File(path));
+        List<File> txtFileList = FileUtil.getLocalTxt(new File(path));
         for (File file : txtFileList) {
             if (name.equals(file.getName())) {
                 return file;
@@ -126,7 +125,6 @@ public class FileUtil {
 
     /**
      * 查询name文件是否被选中
-     *
      * @param checkMap
      * @return
      */

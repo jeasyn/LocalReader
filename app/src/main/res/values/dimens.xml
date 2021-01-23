@@ -1,4 +1,6 @@
 <resources>
+
+    <dimen name="import_no_file_point">24sp</dimen>
     <!-- 书本宽边距 -->
     <dimen name="read_margin_width">15dp</dimen>
     <!-- 书本高边距 -->

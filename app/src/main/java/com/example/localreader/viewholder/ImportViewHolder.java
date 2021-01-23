@@ -5,15 +5,14 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.R;
 
 /**
  * @author xialijuan
- * @date 2020/11/16
+ * @date 2020/11/07
  */
-public class ImportViewHolder extends RecyclerView.ViewHolder {
+public class ImportViewHolder extends BaseViewHolder {
 
     public View fileView;
     public TextView fileNameTv;

@@ -8,6 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="main_book_item">
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginTop">23dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+    <style name="main_book_bottom_point">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
     <style name="main_popup_bottom_image_view_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">20dp</item>
@@ -80,11 +94,11 @@
     </style>
 
 
-    <style name="no_file_or_no_book_point">
+    <style name="no_file_point">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">@dimen/import_no_file_point</item>
     </style>
 
     <style name="read_settings_bg">

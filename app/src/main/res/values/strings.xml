@@ -25,6 +25,8 @@
     <string name="read_day_mode">日间</string>
     <string name="read_settings">设置</string>
 
+    <string name="read_add_bookmark">添加书签</string>
+
     <string name="read_settings_brightness">亮度</string>
     <string name="read_settings_font_size">字号</string>
     <string name="read_settings_less_font_size">A -</string>

@@ -11,6 +11,9 @@ import com.example.localreader.adapter.MyPagerAdapter;
 import com.example.localreader.entity.Book;
 import com.google.android.material.tabs.TabLayout;
 
+/**
+ * @author xialijuan
+ */
 public class CatalogActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
@@ -43,7 +46,7 @@ public class CatalogActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
 
-        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(),book.getBookPath());
+        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(),0,book.getBookPath());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager, true);
     }
