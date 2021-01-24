@@ -21,6 +21,7 @@ public class FileUtil {
 
     /**
      * 获取文件编码
+     *
      * @param fileName 文件名
      * @return 文件编码
      * @throws IOException 抛出的io异常
@@ -42,6 +43,7 @@ public class FileUtil {
 
     /**
      * 格式化文件大小
+     *
      * @param size long型的文件大小
      * @return 格式化后的文件大小
      */
@@ -71,6 +73,7 @@ public class FileUtil {
 
     /**
      * 格式化文件时间
+     *
      * @param time long型时间
      * @return 格式化后的时间
      */
@@ -81,6 +84,7 @@ public class FileUtil {
 
     /**
      * 查询所有txt文件
+     *
      * @param file txt文件
      * @return 返回sd卡路径下txt文件集合
      */
@@ -107,6 +111,7 @@ public class FileUtil {
 
     /**
      * 通过name查找文件
+     *
      * @param name 文件名
      * @return 文件
      */
@@ -123,8 +128,9 @@ public class FileUtil {
 
     /**
      * 查询name文件是否被选中
+     *
      * @param checkMap 所有文件
-     * @param name 文件名
+     * @param name     文件名
      * @return 是否被选中
      */
     public static boolean isChecked(HashMap<File, Boolean> checkMap, String name) {

@@ -16,7 +16,7 @@ import com.example.localreader.adapter.CatalogAdapter;
 import com.example.localreader.entity.BookCatalog;
 import com.example.localreader.util.PageFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xialijuan
@@ -26,44 +26,43 @@ public class CatalogFragment extends Fragment {
 
     private static final String ARGUMENT = "argument";
     private PageFactory pageFactory;
-    private ArrayList<BookCatalog> catalogList = new ArrayList<>();
-    private ListView catalogLv;
+    private List<BookCatalog> catalogList;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_catalog, container, false);
         init(view);
-        initListener();
         return view;
     }
 
     private void init(View v) {
-        catalogLv = v.findViewById(R.id.rv_catalog);
-
+        ListView catalogLv = v.findViewById(R.id.rv_catalog);
+        // 获取章节目录
         pageFactory = PageFactory.getInstance();
-        catalogList.addAll(pageFactory.getDirectoryList());
+        catalogList = pageFactory.getDirectoryList();
+
         CatalogAdapter catalogAdapter = new CatalogAdapter(getContext(), catalogList);
         catalogAdapter.setCharter(pageFactory.getCurrentCharter());
         catalogLv.setAdapter(catalogAdapter);
         catalogAdapter.notifyDataSetChanged();
+
+        catalogLv.setOnItemClickListener(mOnItemClickListener);
     }
 
-    private void initListener() {
-        catalogLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pageFactory.changeChapter(catalogList.get(position).getPosition());
-                getActivity().finish();
-            }
-        });
-    }
+    private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            pageFactory.changeChapter(catalogList.get(position).getPosition());
+            getActivity().finish();
+        }
+    };
 
     /**
      * 用于从Activity传递数据到Fragment
      *
      * @param bookPath 图书路径
-     * @return CatalogFragment
+     * @return
      */
     public static CatalogFragment newInstance(String bookPath) {
         Bundle bundle = new Bundle();

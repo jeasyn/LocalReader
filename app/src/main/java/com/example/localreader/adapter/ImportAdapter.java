@@ -23,9 +23,19 @@ import java.util.List;
  */
 public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
 
+    /**
+     * 扫描到的sd卡中的所有txt文件
+     */
     private List<File> files;
+    /**
+     * 选中的txt文件和对应状态集合
+     */
     private HashMap<File, Boolean> selectMap = new HashMap<>();
+    /**
+     * 已导入书架的名字集合
+     */
     private List<String> names;
+
     private CheckedChangeListener mCheckedChangeListener;
 
 

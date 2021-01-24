@@ -28,18 +28,26 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private Context context;
     private List<Book> books;
+    /**
+     * 可以打开图书或显示图书
+     */
     private final static int OPEN_BOOK = 0;
+    /**
+     * 导入图书到书架
+     */
     private final static int IMPORT_BOOK = 1;
     /**
      * 是否显示底部选项和checkbox
      */
     private boolean isShowItem = false;
     /**
-     * 存储选中的图书，类似hashmap
+     * 存储选中的图书，类似HashMap
      */
     private SparseBooleanArray mBooleanArray;
+
     private int[] bg = new int[]{R.drawable.book_shelf_cover_bg_1,
             R.drawable.book_shelf_cover_bg_2, R.drawable.book_shelf_cover_bg_3};
+
     private View.OnClickListener mOnItemClickListener;
     private View.OnLongClickListener mItemLongClickListener;
     private View.OnClickListener mItemSelectedClickListener;
@@ -108,10 +116,12 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 viewHolder.bookView.setTag(book.getId());
                 viewHolder.bookView.setOnLongClickListener(mItemLongClickListener);
                 if (isShowItem) {
+                    // 可以显示选中的图书
                     viewHolder.bookSelectIv.setVisibility(View.VISIBLE);
                     viewHolder.bookSelectIv.setSelected(getItemSelected(book.getId()));
                     viewHolder.bookView.setOnClickListener(mItemSelectedClickListener);
                 } else {
+                    // 不能显示选中的图书，并清空选中集合中的书架
                     mBooleanArray.clear();
                     viewHolder.bookSelectIv.setVisibility(View.GONE);
                     viewHolder.bookView.setOnClickListener(mOnItemClickListener);
@@ -196,19 +206,34 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         this.mItemLongClickListener = itemLongClickListener;
     }
 
-    public void animState(boolean state) {
+    /**
+     * 底部菜单栏显示状态，并初始化选中的集合数据
+     *
+     * @param state 显示状态
+     */
+    public void showState(boolean state) {
         isShowItem = state;
         mBooleanArray.clear();
         notifyDataSetChanged();
     }
 
+    /**
+     * 长按后选中当前图书
+     *
+     * @param id 长按当前图书的id
+     */
     public void bookSelect(int id) {
         isShowItem = true;
         setItemSelected(id, true);
         notifyDataSetChanged();
     }
 
-
+    /**
+     * 设置id的图书选中状态
+     *
+     * @param id       为id的图书
+     * @param selected 是否被选中
+     */
     private void setItemSelected(int id, boolean selected) {
         if (mBooleanArray == null) {
             mBooleanArray = new SparseBooleanArray();

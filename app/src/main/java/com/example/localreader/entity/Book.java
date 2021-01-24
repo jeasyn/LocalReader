@@ -22,7 +22,7 @@ public class Book extends LitePalSupport implements Serializable {
      */
     private long position;
     /**
-     * 读书进度
+     * 读书进度（已格式化）
      */
     private String progress;
     /**

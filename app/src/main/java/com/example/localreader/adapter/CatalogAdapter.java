@@ -24,23 +24,9 @@ public class CatalogAdapter extends BaseAdapter {
     private List<BookCatalog> bookCatalogueList;
     private int currentCharter = 0;
 
-    @Override
-    public int getCount() {
-        return bookCatalogueList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return bookCatalogueList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void setCharter(int charter) {
-        currentCharter = charter;
+    public CatalogAdapter(Context context, List<BookCatalog> bookCatalogueList) {
+        this.context = context;
+        this.bookCatalogueList = bookCatalogueList;
     }
 
     @Override
@@ -56,6 +42,7 @@ public class CatalogAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         if (currentCharter == position) {
+            // 正在阅读的当前章节
             viewHolder.catalog.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
         } else {
             viewHolder.catalog.setTextColor(ContextCompat.getColor(context, R.color.read_default_text));
@@ -64,9 +51,23 @@ public class CatalogAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public CatalogAdapter(Context context, List<BookCatalog> bookCatalogueList) {
-        this.context = context;
-        this.bookCatalogueList = bookCatalogueList;
+    public void setCharter(int charter) {
+        currentCharter = charter;
+    }
+
+    @Override
+    public int getCount() {
+        return bookCatalogueList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return bookCatalogueList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     class ViewHolder {

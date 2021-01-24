@@ -8,7 +8,7 @@ import org.litepal.crud.LitePalSupport;
  */
 public class Bookmark extends LitePalSupport {
 
-    private int id ;
+    private int id;
     private String bookPath;
     /**
      * 书签显示的部分文字

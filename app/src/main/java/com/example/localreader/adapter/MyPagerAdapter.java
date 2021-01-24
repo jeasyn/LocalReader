@@ -24,11 +24,6 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
         this.bookPath = bookPath;
     }
 
-    @Override
-    public int getCount() {
-        return title.length;
-    }
-
     @NonNull
     @Override
     public Fragment getItem(int position) {
@@ -47,6 +42,11 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public int getCount() {
+        return title.length;
     }
 
     @Override

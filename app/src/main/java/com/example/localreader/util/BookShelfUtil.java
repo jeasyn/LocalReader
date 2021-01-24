@@ -25,7 +25,7 @@ public class BookShelfUtil {
                 Book book = new Book();
                 book.setBookName(selectFile.getName());
                 book.setBookPath(selectFile.getPath());
-                book.setProgress("未读");
+                  book.setProgress("未读");
                 // 默认没打开
                 book.setPosition(0);
                 book.save();
@@ -53,7 +53,6 @@ public class BookShelfUtil {
         }
         return books;
     }
-
 
     /**
      * 通过id查询数据库的图书
