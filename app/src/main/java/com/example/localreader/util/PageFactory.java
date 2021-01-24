@@ -38,9 +38,8 @@ import java.util.List;
  * @date 2020/11/21
  */
 public class PageFactory {
-    private static final String TAG = "PageFactory";
-    private static PageFactory pageFactory;
 
+    private static PageFactory pageFactory;
     private Context context;
     private Config config;
     /**
@@ -111,7 +110,7 @@ public class PageFactory {
     /**
      * 背景图片
      */
-    private Bitmap readBg = null;
+    private Bitmap readBg;
     /**
      * 当前是否为第一页
      */
@@ -131,7 +130,7 @@ public class PageFactory {
     /**
      * 书本名字
      */
-    private String bookName = "";
+    private String bookName;
     private Book book;
     private BookUtil bookUtil;
     private int currentCharter = 0;
@@ -140,7 +139,7 @@ public class PageFactory {
     private Page prePage;
     private Page cancelPage;
     private BookTask bookTask;
-    ContentValues values = new ContentValues();
+    private ContentValues values = new ContentValues();
     private static Status status = Status.OPENING;
     private String progress;
     private long position;
@@ -162,8 +161,8 @@ public class PageFactory {
         return pageFactory;
     }
 
-    private PageFactory(Context context) {
-        bookUtil = new BookUtil(context);
+    public PageFactory(Context context) {
+        bookUtil = new BookUtil();
         this.context = context.getApplicationContext();
         config = Config.getInstance();
         //获取屏幕宽高
@@ -220,8 +219,7 @@ public class PageFactory {
 
     /**
      * 初始化背景
-     *
-     * @param isNight
+     * @param isNight 是否是夜间模式
      */
     private void initBg(Boolean isNight) {
         if (isNight) {
@@ -271,7 +269,7 @@ public class PageFactory {
         bookPageWidget.postInvalidate();
     }
 
-    public void onDraw(Bitmap bitmap, List<String> lines, Boolean updateCharter) {
+    private void onDraw(Bitmap bitmap, List<String> lines, Boolean updateCharter) {
         if (getDirectoryList().size() > 0 && updateCharter) {
             currentCharter = getCurrentCharter();
         }
@@ -294,16 +292,13 @@ public class PageFactory {
         paint.setColor(getTextColor());
         if (lines.size() == 0) {
             return;
-        }
-
-        if (lines.size() > 0) {
+        }else {
             float y = marginHeight;
             for (String strLine : lines) {
                 y += fontSize + lineSpace;
                 c.drawText(strLine, measureMarginWidth, y, fontPaint);
             }
         }
-
         // 画进度
         float fPercent = (float) (currentPage.getPosition() * 1.0 / bookUtil.getBookLen());
         if (pageEvent != null) {
@@ -447,7 +442,7 @@ public class PageFactory {
         }
     }
 
-    public Page getNextPage() {
+    private Page getNextPage() {
         bookUtil.setPosition(currentPage.getEnd());
 
         Page page = new Page();
@@ -457,7 +452,7 @@ public class PageFactory {
         return page;
     }
 
-    public Page getPrePage() {
+    private Page getPrePage() {
         bookUtil.setPosition(currentPage.getPosition());
 
         Page page = new Page();
@@ -467,7 +462,7 @@ public class PageFactory {
         return page;
     }
 
-    public Page getPageForBegin(long begin) {
+    private Page getPageForBegin(long begin) {
         Page page = new Page();
         page.setPosition(begin);
 
@@ -477,7 +472,7 @@ public class PageFactory {
         return page;
     }
 
-    public List<String> getNextLines() {
+    private List<String> getNextLines() {
         List<String> lines = new ArrayList<>();
         float width = 0;
         String line = "";
@@ -520,7 +515,7 @@ public class PageFactory {
         return lines;
     }
 
-    public List<String> getPreLines() {
+    private List<String> getPreLines() {
         List<String> lines = new ArrayList<>();
         float width = 0;
         String line = "";
@@ -609,7 +604,6 @@ public class PageFactory {
 
     /**
      * 获取现在的章
-     *
      * @return
      */
     public int getCurrentCharter() {
@@ -627,10 +621,9 @@ public class PageFactory {
 
     /**
      * 绘制当前页面
-     *
-     * @param updateChapter
+     * @param updateChapter 是否更新章节
      */
-    public void currentPage(Boolean updateChapter) {
+    private void currentPage(Boolean updateChapter) {
         onDraw(bookPageWidget.getCurPage(), currentPage.getLines(), updateChapter);
         onDraw(bookPageWidget.getNextPage(), currentPage.getLines(), updateChapter);
     }
@@ -643,7 +636,6 @@ public class PageFactory {
 
     /**
      * 改变章节进度
-     *
      * @param begin
      */
     public void changeChapter(long begin) {
@@ -653,7 +645,6 @@ public class PageFactory {
 
     /**
      * 改变亮度
-     *
      * @param activity
      * @param brightness
      */
@@ -665,7 +656,6 @@ public class PageFactory {
 
     /**
      * 获取系统亮度
-     *
      * @param activity
      * @return
      */
@@ -683,8 +673,7 @@ public class PageFactory {
 
     /**
      * 改变字体大小
-     *
-     * @param fontSize
+     * @param fontSize 新的字体大小
      */
     public void changeFontSize(int fontSize) {
         this.fontSize = fontSize;
@@ -698,23 +687,23 @@ public class PageFactory {
     /**
      * 改变背景
      *
-     * @param type
+     * @param bg
      */
-    public void changeBookBg(int type) {
-        setBookBg(type);
+    public void changeBookBg(int bg) {
+        setBookBg(bg);
         currentPage(false);
     }
 
     /**
      * 设置读书页面的背景和字的颜色
      *
-     * @param type
+     * @param bg 背景颜色
      */
-    public void setBookBg(int type) {
+    private void setBookBg(int bg) {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(bitmap);
         int color = 0;
-        switch (type) {
+        switch (bg) {
             case Config.BOOK_BG_WHITE:
                 canvas.drawColor(ContextCompat.getColor(context, R.color.read_bg_white));
                 color = ContextCompat.getColor(context, R.color.read_font_color_by_white);
@@ -749,7 +738,7 @@ public class PageFactory {
         setTextColor(color);
     }
 
-    public void setBookPageBg(int color) {
+    private void setBookPageBg(int color) {
         if (bookPageWidget != null) {
             bookPageWidget.setBgColor(color);
         }
@@ -758,9 +747,9 @@ public class PageFactory {
     /**
      * 设置日间或者夜间模式
      *
-     * @param isNight
+     * @param isNight 是否为夜间模式
      */
-    public void setDayOrNight(Boolean isNight) {
+    public void setDayOrNight(boolean isNight) {
         initBg(isNight);
         currentPage(false);
     }
@@ -789,11 +778,6 @@ public class PageFactory {
         return currentPage;
     }
 
-    /**
-     * 获取书本的章
-     *
-     * @return
-     */
     public List<BookCatalog> getDirectoryList() {
         return bookUtil.getBookCatalogList();
     }
@@ -850,7 +834,7 @@ public class PageFactory {
         /**
          * 读书进度监听
          *
-         * @param progress
+         * @param progress 进度
          */
         void changeProgress(float progress);
     }

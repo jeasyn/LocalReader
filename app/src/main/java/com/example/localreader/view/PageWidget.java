@@ -18,7 +18,6 @@ import com.example.localreader.util.PageFactory;
  * @date 2020/11/15
  */
 public class PageWidget extends View {
-    private final static String TAG = "PageWidget";
     private Context context;
     /**
      * 屏幕宽
@@ -145,14 +144,14 @@ public class PageWidget extends View {
                     }
                     cancelPage = false;
                     if (isNext) {
-                        Boolean isNext = mTouchListener.nextPage();
+                        boolean isNext = mTouchListener.nextPage();
                         baseFlip.setDirection(BaseFlip.Direction.next);
                         if (!isNext) {
                             noNext = true;
                             return true;
                         }
                     } else {
-                        Boolean isPre = mTouchListener.prePage();
+                        boolean isPre = mTouchListener.prePage();
                         baseFlip.setDirection(BaseFlip.Direction.pre);
                         if (!isPre) {
                             noNext = true;
@@ -199,13 +198,13 @@ public class PageWidget extends View {
                     isNext = true;
                 }
                 if (isNext) {
-                    Boolean isNext = mTouchListener.nextPage();
+                    boolean isNext = mTouchListener.nextPage();
                     baseFlip.setDirection(BaseFlip.Direction.next);
                     if (!isNext) {
                         return true;
                     }
                 } else {
-                    Boolean isPre = mTouchListener.prePage();
+                    boolean isPre = mTouchListener.prePage();
                     baseFlip.setDirection(BaseFlip.Direction.pre);
                     if (!isPre) {
                         return true;
@@ -246,21 +245,28 @@ public class PageWidget extends View {
         }
     }
 
-    public boolean isRunning() {
-        return isRunning;
-    }
-
     public void setTouchListener(TouchListener mTouchListener) {
         this.mTouchListener = mTouchListener;
     }
 
     public interface TouchListener {
+        /**
+         * 触摸中间
+         */
         void center();
-
-        Boolean prePage();
-
-        Boolean nextPage();
-
+        /**
+         * 触摸左边
+         * @return
+         */
+        boolean prePage();
+        /**
+         * 触摸右边
+         * @return
+         */
+        boolean nextPage();
+        /**
+         * 取消触摸
+         */
         void cancel();
     }
 }

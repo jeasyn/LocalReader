@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.example.localreader.R;
 import com.example.localreader.entity.Bookmark;
-import com.example.localreader.entity.Config;
 import com.example.localreader.util.PageFactory;
 
 import java.text.DecimalFormat;
@@ -46,7 +45,7 @@ public class BookmarkAdapter extends BaseAdapter {
         final ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_bookmark, null);
+            convertView = inflater.inflate(R.layout.item_bookmark, parent, false);
             viewHolder.markContent = convertView.findViewById(R.id.tv_mark_content);
             viewHolder.markProgress = convertView.findViewById(R.id.tv_mark_progress);
             viewHolder.markTime = convertView.findViewById(R.id.tv_mark_time);
@@ -69,7 +68,6 @@ public class BookmarkAdapter extends BaseAdapter {
         this.context = context;
         this.list = list;
         pageFactory = PageFactory.getInstance();
-        Config.getInstance();
     }
 
     class ViewHolder {

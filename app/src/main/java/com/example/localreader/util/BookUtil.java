@@ -1,7 +1,6 @@
 package com.example.localreader.util;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -28,29 +27,26 @@ import java.util.List;
  */
 public class BookUtil {
 
-    private Context context;
     private static final String CACHED_PATH = Environment.getExternalStorageDirectory() + "/LocalReader/";
     /**
      * 存储的字符数
      */
-    public static final int CACHED_SIZE = 30000;
+    private static final int CACHED_SIZE = 30000;
 
-    protected final ArrayList<Cache> caches = new ArrayList<>();
+    private final ArrayList<Cache> caches = new ArrayList<>();
     /**
      * 目录
      */
     private List<BookCatalog> bookCatalogList = new ArrayList<>();
 
-    private String strCharsetName;
     private String bookName;
     private String bookPath;
     private long bookLen;
     private long position;
     private Book mBook;
-//    private final String CACHED_PATH = context.getExternalFilesDir(null);
+//    private final File CACHED_PATH = context.getExternalFilesDir(null);
 
-    public BookUtil(Context context) {
-        this.context = context;
+    public BookUtil() {
         // 路径/storage/emulated/0/LocalReader/
         File file = new File(CACHED_PATH);
         if (!file.exists()) {
@@ -71,14 +67,14 @@ public class BookUtil {
 
     /**
      * 删除书签
-     * @param selectBooks
-     * @return
+     *
+     * @param selectBooks 选中的图书集合
      */
-    public static void deleteBookmarks(List<Book> selectBooks){
+    public static void deleteBookmarks(List<Book> selectBooks) {
         for (Book selectBook : selectBooks) {
-           List<Bookmark> temp = LitePal.where("bookPath = ?", selectBook.getBookPath()).find(Bookmark.class);
+            List<Bookmark> temp = LitePal.where("bookPath = ?", selectBook.getBookPath()).find(Bookmark.class);
             for (Bookmark bookmark : temp) {
-                LitePal.delete(Bookmark.class,bookmark.getId());
+                LitePal.delete(Bookmark.class, bookmark.getId());
             }
         }
     }
@@ -92,8 +88,8 @@ public class BookUtil {
             file.mkdir();
         } else {
             File[] files = file.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                files[i].delete();
+            for (File temp : files) {
+                temp.delete();
             }
         }
     }
@@ -115,7 +111,7 @@ public class BookUtil {
         if (position >= bookLen) {
             return null;
         }
-        String line = "";
+        StringBuilder line = new StringBuilder();
         while (position < bookLen) {
             int word = next(false);
             if (word == -1) {
@@ -126,16 +122,16 @@ public class BookUtil {
                 next(false);
                 break;
             }
-            line += wordChar;
+            line.append(wordChar);
         }
-        return line.toCharArray();
+        return line.toString().toCharArray();
     }
 
     public char[] preLine() {
         if (position <= 0) {
             return null;
         }
-        String line = "";
+        StringBuilder line = new StringBuilder();
         while (position >= 0) {
             int word = pre(false);
             if (word == -1) {
@@ -146,12 +142,12 @@ public class BookUtil {
                 pre(false);
                 break;
             }
-            line = wordChar + line;
+            line.append(wordChar);
         }
-        return line.toCharArray();
+        return line.toString().toCharArray();
     }
 
-    public char current() {
+    private char current() {
         int cachePos = 0;
         int pos = 0;
         int len = 0;
@@ -169,7 +165,7 @@ public class BookUtil {
         return charArray[pos];
     }
 
-    public int pre(boolean back) {
+    private int pre(boolean back) {
         position -= 1;
         if (position < 0) {
             position = 0;
@@ -192,9 +188,11 @@ public class BookUtil {
 
     /**
      * 缓存书本
-     * @throws IOException
+     *
+     * @throws IOException 抛出io异常
      */
     private void cacheBook() throws IOException {
+        String strCharsetName;
         if (TextUtils.isEmpty(mBook.getCharset())) {
             strCharsetName = FileUtil.getCharset(bookPath);
             if (strCharsetName == null) {
@@ -252,12 +250,13 @@ public class BookUtil {
                 getChapter();
             }
         }.start();
+
     }
 
     /**
      * 获取章节名称
      */
-    public synchronized void getChapter() {
+    private synchronized void getChapter() {
         try {
             long size = 0;
             for (int i = 0; i < caches.size(); i++) {
@@ -295,16 +294,17 @@ public class BookUtil {
         return bookLen;
     }
 
-    protected String fileName(int index) {
+    private String fileName(int index) {
         return CACHED_PATH + bookName + index;
     }
 
     /**
      * 获取书本缓存
-     * @param index
-     * @return
+     *
+     * @param index 书本缓存索引
+     * @return 书本缓存数组
      */
-    public char[] block(int index) {
+    private char[] block(int index) {
         if (caches.size() == 0) {
             return new char[1];
         }
@@ -321,7 +321,7 @@ public class BookUtil {
                 }
             } catch (IOException e) {
                 throw new RuntimeException("Error during reading " + fileName(index));
-            }finally {
+            } finally {
                 try {
                     if (reader != null) {
                         reader.close();

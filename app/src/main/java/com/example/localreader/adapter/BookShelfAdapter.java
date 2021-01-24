@@ -44,8 +44,6 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private View.OnLongClickListener mItemLongClickListener;
     private View.OnClickListener mItemSelectedClickListener;
     private View.OnClickListener mImportListener;
-    private String readed = "100.0%";
-    private String noRead = "未读";
 
     public BookShelfAdapter(List<Book> books, Context context) {
         mBooleanArray = new SparseBooleanArray();
@@ -98,6 +96,8 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                 String progress = book.getProgress();
 
+                String readed = "100.0%";
+                String noRead = "未读";
                 if (progress.equals(readed)) {
                     progress = "已读完";
                 } else if (!progress.equals(noRead)) {
@@ -132,6 +132,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     /**
      * 导入图书监听
+     *
      * @param mImportListener
      */
     public void setImportListener(View.OnClickListener mImportListener) {
@@ -140,6 +141,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     /**
      * 点击图书监听
+     *
      * @param mOnItemClickListener
      */
     public void setOnItemClickListener(View.OnClickListener mOnItemClickListener) {
@@ -160,7 +162,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         initCheck(false);
     }
 
-    public void initCheck(boolean states) {
+    private void initCheck(boolean states) {
         if (books != null) {
             for (Book book : books) {
                 setItemSelected(book.getId(), states);
@@ -171,19 +173,19 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     /**
      * 选中图书
-     * @param id
-     * @return
+     *
+     * @param id 图书id
      */
-    public int selectBook(int id) {
+    public void selectBook(int id) {
         Book book = BookShelfUtil.queryBookById(id);
         boolean isSelected = getItemSelected(book.getId());
         setItemSelected(book.getId(), !isSelected);
         notifyDataSetChanged();
-        return getSelectSize();
     }
 
     /**
      * 长按图书后自动点击图书监听
+     *
      * @param onItemClickListener
      */
     public void setOnItemClickSelectListener(View.OnClickListener onItemClickListener) {
@@ -207,7 +209,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
 
-    public void setItemSelected(int id, boolean selected) {
+    private void setItemSelected(int id, boolean selected) {
         if (mBooleanArray == null) {
             mBooleanArray = new SparseBooleanArray();
         }
@@ -216,10 +218,11 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     /**
      * 返回图书id是否被选中
-     * @param id
-     * @return
+     *
+     * @param id 图书id
+     * @return 图书是否被选中
      */
-    public boolean getItemSelected(int id) {
+    private boolean getItemSelected(int id) {
         if (mBooleanArray == null) {
             return false;
         }
@@ -227,8 +230,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     /**
-     * 获取被选中的id集合
-     * @return
+     * @return 被选中的图书集合
      */
     public List<Book> getSelectBook() {
         List<Book> selectBook = new ArrayList<>();

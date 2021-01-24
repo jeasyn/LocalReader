@@ -16,7 +16,8 @@ public class BookShelfUtil {
 
     /**
      * 将集合中的txt文件添加到书架上
-     * @param files
+     *
+     * @param files 选中的文件集合
      */
     public static void importBooks(List<File> files) {
         if (files.size() != 0) {
@@ -34,8 +35,9 @@ public class BookShelfUtil {
 
     /**
      * 删除所选图书集合
-     * @param selectBook
-     * @return
+     *
+     * @param selectBook 选中的图书集合
+     * @return 删除后剩余的图书集合
      */
     public static List<Book> deleteBooks(List<Book> selectBook) {
         List<Book> books = LitePal.findAll(Book.class);
@@ -55,8 +57,9 @@ public class BookShelfUtil {
 
     /**
      * 通过id查询数据库的图书
-     * @param id
-     * @return
+     *
+     * @param id 图书id
+     * @return Id为id的图书
      */
     public static Book queryBookById(int id) {
         List<Book> books = LitePal.findAll(Book.class);
@@ -70,7 +73,8 @@ public class BookShelfUtil {
 
     /**
      * 查询书架上所有图书的名称
-     * @return
+     *
+     * @return 图书名称集合
      */
     public static List<String> getBookShelfName() {
         List<Book> books = LitePal.findAll(Book.class);

@@ -95,8 +95,9 @@ public class BookmarkFragment extends Fragment {
 
     /**
      * 用于从Activity传递数据到Fragment
-     * @param bookPath
-     * @return
+     *
+     * @param bookPath 图书路径
+     * @return BookmarkFragment
      */
     public static BookmarkFragment newInstance(String bookPath) {
         Bundle bundle = new Bundle();

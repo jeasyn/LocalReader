@@ -35,9 +35,8 @@ public class ImportActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ImportAdapter adapter;
     private TextView noFilePointTv;
-    private List<String> bookShelfNames;
     /**
-     * 减去书架的个数（最多选中文件个数
+     * 减去书架的个数（最多选中文件个数）
      */
     private int actualSize;
     private Button importBookshelfBtn;
@@ -80,7 +79,7 @@ public class ImportActivity extends AppCompatActivity {
         adapter.setCheckedChangeListener(mCheckedChangeListener);
 
         // 将导入到书架上的书状态变成"已导入"
-        bookShelfNames = BookShelfUtil.getBookShelfName();
+        List<String> bookShelfNames = BookShelfUtil.getBookShelfName();
         adapter.getBookShelfNames(bookShelfNames);
 
         actualSize = sdCardFiles.size() - bookShelfNames.size();

@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat;
 
 import com.example.localreader.R;
 import com.example.localreader.entity.BookCatalog;
-import com.example.localreader.entity.Config;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class CatalogAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setCharter(int charter){
+    public void setCharter(int charter) {
         currentCharter = charter;
     }
 
@@ -48,18 +47,18 @@ public class CatalogAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
         final ViewHolder viewHolder;
-        if(convertView==null) {
-            viewHolder= new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_catalog,null);
+        if (convertView == null) {
+            viewHolder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.item_catalog, parent, false);
             viewHolder.catalog = convertView.findViewById(R.id.tv_catalog);
             convertView.setTag(viewHolder);
-        }else {
-            viewHolder = (ViewHolder)convertView.getTag();
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        if (currentCharter == position){
-            viewHolder.catalog.setTextColor(ContextCompat.getColor(context,R.color.colorAccent));
-        }else{
-            viewHolder.catalog.setTextColor(ContextCompat.getColor(context,R.color.read_default_text));
+        if (currentCharter == position) {
+            viewHolder.catalog.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+        } else {
+            viewHolder.catalog.setTextColor(ContextCompat.getColor(context, R.color.read_default_text));
         }
         viewHolder.catalog.setText(bookCatalogueList.get(position).getCatalog());
         return convertView;
@@ -68,7 +67,6 @@ public class CatalogAdapter extends BaseAdapter {
     public CatalogAdapter(Context context, List<BookCatalog> bookCatalogueList) {
         this.context = context;
         this.bookCatalogueList = bookCatalogueList;
-        Config.getInstance();
     }
 
     class ViewHolder {
