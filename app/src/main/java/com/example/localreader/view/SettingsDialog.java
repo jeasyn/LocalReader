@@ -19,7 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * @author xialijuan
  * @date 2020/12/18
  */
-public class SettingDialog extends Dialog implements View.OnClickListener {
+public class SettingsDialog extends Dialog implements View.OnClickListener {
 
     private Config config;
     private int fontSizeMin;
@@ -36,11 +36,11 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     private TextView lessSizeTv;
     private SettingListener mSettingListener;
 
-    public SettingDialog(@NonNull Context context) {
+    public SettingsDialog(@NonNull Context context) {
         this(context, R.style.read_setting_popup);
     }
 
-    public SettingDialog(@NonNull Context context, int themeResId) {
+    public SettingsDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
     }
 
@@ -106,6 +106,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
 
     /**
      * 设置背景
+     *
      * @param bg 背景颜色
      */
     private void setBookBg(int bg) {
@@ -174,6 +175,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
 
     /**
      * 改变亮度进度条位置
+     *
      * @param brightness 进度条的值
      */
     private void changeBrightnessProgress(int brightness) {
@@ -193,18 +195,21 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     public interface SettingListener {
         /**
          * 改变亮度
+         *
          * @param brightness 亮度值
          */
         void changeSystemBright(float brightness);
 
         /**
          * 改变字号
+         *
          * @param fontSize 字号大小
          */
         void changeFontSize(int fontSize);
 
         /**
          * 换读书背景
+         *
          * @param bg 背景颜色
          */
         void changeBookBg(int bg);

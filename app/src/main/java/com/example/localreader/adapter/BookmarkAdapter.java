@@ -21,22 +21,17 @@ import java.util.List;
 public class BookmarkAdapter extends BaseAdapter {
 
     private Context context;
+    /**
+     * 书签集合
+     */
     private List<Bookmark> list;
     private PageFactory pageFactory;
 
-    @Override
-    public int getCount() {
-        return list.size();
-    }
 
-    @Override
-    public Object getItem(int position) {
-        return list.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+    public BookmarkAdapter(Context context, List<Bookmark> list) {
+        this.context = context;
+        this.list = list;
+        pageFactory = PageFactory.getInstance();
     }
 
     @Override
@@ -55,19 +50,31 @@ public class BookmarkAdapter extends BaseAdapter {
         }
         Bookmark bookmark = list.get(position);
         viewHolder.markContent.setText(bookmark.getPartContent());
-        long begin = list.get(position).getPosition();
+
+        // 格式化显示书签进度
+        long begin = bookmark.getPosition();
         float percent = (float) (begin * 1.0 / pageFactory.getBookLen());
         DecimalFormat df = new DecimalFormat("#0.0");
         String progress = df.format(percent * 100) + "%";
         viewHolder.markProgress.setText(progress);
-        viewHolder.markTime.setText(list.get(position).getTime().substring(0, 16));
+
+        viewHolder.markTime.setText(bookmark.getTime().substring(0, 16));
         return convertView;
     }
 
-    public BookmarkAdapter(Context context, List<Bookmark> list) {
-        this.context = context;
-        this.list = list;
-        pageFactory = PageFactory.getInstance();
+    @Override
+    public int getCount() {
+        return list.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return list.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     class ViewHolder {

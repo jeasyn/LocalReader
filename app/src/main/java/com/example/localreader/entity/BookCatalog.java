@@ -8,6 +8,9 @@ public class BookCatalog {
 
     private int id;
     private String bookPath;
+    /**
+     * 章节名称
+     */
     private String catalog;
     /**
      * 最后一次读的位置

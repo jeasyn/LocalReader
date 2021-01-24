@@ -24,7 +24,7 @@ import com.example.localreader.entity.Book;
 import com.example.localreader.entity.BookCatalog;
 import com.example.localreader.entity.Config;
 import com.example.localreader.entity.Page;
-import com.example.localreader.view.PageWidget;
+import com.example.localreader.view.PageView;
 
 import org.litepal.LitePal;
 
@@ -59,9 +59,6 @@ public class PageFactory {
      * 上下与边缘的距离
      */
     private float marginHeight;
-    /**
-     * 左右与边缘的距离
-     */
     private float measureMarginWidth;
     /**
      * 左右与边缘的距离
@@ -104,9 +101,9 @@ public class PageFactory {
      */
     private Paint paint;
     /**
-     * 电池字体大小
+     * 字体大小
      */
-    private float mBatterryFontSize;
+    private float mFontSize;
     /**
      * 背景图片
      */
@@ -114,15 +111,15 @@ public class PageFactory {
     /**
      * 当前是否为第一页
      */
-    private boolean isFirstPage;
+    private boolean firstPage;
     /**
      * 当前是否为最后一页
      */
-    private boolean isLastPage;
+    private boolean lastPage;
     /**
-     * 书本widget
+     * 书本视图
      */
-    private PageWidget bookPageWidget;
+    private PageView bookPageView;
     /**
      * 书本路径
      */
@@ -154,11 +151,10 @@ public class PageFactory {
         return pageFactory;
     }
 
-    public static synchronized PageFactory createPageFactory(Context context) {
+    public static synchronized void createPageFactory(Context context) {
         if (pageFactory == null) {
             pageFactory = new PageFactory(context);
         }
-        return pageFactory;
     }
 
     public PageFactory(Context context) {
@@ -199,11 +195,11 @@ public class PageFactory {
         waitPaint.setColor(textColor);
         // 设置该项为true，将有助于文本在LCD屏幕上的显示效果
         waitPaint.setSubpixelText(true);
-        calculateLineCount();
+        getLineCount();
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBatterryFontSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, context.getResources().getDisplayMetrics());
-        paint.setTextSize(mBatterryFontSize);
+        mFontSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, context.getResources().getDisplayMetrics());
+        paint.setTextSize(mFontSize);
         paint.setTextAlign(Paint.Align.LEFT);
         paint.setColor(textColor);
 
@@ -236,7 +232,7 @@ public class PageFactory {
         }
     }
 
-    private void calculateLineCount() {
+    private void getLineCount() {
         // 可显示的行数
         lineCount = (int) (visibleHeight / (fontSize + lineSpace));
     }
@@ -266,7 +262,7 @@ public class PageFactory {
         // 下面这行是实现水平居中，drawText对应改为传入targetRect.centerX()
         waitPaint.setTextAlign(Paint.Align.CENTER);
         c.drawText(status, targetRect.centerX(), baseline, waitPaint);
-        bookPageWidget.postInvalidate();
+        bookPageView.postInvalidate();
     }
 
     private void onDraw(Bitmap bitmap, List<String> lines, Boolean updateCharter) {
@@ -317,10 +313,9 @@ public class PageFactory {
         //画章
         if (getDirectoryList().size() > 0) {
             String charterName = getDirectoryList().get(currentCharter).getCatalog();
-            c.drawText(charterName, 0, statusMarginBottom + mBatterryFontSize + 30, paint);
+            c.drawText(charterName, 0, statusMarginBottom + mFontSize + 30, paint);
         }
-
-        bookPageWidget.postInvalidate();
+        bookPageView.postInvalidate();
     }
 
     /**
@@ -329,19 +324,19 @@ public class PageFactory {
     public void upPage() {
         Log.d("position", pageFactory.getPosition() + " ");
         if (currentPage.getPosition() <= 0) {
-            if (!isFirstPage) {
+            if (!firstPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_head), Toast.LENGTH_SHORT).show();
             }
-            isFirstPage = true;
+            firstPage = true;
             return;
         } else {
-            isFirstPage = false;
+            firstPage = false;
         }
         position = currentPage.getPosition();
         cancelPage = currentPage;
-        onDraw(bookPageWidget.getCurPage(), currentPage.getLines(), true);
+        onDraw(bookPageView.getCurPage(), currentPage.getLines(), true);
         currentPage = getPrePage();
-        onDraw(bookPageWidget.getNextPage(), currentPage.getLines(), true);
+        onDraw(bookPageView.getNextPage(), currentPage.getLines(), true);
     }
 
     /**
@@ -350,20 +345,20 @@ public class PageFactory {
     public void nextPage() {
         Log.d("position", pageFactory.getPosition() + " ");
         if (currentPage.getEnd() >= bookUtil.getBookLen()) {
-            if (!isLastPage) {
+            if (!lastPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_end), Toast.LENGTH_SHORT).show();
             }
-            isLastPage = true;
+            lastPage = true;
             return;
         } else {
-            isLastPage = false;
+            lastPage = false;
         }
         position = currentPage.getPosition();
         cancelPage = currentPage;
-        onDraw(bookPageWidget.getCurPage(), currentPage.getLines(), true);
+        onDraw(bookPageView.getCurPage(), currentPage.getLines(), true);
         prePage = currentPage;
         currentPage = getNextPage();
-        onDraw(bookPageWidget.getNextPage(), currentPage.getLines(), true);
+        onDraw(bookPageView.getNextPage(), currentPage.getLines(), true);
     }
 
     /**
@@ -387,8 +382,8 @@ public class PageFactory {
         bookName = book.getBookName().split(".txt")[0];
 
         status = Status.OPENING;
-        drawStatus(bookPageWidget.getCurPage());
-        drawStatus(bookPageWidget.getNextPage());
+        drawStatus(bookPageView.getCurPage());
+        drawStatus(bookPageView.getNextPage());
         if (bookTask != null && bookTask.getStatus() != AsyncTask.Status.FINISHED) {
             bookTask.cancel(true);
         }
@@ -408,13 +403,13 @@ public class PageFactory {
             if (result) {
                 PageFactory.status = PageFactory.Status.FINISH;
                 currentPage = getPageForBegin(begin);
-                if (bookPageWidget != null) {
+                if (bookPageView != null) {
                     currentPage(true);
                 }
             } else {
                 PageFactory.status = PageFactory.Status.FAIL;
-                drawStatus(bookPageWidget.getCurPage());
-                drawStatus(bookPageWidget.getNextPage());
+                drawStatus(bookPageView.getCurPage());
+                drawStatus(bookPageView.getNextPage());
                 Toast.makeText(context, context.getResources().getString(R.string.read_load_fail), Toast.LENGTH_SHORT).show();
             }
         }
@@ -441,6 +436,7 @@ public class PageFactory {
             return true;
         }
     }
+
 
     private Page getNextPage() {
         bookUtil.setPosition(currentPage.getEnd());
@@ -624,8 +620,8 @@ public class PageFactory {
      * @param updateChapter 是否更新章节
      */
     private void currentPage(Boolean updateChapter) {
-        onDraw(bookPageWidget.getCurPage(), currentPage.getLines(), updateChapter);
-        onDraw(bookPageWidget.getNextPage(), currentPage.getLines(), updateChapter);
+        onDraw(bookPageView.getCurPage(), currentPage.getLines(), updateChapter);
+        onDraw(bookPageView.getNextPage(), currentPage.getLines(), updateChapter);
     }
 
     public void changeProgress(float progress) {
@@ -678,7 +674,7 @@ public class PageFactory {
     public void changeFontSize(int fontSize) {
         this.fontSize = fontSize;
         fontPaint.setTextSize(this.fontSize);
-        calculateLineCount();
+        getLineCount();
         measureMarginWidth();
         currentPage = getPageForBegin(currentPage.getPosition());
         currentPage(true);
@@ -739,8 +735,8 @@ public class PageFactory {
     }
 
     private void setBookPageBg(int color) {
-        if (bookPageWidget != null) {
-            bookPageWidget.setBgColor(color);
+        if (bookPageView != null) {
+            bookPageView.setBgColor(color);
         }
     }
 
@@ -759,7 +755,7 @@ public class PageFactory {
         bookPath = "";
         bookName = "";
         book = null;
-        bookPageWidget = null;
+        bookPageView = null;
         pageEvent = null;
         cancelPage = null;
         prePage = null;
@@ -787,11 +783,11 @@ public class PageFactory {
     }
 
     public boolean isFirstPage() {
-        return isFirstPage;
+        return firstPage;
     }
 
     public boolean isLastPage() {
-        return isLastPage;
+        return lastPage;
     }
 
     public void setBgBitmap(Bitmap bitmap) {
@@ -814,8 +810,8 @@ public class PageFactory {
         return this.fontSize;
     }
 
-    public void setPageWidget(PageWidget mBookPageWidget) {
-        this.bookPageWidget = mBookPageWidget;
+    public void setPageWidget(PageView mBookPageView) {
+        this.bookPageView = mBookPageView;
     }
 
     public long getPosition() {

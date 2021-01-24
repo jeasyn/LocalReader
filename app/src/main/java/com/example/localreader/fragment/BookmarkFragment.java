@@ -34,19 +34,17 @@ public class BookmarkFragment extends Fragment {
     private List<Bookmark> bookmarkList;
     private BookmarkAdapter bookmarkAdapter;
     private PageFactory pageFactory;
-    private ListView bookmarkLv;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_mark, container, false);
         init(view);
-        initListener();
         return view;
     }
 
     private void init(View v) {
-        bookmarkLv = v.findViewById(R.id.rv_bookmark);
+        ListView bookmarkLv = v.findViewById(R.id.rv_bookmark);
 
         pageFactory = PageFactory.getInstance();
         Bundle bundle = getArguments();
@@ -57,41 +55,43 @@ public class BookmarkFragment extends Fragment {
         bookmarkList = LitePal.where("bookPath = ?", bookPath).find(Bookmark.class);
         bookmarkAdapter = new BookmarkAdapter(getActivity(), bookmarkList);
         bookmarkLv.setAdapter(bookmarkAdapter);
+
+        bookmarkLv.setOnItemClickListener(mOnItemClickListener);
+        bookmarkLv.setOnItemLongClickListener(mOnItemLongClickListener);
     }
 
-    private void initListener() {
-        bookmarkLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pageFactory.changeChapter(bookmarkList.get(position).getPosition());
-                getActivity().finish();
-            }
-        });
-        bookmarkLv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("提示")
-                        .setMessage("确定删除书签？")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                LitePal.delete(Bookmark.class, bookmarkList.get(position).getId());
-                                bookmarkList.clear();
-                                bookmarkList.addAll(LitePal.where("bookPath = ?", bookPath).find(Bookmark.class));
-                                bookmarkAdapter.notifyDataSetChanged();
-                            }
-                        }).setCancelable(true).show();
-                return false;
-            }
-        });
-    }
+    private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            pageFactory.changeChapter(bookmarkList.get(position).getPosition());
+            getActivity().finish();
+        }
+    };
+
+    private AdapterView.OnItemLongClickListener mOnItemLongClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("提示")
+                    .setMessage("确定删除书签？")
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            LitePal.delete(Bookmark.class, bookmarkList.get(position).getId());
+                            bookmarkList.clear();
+                            bookmarkList.addAll(LitePal.where("bookPath = ?", bookPath).find(Bookmark.class));
+                            bookmarkAdapter.notifyDataSetChanged();
+                        }
+                    }).setCancelable(true).show();
+            return false;
+        }
+    };
 
     /**
      * 用于从Activity传递数据到Fragment

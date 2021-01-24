@@ -80,7 +80,6 @@ public class Config {
 
     public void setNight(boolean night) {
         sp.edit().putBoolean(IS_NIGHT,night).commit();
-
     }
 
     public float getLight(){

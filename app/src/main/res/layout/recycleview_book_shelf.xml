@@ -29,6 +29,7 @@
             android:layout_weight="1"
             android:src="@drawable/book_item_selector"
             android:visibility="gone" />
+
     </RelativeLayout>
 
     <TextView

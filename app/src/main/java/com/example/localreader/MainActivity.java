@@ -47,8 +47,6 @@ import org.litepal.LitePal;
 
 import java.io.File;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * @author xialijuan
@@ -56,7 +54,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 
     private List<Book> books;
-    private static BookShelfAdapter adapter;
+    private BookShelfAdapter adapter;
     private RecyclerView bookShelfRv;
     private LinearLayout bottomLayout;
     private LinearLayout deleteLayout;
@@ -269,6 +267,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * 长按图书监听
+     */
     private View.OnLongClickListener mItemLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -307,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
     private void hideBottomLayout() {
         isHideBottom = false;
         // 隐藏复选框
-        adapter.animState(false);
+        adapter.showState(false);
         Animation mAnimationBottomOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bottom_out);
         bottomLayout.setVisibility(View.GONE);
         bottomLayout.startAnimation(mAnimationBottomOut);
@@ -317,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
      * 导入时直接隐藏，无需动画
      */
     public void directHideBottom() {
-        adapter.animState(false);
+        adapter.showState(false);
         bottomLayout.setVisibility(View.GONE);
     }
 
@@ -350,7 +351,6 @@ public class MainActivity extends AppCompatActivity {
         });
         popupWindow.showAtLocation(inflater.inflate(R.layout.activity_main, null), Gravity.CENTER, 0, 0);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -385,24 +385,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    boolean isExit = false;
+    private long exitTime = 0;
     private void exit() {
-//        // 声明一个定时器
-        Timer timer;
-        if (!isExit) {
-            isExit = true;
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.back_app), Toast.LENGTH_SHORT).show();
-            timer = new Timer();
-            // 执行定时任务，两秒内如果没有再次按下，则不会退出
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    isExit = false;
-                }
-            }, 2000);
+        long endTime = 2000;
+        //两秒内如果没有再次按下，则不会退出
+        if ((System.currentTimeMillis() - exitTime) > endTime) {
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.back_app), Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
         } else {
-            // 两秒内再次按下返回键，则直接退出程序
             finish();
+            System.exit(0);
         }
     }
 

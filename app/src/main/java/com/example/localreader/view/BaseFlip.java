@@ -25,10 +25,10 @@ public abstract class BaseFlip {
          */
         pre(true);
 
-        public final boolean IsHorizontal;
+        public final boolean horizontal;
 
-        Direction(boolean isHorizontal) {
-            IsHorizontal = isHorizontal;
+        Direction(boolean horizontal) {
+            this.horizontal = horizontal;
         }
     }
 
