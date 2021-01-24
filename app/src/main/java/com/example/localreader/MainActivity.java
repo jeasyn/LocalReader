@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         initData();
     }
 
-    public void initViews() {
+    private void initViews() {
         bookShelfRv = findViewById(R.id.rv_book_shelf);
         bottomLayout = findViewById(R.id.ll_main_bottom);
 
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         detailLayout.setOnClickListener(mDetailListener);
     }
 
-    public void initData() {
+    private void initData() {
         books = LitePal.findAll(Book.class);
         bookShelfRv.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
         adapter = new BookShelfAdapter(books, this);
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             selectImg.setImageResource(R.drawable.main_bottom_select_all);
         } else if (books.size() == 0) {
             selectImg.setImageResource(R.drawable.main_bottom_no_select);
-            selectTv.setTextColor(ContextCompat.getColor(this,R.color.main_bottom_freeze_color));
+            selectTv.setTextColor(ContextCompat.getColor(this, R.color.main_bottom_freeze_color));
         } else {
             selectTv.setText(getResources().getString(R.string.main_select_all));
             selectImg.setImageResource(R.drawable.main_bottom_select_all_cancel);
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (selectSize == 0) {
             deleteImg.setImageResource(R.drawable.main_bottom_no_delete);
-            deleteTv.setTextColor(ContextCompat.getColor(this,R.color.main_bottom_freeze_color));
+            deleteTv.setTextColor(ContextCompat.getColor(this, R.color.main_bottom_freeze_color));
         } else {
             deleteImg.setImageResource(R.drawable.main_bottom_delete);
             deleteTv.setTextColor(Color.BLACK);
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             detailTv.setTextColor(Color.BLACK);
         } else {
             detailImg.setImageResource(R.drawable.main_bottom_no_detail);
-            detailTv.setTextColor(ContextCompat.getColor(this,R.color.main_bottom_freeze_color));
+            detailTv.setTextColor(ContextCompat.getColor(this, R.color.main_bottom_freeze_color));
         }
     }
 
@@ -334,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
         popupWindow = new PopupWindow(view, 2 * width / 3, WindowManager.LayoutParams.WRAP_CONTENT);
         // 点击空白处，隐藏popup窗口
         popupWindow.setFocusable(true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
         // 创建当前界面的一个参数对象
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.alpha = 0.3f;
@@ -383,10 +384,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    boolean isExit = false;
 
+    boolean isExit = false;
     private void exit() {
-        // 声明一个定时器
+//        // 声明一个定时器
         Timer timer;
         if (!isExit) {
             isExit = true;

@@ -16,9 +16,6 @@ import com.google.android.material.tabs.TabLayout;
  */
 public class CatalogActivity extends AppCompatActivity {
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private MyPagerAdapter pagerAdapter;
     private Book book;
 
     @Override
@@ -43,10 +40,10 @@ public class CatalogActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        tabLayout = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.viewPager);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        ViewPager viewPager = findViewById(R.id.viewPager);
 
-        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(),0,book.getBookPath());
+        MyPagerAdapter pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(),0,book.getBookPath());
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager, true);
     }

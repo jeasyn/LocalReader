@@ -19,7 +19,7 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
     private CatalogFragment catalogueFragment;
     private BookmarkFragment bookMarkFragment;
 
-    public MyPagerAdapter(@NonNull FragmentManager fm, int behavior,String bookPath) {
+    public MyPagerAdapter(@NonNull FragmentManager fm, int behavior, String bookPath) {
         super(fm, behavior);
         this.bookPath = bookPath;
     }

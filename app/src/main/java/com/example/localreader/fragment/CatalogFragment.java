@@ -26,7 +26,7 @@ public class CatalogFragment extends Fragment {
 
     private static final String ARGUMENT = "argument";
     private PageFactory pageFactory;
-    ArrayList<BookCatalog> catalogList = new ArrayList<>();
+    private ArrayList<BookCatalog> catalogList = new ArrayList<>();
     private ListView catalogLv;
 
     @Nullable
@@ -61,8 +61,9 @@ public class CatalogFragment extends Fragment {
 
     /**
      * 用于从Activity传递数据到Fragment
-     * @param bookPath
-     * @return
+     *
+     * @param bookPath 图书路径
+     * @return CatalogFragment
      */
     public static CatalogFragment newInstance(String bookPath) {
         Bundle bundle = new Bundle();

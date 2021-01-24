@@ -4,10 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -24,7 +22,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class SettingDialog extends Dialog implements View.OnClickListener {
 
     private Config config;
-    private Context context;
     private int fontSizeMin;
     private int fontSizeMax;
     private int currentFontSize;
@@ -52,15 +49,6 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         getWindow().setGravity(Gravity.BOTTOM);
         setContentView(R.layout.popup_settings_layout);
-
-        WindowManager m = getWindow().getWindowManager();
-        Display d = m.getDefaultDisplay();
-        WindowManager.LayoutParams p = getWindow().getAttributes();
-        p.width = d.getWidth();
-
-//        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-
-        getWindow().setAttributes(p);
 
         fontSizeMin = (int) getContext().getResources().getDimension(R.dimen.read_min_text_size);
         fontSizeMax = (int) getContext().getResources().getDimension(R.dimen.read_max_text_size);
@@ -117,11 +105,10 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     }
 
     /**
-     * 设置字体
-     *
-     * @param bg
+     * 设置背景
+     * @param bg 背景颜色
      */
-    public void setBookBg(int bg) {
+    private void setBookBg(int bg) {
         config.setBookBg(bg);
         if (mSettingListener != null) {
             mSettingListener.changeBookBg(bg);
@@ -187,7 +174,7 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
 
     /**
      * 改变亮度进度条位置
-     * @param brightness
+     * @param brightness 进度条的值
      */
     private void changeBrightnessProgress(int brightness) {
         Log.d("brightness", brightness + "");
@@ -206,19 +193,19 @@ public class SettingDialog extends Dialog implements View.OnClickListener {
     public interface SettingListener {
         /**
          * 改变亮度
-         * @param brightness
+         * @param brightness 亮度值
          */
         void changeSystemBright(float brightness);
 
         /**
          * 改变字号
-         * @param fontSize
+         * @param fontSize 字号大小
          */
         void changeFontSize(int fontSize);
 
         /**
          * 换读书背景
-         * @param bg
+         * @param bg 背景颜色
          */
         void changeBookBg(int bg);
     }

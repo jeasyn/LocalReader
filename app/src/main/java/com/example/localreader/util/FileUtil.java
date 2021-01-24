@@ -19,15 +19,11 @@ import java.util.List;
  */
 public class FileUtil {
 
-    private static long BYTE_SIZE = 1024;
-    private static long KB_SIZE = 1048576;
-    private static long MB_SIZE = 1073741824;
-
     /**
      * 获取文件编码
-     * @param fileName
-     * @return
-     * @throws IOException
+     * @param fileName 文件名
+     * @return 文件编码
+     * @throws IOException 抛出的io异常
      */
     public static String getCharset(String fileName) throws IOException {
         String charset;
@@ -46,11 +42,13 @@ public class FileUtil {
 
     /**
      * 格式化文件大小
-     * @param size
-     * @return
+     * @param size long型的文件大小
+     * @return 格式化后的文件大小
      */
     public static String formatFileSize(long size) {
-
+        long byteSize = 1024;
+        final long kbSize = 1048576;
+        final long mbSize = 1073741824;
         if (size == 0) {
             return "0.00B";
         }
@@ -59,32 +57,32 @@ public class FileUtil {
 
         String fileSizeString;
 
-        if (size < BYTE_SIZE) {
+        if (size < byteSize) {
             fileSizeString = dFormat.format((double) size) + "B";
-        } else if (size < KB_SIZE) {
-            fileSizeString = dFormat.format((double) size / BYTE_SIZE) + "KB";
-        } else if (size < MB_SIZE) {
-            fileSizeString = dFormat.format((double) size / KB_SIZE) + "MB";
+        } else if (size < kbSize) {
+            fileSizeString = dFormat.format((double) size / byteSize) + "KB";
+        } else if (size < mbSize) {
+            fileSizeString = dFormat.format((double) size / kbSize) + "MB";
         } else {
-            fileSizeString = dFormat.format((double) size / MB_SIZE) + "GB";
+            fileSizeString = dFormat.format((double) size / mbSize) + "GB";
         }
         return fileSizeString;
     }
 
     /**
      * 格式化文件时间
-     * @param time
-     * @return
+     * @param time long型时间
+     * @return 格式化后的时间
      */
     public static String formatFileTime(long time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String formatTime = sdf.format(time);
-        return formatTime;
+        return sdf.format(time);
     }
 
     /**
      * 查询所有txt文件
-     * @return
+     * @param file txt文件
+     * @return 返回sd卡路径下txt文件集合
      */
     public static List<File> getLocalTxt(File file) {
         List<File> txtList = new ArrayList<>();
@@ -109,8 +107,8 @@ public class FileUtil {
 
     /**
      * 通过name查找文件
-     * @param name
-     * @return
+     * @param name 文件名
+     * @return 文件
      */
     public static File getFileByName(String name) {
         String path = Environment.getExternalStorageDirectory().toString();
@@ -125,8 +123,9 @@ public class FileUtil {
 
     /**
      * 查询name文件是否被选中
-     * @param checkMap
-     * @return
+     * @param checkMap 所有文件
+     * @param name 文件名
+     * @return 是否被选中
      */
     public static boolean isChecked(HashMap<File, Boolean> checkMap, String name) {
         for (File file : checkMap.keySet()) {

@@ -28,10 +28,6 @@ public class Config {
     public final static int BOOK_BG_GREEN = 3;
     public final static int BOOK_BG_BLUE = 4;
     /**
-     * true：夜间模式，false：日间模式
-     */
-    private boolean night;
-    /**
      * 字体大小
      */
     private float fontSize = 0;
@@ -49,11 +45,10 @@ public class Config {
         return config;
     }
 
-    public static synchronized Config createConfig(Context context){
+    public static synchronized void createConfig(Context context){
         if (config == null){
             config = new Config(context);
         }
-        return config;
     }
 
     public int getBookBg(){
@@ -76,6 +71,9 @@ public class Config {
         sp.edit().putFloat(FONT_SIZE,fontSize).commit();
     }
 
+    /**
+     * @return true：夜间模式，false：日间模式
+     */
     public boolean isNight() {
         return sp.getBoolean(IS_NIGHT, false);
     }

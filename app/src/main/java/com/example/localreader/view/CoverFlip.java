@@ -58,7 +58,7 @@ public class CoverFlip extends BaseFlip {
 
     /**
      * 添加阴影
-     * @param left
+     * @param left 矩形左侧的X坐标
      * @param canvas
      */
     public void addShadow(int left,Canvas canvas) {

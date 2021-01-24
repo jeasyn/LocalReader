@@ -1,13 +1,12 @@
 package com.example.localreader;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,12 +46,10 @@ import java.util.List;
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "ReadActivity";
-    private final static int MESSAGE_CHANGEPROGRESS = 1;
+    private final static int MESSAGE_CHANGE_PROGRESS = 1;
     private Config config;
     private Book book;
     private PageFactory pageFactory;
-    private int screenWidth, screenHeight;
     private boolean isShow = false;
     private boolean mDayOrNight;
     private SettingDialog settingsDetail;
@@ -123,10 +120,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         pageFactory = PageFactory.getInstance();
 
         settingsDetail = new SettingDialog(this);
-        //获取屏幕宽高
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        screenWidth = displayMetrics.widthPixels;
-        screenHeight = displayMetrics.heightPixels;
         //保持屏幕常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //初始化屏幕亮度
@@ -201,7 +194,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void changeProgress(float progress) {
             Message message = new Message();
-            message.what = MESSAGE_CHANGEPROGRESS;
+            message.what = MESSAGE_CHANGE_PROGRESS;
             message.obj = progress;
             mHandler.sendMessage(message);
         }
@@ -218,7 +211,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
-        public Boolean prePage() {
+        public boolean prePage() {
             if (isShow) {
                 return false;
             }
@@ -231,7 +224,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         @Override
-        public Boolean nextPage() {
+        public boolean nextPage() {
             if (isShow) {
                 return false;
             }
@@ -250,13 +243,12 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     };
 
 
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case MESSAGE_CHANGEPROGRESS:
+                case MESSAGE_CHANGE_PROGRESS:
                     float progress = (float) msg.obj;
                     setSeekBarProgress(progress);
                     break;
