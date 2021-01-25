@@ -2,7 +2,7 @@ package com.example.localreader.entity;
 
 /**
  * @author xialijuan
- * @date 2020/12/15
+ * @date 2020/12/30
  */
 public class BookCatalog {
 

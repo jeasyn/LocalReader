@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.R;
+import com.example.localreader.listener.CheckedChangeListener;
 import com.example.localreader.util.FileUtil;
 import com.example.localreader.viewholder.ImportViewHolder;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2020/11/07
+ * @date 2020/12/06
  */
 public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
 
@@ -111,9 +112,9 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
     }
 
     /**
-     * 获取添加到书架的书名集合
+     * 获取已添加到书架的书名集合
      *
-     * @param names 书名集合
+     * @param names 已添加到书架的书名集合
      */
     public void getBookShelfNames(List<String> names) {
         this.names = names;
@@ -150,7 +151,7 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
         holder.fileTimeTv.setText(FileUtil.formatFileTime(file.lastModified()));
         holder.isSelectCb.setChecked(FileUtil.isChecked(selectMap, file.getName()));
 
-        // 给单选按钮设置监听
+        // 给CheckBox设置监听
         holder.isSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -180,17 +181,6 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
             notifyDataSetChanged();
         }
     };
-
-    public interface CheckedChangeListener {
-        /**
-         * checkbox状态监听
-         *
-         * @param position   当前位置
-         * @param buttonView 状态已更改的复合按钮视图
-         * @param isChecked  单选按钮状态
-         */
-        void onCheckedChanged(int position, CompoundButton buttonView, boolean isChecked);
-    }
 
     public void setCheckedChangeListener(CheckedChangeListener checkedChangeListener) {
         mCheckedChangeListener = checkedChangeListener;

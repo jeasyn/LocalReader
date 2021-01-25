@@ -20,13 +20,13 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2020/12/09
+ * @date 2020/12/30
  */
 public class CatalogFragment extends Fragment {
 
     private static final String ARGUMENT = "argument";
     private PageFactory pageFactory;
-    private List<BookCatalog> catalogList;
+    private List<BookCatalog> catalogs;
 
     @Nullable
     @Override
@@ -38,11 +38,11 @@ public class CatalogFragment extends Fragment {
 
     private void init(View v) {
         ListView catalogLv = v.findViewById(R.id.rv_catalog);
-        // 获取章节目录
         pageFactory = PageFactory.getInstance();
-        catalogList = pageFactory.getDirectoryList();
+        // 获取章节目录
+        catalogs = pageFactory.getDirectoryList();
 
-        CatalogAdapter catalogAdapter = new CatalogAdapter(getContext(), catalogList);
+        CatalogAdapter catalogAdapter = new CatalogAdapter(getContext(), catalogs);
         catalogAdapter.setCharter(pageFactory.getCurrentCharter());
         catalogLv.setAdapter(catalogAdapter);
         catalogAdapter.notifyDataSetChanged();
@@ -53,7 +53,7 @@ public class CatalogFragment extends Fragment {
     private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            pageFactory.changeChapter(catalogList.get(position).getPosition());
+            pageFactory.changeChapter(catalogs.get(position).getPosition());
             getActivity().finish();
         }
     };

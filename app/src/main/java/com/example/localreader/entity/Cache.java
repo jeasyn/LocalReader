@@ -4,7 +4,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * @author xialijuan
- * @date 2020/12/07
+ * @date 2021/01/11
  */
 public class Cache {
     private long size;

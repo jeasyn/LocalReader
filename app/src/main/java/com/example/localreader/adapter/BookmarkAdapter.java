@@ -5,18 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import com.example.localreader.R;
 import com.example.localreader.entity.Bookmark;
 import com.example.localreader.util.PageFactory;
+import com.example.localreader.viewholder.BookmarkViewHolder;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2020/12/10
+ * @date 2021/01/02
  */
 public class BookmarkAdapter extends BaseAdapter {
 
@@ -24,60 +24,56 @@ public class BookmarkAdapter extends BaseAdapter {
     /**
      * 书签集合
      */
-    private List<Bookmark> list;
+    private List<Bookmark> bookmarks;
     private PageFactory pageFactory;
 
 
-    public BookmarkAdapter(Context context, List<Bookmark> list) {
+    public BookmarkAdapter(Context context, List<Bookmark> bookmarks) {
         this.context = context;
-        this.list = list;
+        this.bookmarks = bookmarks;
         pageFactory = PageFactory.getInstance();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        final ViewHolder viewHolder;
+        final BookmarkViewHolder bookmarkViewHolder;
         if (convertView == null) {
-            viewHolder = new ViewHolder();
+            bookmarkViewHolder = new BookmarkViewHolder();
             convertView = inflater.inflate(R.layout.item_bookmark, parent, false);
-            viewHolder.markContent = convertView.findViewById(R.id.tv_mark_content);
-            viewHolder.markProgress = convertView.findViewById(R.id.tv_mark_progress);
-            viewHolder.markTime = convertView.findViewById(R.id.tv_mark_time);
-            convertView.setTag(viewHolder);
+            bookmarkViewHolder.markContentTv = convertView.findViewById(R.id.tv_mark_content);
+            bookmarkViewHolder.markProgressTv = convertView.findViewById(R.id.tv_mark_progress);
+            bookmarkViewHolder.markTimeTv = convertView.findViewById(R.id.tv_mark_time);
+            convertView.setTag(bookmarkViewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            bookmarkViewHolder = (BookmarkViewHolder) convertView.getTag();
         }
-        Bookmark bookmark = list.get(position);
-        viewHolder.markContent.setText(bookmark.getPartContent());
+        Bookmark bookmark = bookmarks.get(position);
+        bookmarkViewHolder.markContentTv.setText(bookmark.getPartContent());
 
         // 格式化显示书签进度
         long begin = bookmark.getPosition();
         float percent = (float) (begin * 1.0 / pageFactory.getBookLen());
         DecimalFormat df = new DecimalFormat("#0.0");
         String progress = df.format(percent * 100) + "%";
-        viewHolder.markProgress.setText(progress);
+        bookmarkViewHolder.markProgressTv.setText(progress);
 
-        viewHolder.markTime.setText(bookmark.getTime().substring(0, 16));
+        bookmarkViewHolder.markTimeTv.setText(bookmark.getTime().substring(0, 16));
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return bookmarks.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return list.get(position);
+        return bookmarks.get(position);
     }
 
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-    class ViewHolder {
-        TextView markContent, markProgress, markTime;
     }
 }

@@ -22,7 +22,7 @@ import java.util.Random;
 
 /**
  * @author xialijuan
- * @date 2020/11/12
+ * @date 2020/12/14
  */
 public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -166,7 +166,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     /**
-     * 全部选
+     * 全不选
      */
     public void unSelectAll() {
         initCheck(false);

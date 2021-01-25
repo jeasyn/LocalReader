@@ -11,11 +11,12 @@ import android.view.ViewConfiguration;
 import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
+import com.example.localreader.listener.TouchListener;
 import com.example.localreader.util.PageFactory;
 
 /**
  * @author xialijuan
- * @date 2020/11/15
+ * @date 2020/12/22
  */
 public class PageView extends View {
     private Context context;
@@ -117,110 +118,139 @@ public class PageView extends View {
         int y = (int) event.getY();
         baseFlip.setTouchPoint(x, y);
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            downX = (int) event.getX();
-            downY = (int) event.getY();
-            moveX = 0;
-            moveY = 0;
-            move = false;
-            noNext = false;
-            next = false;
-            running = false;
-            baseFlip.setStartPoint(downX, downY);
-            abortAnimation();
+            actionDown(event);
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
-            //判断是否移动了
-            if (!move) {
-                move = Math.abs(downX - x) > slop || Math.abs(downY - y) > slop;
-            }
-            if (move) {
-                move = true;
-                if (moveX == 0 && moveY == 0) {
-                    //判断翻得是上一页还是下一页
-                    if (x - downX > 0) {
-                        next = false;
-                    } else {
-                        next = true;
-                    }
-                    cancelPage = false;
-                    if (next) {
-                        boolean isNext = mTouchListener.nextPage();
-                        baseFlip.setDirection(BaseFlip.Direction.next);
-                        if (!isNext) {
-                            noNext = true;
-                            return true;
-                        }
-                    } else {
-                        boolean isPre = mTouchListener.upPage();
-                        baseFlip.setDirection(BaseFlip.Direction.pre);
-                        if (!isPre) {
-                            noNext = true;
-                            return true;
-                        }
-                    }
-                } else {
-                    //判断是否取消翻页
-                    if (next) {
-                        if (x - moveX > 0) {
-                            cancelPage = true;
-                            baseFlip.setCancel(true);
-                        } else {
-                            cancelPage = false;
-                            baseFlip.setCancel(false);
-                        }
-                    } else {
-                        if (x - moveX < 0) {
-                            baseFlip.setCancel(true);
-                            cancelPage = true;
-                        } else {
-                            baseFlip.setCancel(false);
-                            cancelPage = false;
-                        }
-                    }
-                }
-                moveX = x;
-                moveY = y;
-                running = true;
-                this.postInvalidate();
-            }
+            actionMove(x,y);
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (!move) {
-                cancelPage = false;
-                //是否点击了中间
-                if (downX > screenWidth / 5 && downX < screenWidth * 4 / 5 && downY > screenHeight / 3 && downY < screenHeight * 2 / 3) {
-                    if (mTouchListener != null) {
-                        mTouchListener.center();
-                    }
-                    return true;
-                } else if (x < screenWidth / 2) {
+            actionUp(x);
+        }
+        return true;
+    }
+
+    /**
+     * 当屏幕检测到第一个触点按下之后就会触发到这个事件
+     * @param event
+     */
+    private void actionDown(MotionEvent event){
+        downX = (int) event.getX();
+        downY = (int) event.getY();
+        moveX = 0;
+        moveY = 0;
+        move = false;
+        noNext = false;
+        next = false;
+        running = false;
+        baseFlip.setStartPoint(downX, downY);
+        abortAnimation();
+    }
+
+    /**
+     * 当触点在屏幕上移动时触发，触点在屏幕上停留也是会触发的
+     * @param x
+     * @param y
+     * @return
+     */
+    private boolean actionMove(int x,int y){
+        final int slop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        // 判断是否移动了
+        if (!move) {
+            move = Math.abs(downX - x) > slop || Math.abs(downY - y) > slop;
+        }
+        if (move) {
+            move = true;
+            if (moveX == 0 && moveY == 0) {
+                //判断翻得是上一页还是下一页
+                if (x - downX > 0) {
                     next = false;
                 } else {
                     next = true;
                 }
+                cancelPage = false;
                 if (next) {
                     boolean isNext = mTouchListener.nextPage();
                     baseFlip.setDirection(BaseFlip.Direction.next);
                     if (!isNext) {
+                        noNext = true;
                         return true;
                     }
                 } else {
                     boolean isPre = mTouchListener.upPage();
-                    baseFlip.setDirection(BaseFlip.Direction.pre);
+                    baseFlip.setDirection(BaseFlip.Direction.up);
                     if (!isPre) {
+                        noNext = true;
                         return true;
                     }
                 }
+            } else {
+                //判断是否取消翻页
+                if (next) {
+                    if (x - moveX > 0) {
+                        cancelPage = true;
+                        baseFlip.setCancel(true);
+                    } else {
+                        cancelPage = false;
+                        baseFlip.setCancel(false);
+                    }
+                } else {
+                    if (x - moveX < 0) {
+                        baseFlip.setCancel(true);
+                        cancelPage = true;
+                    } else {
+                        baseFlip.setCancel(false);
+                        cancelPage = false;
+                    }
+                }
             }
-            if (cancelPage && mTouchListener != null) {
-                mTouchListener.cancel();
+            moveX = x;
+            moveY = y;
+            running = true;
+            this.postInvalidate();
+        }
+        return false;
+    }
+
+    /**
+     * 当触点松开时被触发
+     * @param x
+     * @return
+     */
+    private boolean actionUp(int x){
+        if (!move) {
+            cancelPage = false;
+            //是否点击了中间
+            if (downX > screenWidth / 5 && downX < screenWidth * 4 / 5 && downY > screenHeight / 3 && downY < screenHeight * 2 / 3) {
+                if (mTouchListener != null) {
+                    mTouchListener.center();
+                }
+                return true;
+            } else if (x < screenWidth / 2) {
+                next = false;
+            } else {
+                next = true;
             }
-            if (!noNext) {
-                running = true;
-                baseFlip.startSliding(scroller);
-                this.postInvalidate();
+            if (next) {
+                boolean isNext = mTouchListener.nextPage();
+                baseFlip.setDirection(BaseFlip.Direction.next);
+                if (!isNext) {
+                    return true;
+                }
+            } else {
+                boolean isPre = mTouchListener.upPage();
+                baseFlip.setDirection(BaseFlip.Direction.up);
+                if (!isPre) {
+                    return true;
+                }
             }
         }
-        return true;
+        if (cancelPage && mTouchListener != null) {
+            mTouchListener.cancel();
+        }
+        if (!noNext) {
+            running = true;
+            baseFlip.startSliding(scroller);
+            this.postInvalidate();
+        }
+        return false;
     }
 
     @Override
@@ -247,26 +277,5 @@ public class PageView extends View {
 
     public void setTouchListener(TouchListener mTouchListener) {
         this.mTouchListener = mTouchListener;
-    }
-
-    public interface TouchListener {
-        /**
-         * 触摸中间
-         */
-        void center();
-        /**
-         * 触摸左边
-         * @return
-         */
-        boolean upPage();
-        /**
-         * 触摸右边
-         * @return
-         */
-        boolean nextPage();
-        /**
-         * 取消触摸
-         */
-        void cancel();
     }
 }

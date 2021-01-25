@@ -10,7 +10,7 @@ import com.example.localreader.R;
 
 /**
  * @author xialijuan
- * @date 2020/11/07
+ * @date 2020/12/06
  */
 public class ImportViewHolder extends BaseViewHolder {
 
@@ -22,7 +22,6 @@ public class ImportViewHolder extends BaseViewHolder {
     public TextView importedTv;
 
     public ImportViewHolder(@NonNull View itemView) {
-
         super(itemView);
         fileView = itemView;
         fileNameTv = itemView.findViewById(R.id.tv_add_file_name);

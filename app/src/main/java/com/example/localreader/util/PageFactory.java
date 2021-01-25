@@ -35,39 +35,40 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2020/11/21
+ * @date 2020/12/25
  */
 public class PageFactory {
 
+    private String TAG = "PageFactory";
     private static PageFactory pageFactory;
     private Context context;
     private Config config;
     /**
      * 页面宽
      */
-    private int width;
+    private int screenWidth;
     /**
      * 页面高
      */
-    private int height;
+    private int screenHeight;
     /**
-     * 文字大小
+     * 阅读的文字大小
      */
     private float fontSize;
     private DecimalFormat df;
     /**
-     * 上下与边缘的距离
+     * 页面文字与上下边缘的距离（书本高边距）
      */
     private float marginHeight;
-    private float measureMarginWidth;
     /**
-     * 左右与边缘的距离
+     * 页面文字与左右边缘的距离（书本宽边距）
      */
     private float marginWidth;
+    private float measureMarginWidth;
     /**
      * 状态栏距离底部高度
      */
-    private float statusMarginBottom;
+    private float statusMarginBottomHeight;
     /**
      * 行间距
      */
@@ -79,17 +80,17 @@ public class PageFactory {
     /**
      * 加载画笔
      */
-    private Paint waitPaint;
+    private Paint loadPaint;
     /**
      * 文字颜色
      */
     private int textColor = Color.rgb(50, 65, 78);
     /**
-     * 绘制内容的高
+     * 绘制内容的可见高
      */
     private float visibleHeight;
     /**
-     * 绘制内容的宽
+     * 绘制内容的可见宽
      */
     private float visibleWidth;
     /**
@@ -97,7 +98,7 @@ public class PageFactory {
      */
     private int lineCount;
     /**
-     * 电池画笔
+     * 画笔
      */
     private Paint paint;
     /**
@@ -119,7 +120,7 @@ public class PageFactory {
     /**
      * 书本视图
      */
-    private PageView bookPageView;
+    private PageView pageView;
     /**
      * 书本路径
      */
@@ -163,15 +164,15 @@ public class PageFactory {
         config = Config.getInstance();
         //获取屏幕宽高
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        width = displayMetrics.widthPixels;
-        height = displayMetrics.heightPixels;
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
         df = new DecimalFormat("#0.0");
         marginWidth = this.context.getResources().getDimension(R.dimen.read_margin_width);
         marginHeight = this.context.getResources().getDimension(R.dimen.read_margin_height);
-        statusMarginBottom = this.context.getResources().getDimension(R.dimen.read_status_margin_bottom);
+        statusMarginBottomHeight = this.context.getResources().getDimension(R.dimen.read_status_margin_bottom);
         lineSpace = context.getResources().getDimension(R.dimen.read_line_spacing);
-        visibleWidth = width - marginWidth * 2;
-        visibleHeight = height - marginHeight * 2;
+        visibleWidth = screenWidth - marginWidth * 2;
+        visibleHeight = screenHeight - marginHeight * 2;
 
         fontSize = config.getFontSize();
         // 画笔
@@ -186,15 +187,15 @@ public class PageFactory {
         fontPaint.setSubpixelText(true);
 
         // 画笔
-        waitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        loadPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         // 左对齐
-        waitPaint.setTextAlign(Paint.Align.LEFT);
+        loadPaint.setTextAlign(Paint.Align.LEFT);
         // 字体大小
-        waitPaint.setTextSize(this.context.getResources().getDimension(R.dimen.read_max_text_size));
+        loadPaint.setTextSize(this.context.getResources().getDimension(R.dimen.read_max_text_size));
         // 字体颜色
-        waitPaint.setColor(textColor);
+        loadPaint.setColor(textColor);
         // 设置该项为true，将有助于文本在LCD屏幕上的显示效果
-        waitPaint.setSubpixelText(true);
+        loadPaint.setSubpixelText(true);
         getLineCount();
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -219,7 +220,7 @@ public class PageFactory {
      */
     private void initBg(Boolean isNight) {
         if (isNight) {
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            Bitmap bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.RGB_565);
             Canvas canvas = new Canvas(bitmap);
             canvas.drawColor(Color.BLACK);
             setBgBitmap(bitmap);
@@ -237,6 +238,10 @@ public class PageFactory {
         lineCount = (int) (visibleHeight / (fontSize + lineSpace));
     }
 
+    /**
+     * 加载图书状态
+     * @param bitmap
+     */
     private void drawStatus(Bitmap bitmap) {
         String status = "";
         switch (PageFactory.status) {
@@ -252,17 +257,17 @@ public class PageFactory {
 
         Canvas c = new Canvas(bitmap);
         c.drawBitmap(getBgBitmap(), 0, 0, null);
-        waitPaint.setColor(getTextColor());
-        waitPaint.setTextAlign(Paint.Align.CENTER);
+        loadPaint.setColor(getTextColor());
+        loadPaint.setTextAlign(Paint.Align.CENTER);
 
-        Rect targetRect = new Rect(0, 0, width, height);
-        Paint.FontMetricsInt fontMetrics = waitPaint.getFontMetricsInt();
+        Rect targetRect = new Rect(0, 0, screenWidth, screenHeight);
+        Paint.FontMetricsInt fontMetrics = loadPaint.getFontMetricsInt();
 
         int baseline = (targetRect.bottom + targetRect.top - fontMetrics.bottom - fontMetrics.top) / 2;
         // 下面这行是实现水平居中，drawText对应改为传入targetRect.centerX()
-        waitPaint.setTextAlign(Paint.Align.CENTER);
-        c.drawText(status, targetRect.centerX(), baseline, waitPaint);
-        bookPageView.postInvalidate();
+        loadPaint.setTextAlign(Paint.Align.CENTER);
+        c.drawText(status, targetRect.centerX(), baseline, loadPaint);
+        pageView.postInvalidate();
     }
 
     private void onDraw(Bitmap bitmap, List<String> lines, Boolean updateCharter) {
@@ -303,7 +308,7 @@ public class PageFactory {
         // 进度文字
         progress = df.format(fPercent * 100) + "%";
 
-        c.drawText(progress, width / 2, height - statusMarginBottom, paint);
+        c.drawText(progress, screenWidth / 2, screenHeight - statusMarginBottomHeight, paint);
         // save()无参传入这两个方法最终都调用native_save方法，而无参方法save()默认是保存Matrix和Clip这两个信息。
         // 如果允许，那么尽量使用无参的save()方法，而不是使用有参的save(int saveFlags)方法传入别的Flag。
         c.save();
@@ -313,16 +318,16 @@ public class PageFactory {
         //画章
         if (getDirectoryList().size() > 0) {
             String charterName = getDirectoryList().get(currentCharter).getCatalog();
-            c.drawText(charterName, 0, statusMarginBottom + mFontSize + 30, paint);
+            c.drawText(charterName, 0, statusMarginBottomHeight + mFontSize + 30, paint);
         }
-        bookPageView.postInvalidate();
+        pageView.postInvalidate();
     }
 
     /**
      * 向前翻页
      */
     public void upPage() {
-        Log.d("position", pageFactory.getPosition() + " ");
+        Log.d(TAG, pageFactory.getPosition() + " ");
         if (currentPage.getPosition() <= 0) {
             if (!firstPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_head), Toast.LENGTH_SHORT).show();
@@ -334,16 +339,16 @@ public class PageFactory {
         }
         position = currentPage.getPosition();
         cancelPage = currentPage;
-        onDraw(bookPageView.getCurPage(), currentPage.getLines(), true);
+        onDraw(pageView.getCurPage(), currentPage.getLines(), true);
         currentPage = getPrePage();
-        onDraw(bookPageView.getNextPage(), currentPage.getLines(), true);
+        onDraw(pageView.getNextPage(), currentPage.getLines(), true);
     }
 
     /**
      * 向后翻页
      */
     public void nextPage() {
-        Log.d("position", pageFactory.getPosition() + " ");
+        Log.d(TAG, pageFactory.getPosition() + " ");
         if (currentPage.getEnd() >= bookUtil.getBookLen()) {
             if (!lastPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_end), Toast.LENGTH_SHORT).show();
@@ -355,10 +360,10 @@ public class PageFactory {
         }
         position = currentPage.getPosition();
         cancelPage = currentPage;
-        onDraw(bookPageView.getCurPage(), currentPage.getLines(), true);
+        onDraw(pageView.getCurPage(), currentPage.getLines(), true);
         prePage = currentPage;
         currentPage = getNextPage();
-        onDraw(bookPageView.getNextPage(), currentPage.getLines(), true);
+        onDraw(pageView.getNextPage(), currentPage.getLines(), true);
     }
 
     /**
@@ -382,8 +387,8 @@ public class PageFactory {
         bookName = book.getBookName().split(".txt")[0];
 
         status = Status.OPENING;
-        drawStatus(bookPageView.getCurPage());
-        drawStatus(bookPageView.getNextPage());
+        drawStatus(pageView.getCurPage());
+        drawStatus(pageView.getNextPage());
         if (bookTask != null && bookTask.getStatus() != AsyncTask.Status.FINISHED) {
             bookTask.cancel(true);
         }
@@ -403,13 +408,13 @@ public class PageFactory {
             if (result) {
                 PageFactory.status = PageFactory.Status.FINISH;
                 currentPage = getPageForBegin(begin);
-                if (bookPageView != null) {
+                if (pageView != null) {
                     currentPage(true);
                 }
             } else {
                 PageFactory.status = PageFactory.Status.FAIL;
-                drawStatus(bookPageView.getCurPage());
-                drawStatus(bookPageView.getNextPage());
+                drawStatus(pageView.getCurPage());
+                drawStatus(pageView.getNextPage());
                 Toast.makeText(context, context.getResources().getString(R.string.read_load_fail), Toast.LENGTH_SHORT).show();
             }
         }
@@ -620,8 +625,8 @@ public class PageFactory {
      * @param updateChapter 是否更新章节
      */
     private void currentPage(Boolean updateChapter) {
-        onDraw(bookPageView.getCurPage(), currentPage.getLines(), updateChapter);
-        onDraw(bookPageView.getNextPage(), currentPage.getLines(), updateChapter);
+        onDraw(pageView.getCurPage(), currentPage.getLines(), updateChapter);
+        onDraw(pageView.getNextPage(), currentPage.getLines(), updateChapter);
     }
 
     public void changeProgress(float progress) {
@@ -696,7 +701,7 @@ public class PageFactory {
      * @param bg 背景颜色
      */
     private void setBookBg(int bg) {
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        Bitmap bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(bitmap);
         int color = 0;
         switch (bg) {
@@ -734,9 +739,13 @@ public class PageFactory {
         setTextColor(color);
     }
 
+    /**
+     * 设置阅读的背景颜色
+     * @param color 背景颜色
+     */
     private void setBookPageBg(int color) {
-        if (bookPageView != null) {
-            bookPageView.setBgColor(color);
+        if (pageView != null) {
+            pageView.setBgColor(color);
         }
     }
 
@@ -755,7 +764,7 @@ public class PageFactory {
         bookPath = "";
         bookName = "";
         book = null;
-        bookPageView = null;
+        pageView = null;
         pageEvent = null;
         cancelPage = null;
         prePage = null;
@@ -811,7 +820,7 @@ public class PageFactory {
     }
 
     public void setPageWidget(PageView mBookPageView) {
-        this.bookPageView = mBookPageView;
+        this.pageView = mBookPageView;
     }
 
     public long getPosition() {

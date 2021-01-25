@@ -8,7 +8,7 @@ import android.widget.Scroller;
 
 /**
  * @author xialijuan
- * @date 2020/12/18
+ * @date 2020/12/27
  */
 public class CoverFlip extends BaseFlip {
 

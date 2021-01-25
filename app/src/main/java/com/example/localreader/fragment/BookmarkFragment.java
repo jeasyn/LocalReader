@@ -1,6 +1,5 @@
 package com.example.localreader.fragment;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +10,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.localreader.R;
@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2020/12/08
+ * @date 2021/01/02
  */
 public class BookmarkFragment extends Fragment {
 
