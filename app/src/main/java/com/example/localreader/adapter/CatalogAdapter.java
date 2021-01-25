@@ -5,72 +5,72 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.localreader.R;
 import com.example.localreader.entity.BookCatalog;
+import com.example.localreader.viewholder.CatalogViewHolder;
 
 import java.util.List;
 
 /**
  * @author xialijuan
- * @date 2020/12/10
+ * @date 2020/12/30
  */
 public class CatalogAdapter extends BaseAdapter {
 
     private Context context;
-    private List<BookCatalog> bookCatalogueList;
+    private List<BookCatalog> catalogs;
     private int currentCharter = 0;
 
-    public CatalogAdapter(Context context, List<BookCatalog> bookCatalogueList) {
+    public CatalogAdapter(Context context, List<BookCatalog> catalogs) {
         this.context = context;
-        this.bookCatalogueList = bookCatalogueList;
+        this.catalogs = catalogs;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        final ViewHolder viewHolder;
+        final CatalogViewHolder catalogViewHolder;
         if (convertView == null) {
-            viewHolder = new ViewHolder();
+            catalogViewHolder = new CatalogViewHolder();
             convertView = inflater.inflate(R.layout.item_catalog, parent, false);
-            viewHolder.catalog = convertView.findViewById(R.id.tv_catalog);
-            convertView.setTag(viewHolder);
+            catalogViewHolder.catalogTv = convertView.findViewById(R.id.tv_catalog);
+            convertView.setTag(catalogViewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            catalogViewHolder = (CatalogViewHolder) convertView.getTag();
         }
         if (currentCharter == position) {
             // 正在阅读的当前章节
-            viewHolder.catalog.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+            catalogViewHolder.catalogTv.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
         } else {
-            viewHolder.catalog.setTextColor(ContextCompat.getColor(context, R.color.read_default_text));
+            catalogViewHolder.catalogTv.setTextColor(ContextCompat.getColor(context, R.color.read_default_text));
         }
-        viewHolder.catalog.setText(bookCatalogueList.get(position).getCatalog());
+        catalogViewHolder.catalogTv.setText(catalogs.get(position).getCatalog());
         return convertView;
     }
 
+    /**
+     * 设置当前章节（正在阅读）的索引
+     * @param charter 当前章节的索引
+     */
     public void setCharter(int charter) {
         currentCharter = charter;
     }
 
     @Override
     public int getCount() {
-        return bookCatalogueList.size();
+        return catalogs.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return bookCatalogueList.get(position);
+        return catalogs.get(position);
     }
 
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-    class ViewHolder {
-        TextView catalog;
     }
 }

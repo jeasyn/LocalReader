@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.adapter.ImportAdapter;
 import com.example.localreader.entity.Book;
+import com.example.localreader.listener.CheckedChangeListener;
 import com.example.localreader.util.BookShelfUtil;
 import com.example.localreader.util.FileUtil;
 
@@ -25,6 +26,7 @@ import java.util.List;
 
 /**
  * @author xialijuan
+ * @date 2020/12/06
  */
 public class ImportActivity extends AppCompatActivity {
 
@@ -91,7 +93,7 @@ public class ImportActivity extends AppCompatActivity {
         noFilePointTv.setVisibility(sdCardFiles.size() == 0 ? View.VISIBLE : View.GONE);
     }
 
-    ImportAdapter.CheckedChangeListener mCheckedChangeListener = new ImportAdapter.CheckedChangeListener() {
+    CheckedChangeListener mCheckedChangeListener = new CheckedChangeListener() {
         @Override
         public void onCheckedChanged(int position, CompoundButton buttonView, boolean isChecked) {
             int selectedSize = adapter.getSelectNum();

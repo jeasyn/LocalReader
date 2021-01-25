@@ -10,7 +10,7 @@ import com.example.localreader.R;
 
 /**
  * @author xialijuan
- * @date 2020/11/11
+ * @date 2020/12/14
  */
 public class BookShelfViewHolder extends BaseViewHolder {
 

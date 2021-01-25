@@ -10,7 +10,7 @@ import com.example.localreader.fragment.CatalogFragment;
 
 /**
  * @author xialijuan
- * @date 2020/12/10
+ * @date 2020/12/30
  */
 public class MyPagerAdapter extends FragmentStatePagerAdapter {
 

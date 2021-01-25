@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout;
 
 /**
  * @author xialijuan
+ * @date 2020/12/30
  */
 public class CatalogActivity extends AppCompatActivity {
 

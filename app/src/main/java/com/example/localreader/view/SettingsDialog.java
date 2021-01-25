@@ -13,14 +13,16 @@ import androidx.annotation.NonNull;
 
 import com.example.localreader.R;
 import com.example.localreader.entity.Config;
+import com.example.localreader.listener.SettingsListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
  * @author xialijuan
- * @date 2020/12/18
+ * @date 2021/01/05
  */
 public class SettingsDialog extends Dialog implements View.OnClickListener {
 
+    private String TAG = "SettingsDialog";
     private Config config;
     private int fontSizeMin;
     private int fontSizeMax;
@@ -34,7 +36,7 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
     private FloatingActionButton greenBgFb;
     private FloatingActionButton blueBgFb;
     private TextView lessSizeTv;
-    private SettingListener mSettingListener;
+    private SettingsListener mSettingsListener;
 
     public SettingsDialog(@NonNull Context context) {
         this(context, R.style.read_setting_popup);
@@ -69,7 +71,7 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 changeBrightnessProgress(progress);
-                Log.d("progress", progress + "");
+                Log.d(TAG, progress + "");
             }
 
             @Override
@@ -111,8 +113,8 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
      */
     private void setBookBg(int bg) {
         config.setBookBg(bg);
-        if (mSettingListener != null) {
-            mSettingListener.changeBookBg(bg);
+        if (mSettingsListener != null) {
+            mSettingsListener.changeBookBg(bg);
         }
     }
 
@@ -153,8 +155,8 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
             currentFontSize += 1;
             showSizeTv.setText(currentFontSize + "");
             config.setFontSize(currentFontSize);
-            if (mSettingListener != null) {
-                mSettingListener.changeFontSize(currentFontSize);
+            if (mSettingsListener != null) {
+                mSettingsListener.changeFontSize(currentFontSize);
             }
         }
     }
@@ -167,8 +169,8 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
             currentFontSize -= 1;
             showSizeTv.setText(currentFontSize + "");
             config.setFontSize(currentFontSize);
-            if (mSettingListener != null) {
-                mSettingListener.changeFontSize(currentFontSize);
+            if (mSettingsListener != null) {
+                mSettingsListener.changeFontSize(currentFontSize);
             }
         }
     }
@@ -183,35 +185,12 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
         brightnessSb.setProgress(brightness);
         float light = (float) (brightness / 100.0);
         config.setLight(light);
-        if (mSettingListener != null) {
-            mSettingListener.changeSystemBright(light);
+        if (mSettingsListener != null) {
+            mSettingsListener.changeSystemBright(light);
         }
     }
 
-    public void setSettingListener(SettingListener settingListener) {
-        this.mSettingListener = settingListener;
-    }
-
-    public interface SettingListener {
-        /**
-         * 改变亮度
-         *
-         * @param brightness 亮度值
-         */
-        void changeSystemBright(float brightness);
-
-        /**
-         * 改变字号
-         *
-         * @param fontSize 字号大小
-         */
-        void changeFontSize(int fontSize);
-
-        /**
-         * 换读书背景
-         *
-         * @param bg 背景颜色
-         */
-        void changeBookBg(int bg);
+    public void setSettingListener(SettingsListener settingsListener) {
+        this.mSettingsListener = settingsListener;
     }
 }

@@ -28,6 +28,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.localreader.entity.Book;
 import com.example.localreader.entity.Bookmark;
 import com.example.localreader.entity.Config;
+import com.example.localreader.listener.SettingsListener;
+import com.example.localreader.listener.TouchListener;
 import com.example.localreader.util.PageFactory;
 import com.example.localreader.view.PageView;
 import com.example.localreader.view.SettingsDialog;
@@ -43,6 +45,7 @@ import java.util.List;
 
 /**
  * @author xialijuan
+ * @date 2020/12/22
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -140,7 +143,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, getString(R.string.read_load_fail), Toast.LENGTH_SHORT).show();
         }
         settingsDetail.setOnCancelListener(mOnCancelListener);
-        settingsDetail.setSettingListener(mSettingListener);
+        settingsDetail.setSettingListener(mSettingsListener);
         pageFactory.setPageEvent(mPageEvent);
         bookPage.setTouchListener(mTouchListener);
         initDayOrNight();
@@ -153,7 +156,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    SettingsDialog.SettingListener mSettingListener = new SettingsDialog.SettingListener() {
+    SettingsListener mSettingsListener = new SettingsListener() {
         @Override
         public void changeSystemBright(float brightness) {
             pageFactory.changeBrightness(ReadActivity.this, brightness);
@@ -223,7 +226,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    PageView.TouchListener mTouchListener = new PageView.TouchListener() {
+    TouchListener mTouchListener = new TouchListener() {
         @Override
         public void center() {
             if (isShow) {

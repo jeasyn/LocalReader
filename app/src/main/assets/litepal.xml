@@ -2,8 +2,8 @@
 <litepal>
     <dbname value="Reader"></dbname>
     <version value="1"></version>
-    <list>
+    <bookmarks>
         <mapping class="com.example.localreader.entity.Book"></mapping>
         <mapping class="com.example.localreader.entity.Bookmark"></mapping>
-    </list>
+    </bookmarks>
 </litepal>
