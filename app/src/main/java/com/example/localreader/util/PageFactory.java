@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -24,6 +23,7 @@ import com.example.localreader.entity.Book;
 import com.example.localreader.entity.BookCatalog;
 import com.example.localreader.entity.Config;
 import com.example.localreader.entity.Page;
+import com.example.localreader.listener.PageListener;
 import com.example.localreader.view.PageView;
 
 import org.litepal.LitePal;
@@ -132,19 +132,28 @@ public class PageFactory {
     private Book book;
     private BookUtil bookUtil;
     private int currentCharter = 0;
-    private PageEvent pageEvent;
+    private PageListener pageListener;
     private Page currentPage;
     private Page prePage;
     private Page cancelPage;
-    private BookTask bookTask;
     private ContentValues values = new ContentValues();
     private static Status status = Status.OPENING;
     private String progress;
     private long position;
+    private Activity activity;
 
     public enum Status {
+        /**
+         * 正在打开图书中
+         */
         OPENING,
+        /**
+         * 打开图书完成
+         */
         FINISH,
+        /**
+         * 打开图书失败
+         */
         FAIL,
     }
 
@@ -240,7 +249,7 @@ public class PageFactory {
 
     /**
      * 加载图书状态
-     * @param bitmap
+     * @param bitmap 当前背景颜色
      */
     private void drawStatus(Bitmap bitmap) {
         String status = "";
@@ -248,13 +257,9 @@ public class PageFactory {
             case OPENING:
                 status = context.getResources().getString(R.string.read_loading);
                 break;
-            case FAIL:
-                status = context.getResources().getString(R.string.read_load_fail);
-                break;
             default:
                 break;
         }
-
         Canvas c = new Canvas(bitmap);
         c.drawBitmap(getBgBitmap(), 0, 0, null);
         loadPaint.setColor(getTextColor());
@@ -302,17 +307,14 @@ public class PageFactory {
         }
         // 画进度
         float fPercent = (float) (currentPage.getPosition() * 1.0 / bookUtil.getBookLen());
-        if (pageEvent != null) {
-            pageEvent.changeProgress(fPercent);
+        if (pageListener != null) {
+            pageListener.changeProgress(fPercent);
         }
         // 进度文字
         progress = df.format(fPercent * 100) + "%";
 
         c.drawText(progress, screenWidth / 2, screenHeight - statusMarginBottomHeight, paint);
-        // save()无参传入这两个方法最终都调用native_save方法，而无参方法save()默认是保存Matrix和Clip这两个信息。
-        // 如果允许，那么尽量使用无参的save()方法，而不是使用有参的save(int saveFlags)方法传入别的Flag。
         c.save();
-
         c.restore();
 
         //画章
@@ -378,7 +380,8 @@ public class PageFactory {
      *
      * @throws IOException
      */
-    public void openBook(Book book) throws IOException {
+    public void openBook(Book book,Activity activity) throws IOException {
+        this.activity = activity;
         currentCharter = 0;
         initBg(config.isNight());
 
@@ -389,59 +392,42 @@ public class PageFactory {
         status = Status.OPENING;
         drawStatus(pageView.getCurPage());
         drawStatus(pageView.getNextPage());
-        if (bookTask != null && bookTask.getStatus() != AsyncTask.Status.FINISHED) {
-            bookTask.cancel(true);
-        }
-        bookTask = new BookTask();
-        bookTask.execute(book.getPosition());
+        readStatus(book.getPosition());
     }
 
-    private class BookTask extends AsyncTask<Long, Void, Boolean> {
-        private long begin = 0;
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            if (isCancelled()) {
-                return;
-            }
-            if (result) {
-                PageFactory.status = PageFactory.Status.FINISH;
-                currentPage = getPageForBegin(begin);
-                if (pageView != null) {
-                    currentPage(true);
-                }
-            } else {
-                PageFactory.status = PageFactory.Status.FAIL;
-                drawStatus(pageView.getCurPage());
-                drawStatus(pageView.getNextPage());
-                Toast.makeText(context, context.getResources().getString(R.string.read_load_fail), Toast.LENGTH_SHORT).show();
-            }
+    /**
+     * 阅读状态
+     * @param position 当前页面的第一个字的索引
+     */
+    private void readStatus(long position){
+        try {
+            bookUtil.openBook(book);
+        } catch (IOException e) {
+            e.printStackTrace();
+            setStatus(false,position);
+            return;
         }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected Boolean doInBackground(Long... params) {
-            begin = params[0];
-            try {
-                bookUtil.openBook(book);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        }
+        setStatus(true,position);
     }
 
+    /**
+     * 设置阅读状态
+     * @param status 阅读状态
+     * @param position 当前页面的第一个字的索引
+     */
+    private void setStatus(boolean status, long position){
+        if (status) {
+            PageFactory.status = PageFactory.Status.FINISH;
+            currentPage = getPageForBegin(position);
+            if (pageView != null) {
+                currentPage(true);
+            }
+        } else {
+            PageFactory.status = PageFactory.Status.FAIL;
+            activity.finish();
+            Toast.makeText(context, context.getResources().getString(R.string.read_load_fail), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private Page getNextPage() {
         bookUtil.setPosition(currentPage.getEnd());
@@ -637,17 +623,17 @@ public class PageFactory {
 
     /**
      * 改变章节进度
-     * @param begin
+     * @param position 当前页面的第一个字的索引
      */
-    public void changeChapter(long begin) {
-        currentPage = getPageForBegin(begin);
+    public void changeChapter(long position) {
+        currentPage = getPageForBegin(position);
         currentPage(true);
     }
 
     /**
      * 改变亮度
-     * @param activity
-     * @param brightness
+     * @param activity 当前页面的activity
+     * @param brightness 亮度
      */
     public void changeBrightness(Activity activity, float brightness) {
         WindowManager.LayoutParams attributes = activity.getWindow().getAttributes();
@@ -657,7 +643,7 @@ public class PageFactory {
 
     /**
      * 获取系统亮度
-     * @param activity
+     * @param activity 当前页面的activity
      * @return
      */
     public int getBrightness(Activity activity) {
@@ -688,7 +674,7 @@ public class PageFactory {
     /**
      * 改变背景
      *
-     * @param bg
+     * @param bg 背景
      */
     public void changeBookBg(int bg) {
         setBookBg(bg);
@@ -765,7 +751,7 @@ public class PageFactory {
         bookName = "";
         book = null;
         pageView = null;
-        pageEvent = null;
+        pageListener = null;
         cancelPage = null;
         prePage = null;
         currentPage = null;
@@ -831,16 +817,7 @@ public class PageFactory {
         return progress;
     }
 
-    public void setPageEvent(PageEvent pageEvent) {
-        this.pageEvent = pageEvent;
-    }
-
-    public interface PageEvent {
-        /**
-         * 读书进度监听
-         *
-         * @param progress 进度
-         */
-        void changeProgress(float progress);
+    public void setPageListener(PageListener pageListener) {
+        this.pageListener = pageListener;
     }
 }

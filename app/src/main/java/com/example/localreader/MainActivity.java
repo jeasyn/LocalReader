@@ -37,8 +37,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.adapter.BookShelfAdapter;
 import com.example.localreader.entity.Book;
+import com.example.localreader.entity.Bookmark;
 import com.example.localreader.entity.Config;
-import com.example.localreader.util.BookShelfUtil;
 import com.example.localreader.util.BookUtil;
 import com.example.localreader.util.FileUtil;
 import com.example.localreader.util.PageFactory;
@@ -54,6 +54,7 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private List<Book> books;
     private BookShelfAdapter adapter;
     private RecyclerView bookShelfRv;
@@ -182,28 +183,26 @@ public class MainActivity extends AppCompatActivity {
             if (adapter.getSelectSize() == 0) {
                 return;
             }
-            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-            dialog.setTitle("警告");
-            dialog.setMessage("确认删除选中的书籍？");
-            dialog.setCancelable(false);//设置为false时，点击返回键无效
-            dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    List<Book> selectBooks = adapter.getSelectBook();
-                    if (books != null) {
-                        books.clear();
-                        BookUtil.deleteBookmarks(selectBooks);
-                        books.addAll(BookShelfUtil.deleteBooks(selectBooks));
-                    }
-                    if (books.size() == 0) {
-                        hideBottomLayout();
-                    }
-                    changeBtnState();
-                    refreshData();
-                }
-            });
-            dialog.setNegativeButton("取消", null);
-            dialog.show();
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("警告")
+                    .setMessage("确认删除选中的书籍？")
+                    .setNegativeButton("取消", null)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            List<Book> selectBooks = adapter.getSelectBook();
+                            books.removeAll(selectBooks);
+                            for (Book book : selectBooks) {
+                                LitePal.delete(Book.class, book.getId());
+                            }
+                            BookUtil.deleteBookmarks(selectBooks);
+                            if (books.size() == 0) {
+                                hideBottomLayout();
+                            }
+                            changeBtnState();
+                            adapter.setBookList(books);
+                        }
+                    }).show();
         }
     };
     private View.OnClickListener mCancelListener = new View.OnClickListener() {
@@ -248,11 +247,30 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            int bookId = (Integer) v.getTag();
-            Book book = BookShelfUtil.queryBookById(bookId);
-            Intent intent = new Intent(MainActivity.this, ReadActivity.class);
-            intent.putExtra("book_data", book);
-            startActivity(intent);
+
+            final int bookId = (Integer) v.getTag();
+            final Book book = LitePal.findAll(Book.class, bookId).get(0);
+
+            if (new File(book.getBookPath()).exists()) {
+                Intent intent = new Intent(MainActivity.this, ReadActivity.class);
+                intent.putExtra("book_data", book);
+                startActivity(intent);
+            } else {
+                // 当已放入书架的书被删除时，弹出此对话框
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("警告")
+                        .setMessage("书籍不存在，是否删除该书籍")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                LitePal.delete(Book.class, bookId);
+                                List<Book> all = LitePal.findAll(Book.class);
+                                LitePal.deleteAll(Bookmark.class, "bookPath = ?", book.getBookPath());
+                                adapter.setBookList(all);
+                            }
+                        }).show();
+            }
         }
     };
 
@@ -278,7 +296,8 @@ public class MainActivity extends AppCompatActivity {
             showBottomLayout();
             adapter.bookSelect(bookId);
             changeBtnState();
-            return false;//返回false：执行完长按事件后，还要执行单击事件
+            // 返回false：执行完长按事件后，还要执行单击事件
+            return false;
         }
     };
 
@@ -321,10 +340,6 @@ public class MainActivity extends AppCompatActivity {
     public void directHideBottom() {
         adapter.showState(false);
         bottomLayout.setVisibility(View.GONE);
-    }
-
-    public void refreshData() {
-        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -385,13 +400,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-
     private long exitTime = 0;
+
     private void exit() {
         long endTime = 2000;
         //两秒内如果没有再次按下，则不会退出
         if ((System.currentTimeMillis() - exitTime) > endTime) {
-                Toast.makeText(MainActivity.this, getResources().getString(R.string.back_app), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.back_app), Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
         } else {
             finish();

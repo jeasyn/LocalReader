@@ -8,11 +8,11 @@ import java.util.List;
  */
 public class Page {
     /**
-     * 最后一次读的位置
+     * 当前读的页面的第一个字的索引，包含空格和其他字符
      */
     private long position;
     /**
-     * 文件结尾的位置
+     * 当前阅读页面结尾的位置
      */
     private long end;
     private List<String> lines;

@@ -11,10 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.localreader.R;
 import com.example.localreader.entity.Book;
-import com.example.localreader.util.BookShelfUtil;
 import com.example.localreader.viewholder.BaseViewHolder;
 import com.example.localreader.viewholder.BookShelfViewHolder;
 import com.example.localreader.viewholder.ImportViewHolder;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,11 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     /**
      * 是否显示底部选项和checkbox
      */
-    private boolean isShowItem = false;
+    private boolean showItem = false;
     /**
      * 存储选中的图书，类似HashMap
      */
-    private SparseBooleanArray mBooleanArray;
+    private SparseBooleanArray booleanArray;
 
     private int[] bg = new int[]{R.drawable.book_shelf_cover_bg_1,
             R.drawable.book_shelf_cover_bg_2, R.drawable.book_shelf_cover_bg_3};
@@ -54,9 +55,18 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private View.OnClickListener mImportListener;
 
     public BookShelfAdapter(List<Book> books, Context context) {
-        mBooleanArray = new SparseBooleanArray();
+        booleanArray = new SparseBooleanArray();
         this.context = context;
         this.books = books;
+    }
+
+    /**
+     * 更新过后的books
+     * @param books
+     */
+    public void setBookList(List<Book> books){
+        this.books = books;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -103,7 +113,6 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 viewHolder.bookNameTv.setText(bookName);
 
                 String progress = book.getProgress();
-
                 String readed = "100.0%";
                 String noRead = "未读";
                 if (progress.equals(readed)) {
@@ -115,14 +124,14 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                 viewHolder.bookView.setTag(book.getId());
                 viewHolder.bookView.setOnLongClickListener(mItemLongClickListener);
-                if (isShowItem) {
+                if (showItem) {
                     // 可以显示选中的图书
                     viewHolder.bookSelectIv.setVisibility(View.VISIBLE);
                     viewHolder.bookSelectIv.setSelected(getItemSelected(book.getId()));
                     viewHolder.bookView.setOnClickListener(mItemSelectedClickListener);
                 } else {
                     // 不能显示选中的图书，并清空选中集合中的书架
-                    mBooleanArray.clear();
+                    booleanArray.clear();
                     viewHolder.bookSelectIv.setVisibility(View.GONE);
                     viewHolder.bookView.setOnClickListener(mOnItemClickListener);
                 }
@@ -184,10 +193,11 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     /**
      * 选中图书
      *
-     * @param id 图书id
+     * @param bookId 图书id
      */
-    public void selectBook(int id) {
-        Book book = BookShelfUtil.queryBookById(id);
+    public void selectBook(int bookId) {
+        final Book book = LitePal.findAll(Book.class, bookId).get(0);
+
         boolean isSelected = getItemSelected(book.getId());
         setItemSelected(book.getId(), !isSelected);
         notifyDataSetChanged();
@@ -212,8 +222,8 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      * @param state 显示状态
      */
     public void showState(boolean state) {
-        isShowItem = state;
-        mBooleanArray.clear();
+        showItem = state;
+        booleanArray.clear();
         notifyDataSetChanged();
     }
 
@@ -223,7 +233,7 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      * @param id 长按当前图书的id
      */
     public void bookSelect(int id) {
-        isShowItem = true;
+        showItem = true;
         setItemSelected(id, true);
         notifyDataSetChanged();
     }
@@ -235,10 +245,10 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      * @param selected 是否被选中
      */
     private void setItemSelected(int id, boolean selected) {
-        if (mBooleanArray == null) {
-            mBooleanArray = new SparseBooleanArray();
+        if (booleanArray == null) {
+            booleanArray = new SparseBooleanArray();
         }
-        mBooleanArray.put(id, selected);
+        booleanArray.put(id, selected);
     }
 
     /**
@@ -248,10 +258,10 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
      * @return 图书是否被选中
      */
     private boolean getItemSelected(int id) {
-        if (mBooleanArray == null) {
+        if (booleanArray == null) {
             return false;
         }
-        return mBooleanArray.get(id, false);
+        return booleanArray.get(id, false);
     }
 
     /**
@@ -272,6 +282,6 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public boolean isShowItem() {
-        return isShowItem;
+        return showItem;
     }
 }

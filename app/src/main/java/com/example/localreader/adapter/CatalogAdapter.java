@@ -22,6 +22,9 @@ public class CatalogAdapter extends BaseAdapter {
 
     private Context context;
     private List<BookCatalog> catalogs;
+    /**
+     * 当前正在阅读章节的索引
+     */
     private int currentCharter = 0;
 
     public CatalogAdapter(Context context, List<BookCatalog> catalogs) {

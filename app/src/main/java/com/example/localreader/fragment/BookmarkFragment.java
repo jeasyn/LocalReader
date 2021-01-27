@@ -20,7 +20,6 @@ import com.example.localreader.util.PageFactory;
 
 import org.litepal.LitePal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,7 +50,6 @@ public class BookmarkFragment extends Fragment {
         if (bundle != null) {
             bookPath = bundle.getString(ARGUMENT);
         }
-        bookmarkList = new ArrayList<>();
         bookmarkList = LitePal.where("bookPath = ?", bookPath).find(Bookmark.class);
         bookmarkAdapter = new BookmarkAdapter(getActivity(), bookmarkList);
         bookmarkLv.setAdapter(bookmarkAdapter);
@@ -74,12 +72,7 @@ public class BookmarkFragment extends Fragment {
             new AlertDialog.Builder(getActivity())
                     .setTitle("提示")
                     .setMessage("确定删除书签？")
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
+                    .setNegativeButton("取消", null)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -88,8 +81,9 @@ public class BookmarkFragment extends Fragment {
                             bookmarkList.addAll(LitePal.where("bookPath = ?", bookPath).find(Bookmark.class));
                             bookmarkAdapter.notifyDataSetChanged();
                         }
-                    }).setCancelable(true).show();
-            return false;
+                    }).show();
+            //设置为true，可避免长按事件与点击事件冲突
+            return true;
         }
     };
 

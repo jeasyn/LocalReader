@@ -15,7 +15,7 @@ public class Bookmark extends LitePalSupport {
      */
     private String partContent;
     /**
-     * 书签记录页面最后一次读的位置
+     * 书签记录当前读的页面的第一个字的索引，包含空格和其他字符
      */
     private long position;
     /**

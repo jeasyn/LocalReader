@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.localreader.adapter.ImportAdapter;
 import com.example.localreader.entity.Book;
 import com.example.localreader.listener.CheckedChangeListener;
-import com.example.localreader.util.BookShelfUtil;
 import com.example.localreader.util.FileUtil;
 
 import org.litepal.LitePal;
@@ -42,6 +41,7 @@ public class ImportActivity extends AppCompatActivity {
      */
     private int actualSize;
     private Button importBookshelfBtn;
+    private Button selectStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +67,8 @@ public class ImportActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv_import_book);
         noFilePointTv = findViewById(R.id.tv_no_file);
         importBookshelfBtn = findViewById(R.id.btn_import_book_self);
+
+        selectStatus = findViewById(R.id.btn_select_all_or_not);
     }
 
     public void initData() {
@@ -81,10 +83,10 @@ public class ImportActivity extends AppCompatActivity {
         adapter.setCheckedChangeListener(mCheckedChangeListener);
 
         // 将导入到书架上的书状态变成"已导入"
-        List<String> bookShelfNames = BookShelfUtil.getBookShelfName();
-        adapter.getBookShelfNames(bookShelfNames);
+        List<Book> bookShelf = LitePal.findAll(Book.class);
+        adapter.getBookShelfNames(bookShelf);
 
-        actualSize = sdCardFiles.size() - bookShelfNames.size();
+        actualSize = sdCardFiles.size() - bookShelf.size();
 
         showNoFilePoint();
     }
@@ -103,12 +105,23 @@ public class ImportActivity extends AppCompatActivity {
 
     /**
      * 导入书架按钮监听
+     *
      * @param v
      */
     public void importBookShelf(View v) {
         if (adapter.getSelectNum() != 0) {
             List<File> selectFiles = adapter.getSelectFile();
-            BookShelfUtil.importBooks(selectFiles);
+
+            if (selectFiles.size() != 0) {
+                for (File file : selectFiles) {
+                    Book book = new Book();
+                    book.setBookName(file.getName());
+                    book.setBookPath(file.getPath());
+                    book.setProgress("未读");
+                    book.save();
+                }
+            }
+
             initData();
             adapter.notifyDataSetChanged();//通知adapter数据已发生变化
             startActivity(new Intent(this, MainActivity.class));
@@ -117,6 +130,7 @@ public class ImportActivity extends AppCompatActivity {
 
     /**
      * 全选按钮监听（全选or全不选）
+     *
      * @param v
      */
     public void selectFiles(View v) {
@@ -124,8 +138,10 @@ public class ImportActivity extends AppCompatActivity {
             return;
         }
         if (adapter.getSelectNum() != actualSize) {
+            selectStatus.setText(getString(R.string.main_no_select_all));
             adapter.selectAll();
         } else {
+            selectStatus.setText(getString(R.string.main_select_all));
             adapter.unSelectAll();
         }
         adapter.notifyDataSetChanged();

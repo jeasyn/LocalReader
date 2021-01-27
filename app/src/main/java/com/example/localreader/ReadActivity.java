@@ -28,6 +28,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.localreader.entity.Book;
 import com.example.localreader.entity.Bookmark;
 import com.example.localreader.entity.Config;
+import com.example.localreader.listener.PageListener;
 import com.example.localreader.listener.SettingsListener;
 import com.example.localreader.listener.TouchListener;
 import com.example.localreader.util.PageFactory;
@@ -127,7 +128,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //初始化屏幕亮度
         if (config.getLight() == 0) {
-            float light = ((100 * pageFactory.getBrightness(this)) / 255);
+            float light = (float) ((100 * pageFactory.getBrightness(this)) / 255.0);
             config.setLight((float) (light * 1.0 / 100));
         }
         pageFactory.changeBrightness(this, config.getLight());
@@ -137,14 +138,14 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         pageFactory.setPageWidget(bookPage);
 
         try {
-            pageFactory.openBook(book);
+            pageFactory.openBook(book, ReadActivity.this);
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, getString(R.string.read_load_fail), Toast.LENGTH_SHORT).show();
         }
         settingsDetail.setOnCancelListener(mOnCancelListener);
         settingsDetail.setSettingListener(mSettingsListener);
-        pageFactory.setPageEvent(mPageEvent);
+        pageFactory.setPageListener(mPageListener);
         bookPage.setTouchListener(mTouchListener);
         initDayOrNight();
     }
@@ -173,7 +174,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    PageFactory.PageEvent mPageEvent = new PageFactory.PageEvent() {
+    PageListener mPageListener = new PageListener() {
         @Override
         public void changeProgress(float progress) {
             Message message = new Message();
