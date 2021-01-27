@@ -13,7 +13,7 @@ public class BookCatalog {
      */
     private String catalog;
     /**
-     * 最后一次读的位置
+     * 当前读的页面的第一个字的索引，包含空格和其他字符
      */
     private long position;
 

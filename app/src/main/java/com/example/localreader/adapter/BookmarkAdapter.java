@@ -27,7 +27,6 @@ public class BookmarkAdapter extends BaseAdapter {
     private List<Bookmark> bookmarks;
     private PageFactory pageFactory;
 
-
     public BookmarkAdapter(Context context, List<Bookmark> bookmarks) {
         this.context = context;
         this.bookmarks = bookmarks;

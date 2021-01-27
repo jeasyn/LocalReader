@@ -58,7 +58,7 @@ public class BookUtil {
         this.mBook = book;
         // 如果当前缓存不是要打开的书本就缓存书本同时删除缓存
         if (bookPath == null || !bookPath.equals(book.getBookPath())) {
-            cleanCacheFile();
+            cleanFileCache();
             this.bookPath = book.getBookPath();
             bookName = book.getBookName().split(".txt")[0];
             cacheBook();
@@ -82,7 +82,7 @@ public class BookUtil {
     /**
      * 清除文件缓存
      */
-    private void cleanCacheFile() {
+    private void cleanFileCache() {
         File file = new File(CACHED_PATH);
         if (!file.exists()) {
             file.mkdir();
@@ -105,26 +105,6 @@ public class BookUtil {
             position -= 1;
         }
         return result;
-    }
-
-    public char[] nextLine() {
-        if (position >= bookLen) {
-            return null;
-        }
-        StringBuilder line = new StringBuilder();
-        while (position < bookLen) {
-            int word = next(false);
-            if (word == -1) {
-                break;
-            }
-            char wordChar = (char) word;
-            if ("\r".equals(wordChar + "") && "\n".equals(((char) next(true)) + "")) {
-                next(false);
-                break;
-            }
-            line.append(wordChar);
-        }
-        return line.toString().toCharArray();
     }
 
     public char[] preLine() {
