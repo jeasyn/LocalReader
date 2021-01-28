@@ -67,9 +67,14 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     public void initData() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            //先清空一下，否则会有重复的，或者可以用Set集合存储
+            FileUtil.txtList.clear();
+            File sdCardTxt = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+            FileUtil.getLocalTxt(sdCardTxt);
+        }
         // 获取所有txt文件
-        String sdCardTxt = Environment.getExternalStorageDirectory().toString();
-        sdCardFiles = FileUtil.getLocalTxt(new File(sdCardTxt));
+        sdCardFiles = FileUtil.txtList;
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ImportAdapter(sdCardFiles);

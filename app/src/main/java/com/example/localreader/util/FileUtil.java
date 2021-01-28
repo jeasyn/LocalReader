@@ -20,6 +20,11 @@ import java.util.List;
 public class FileUtil {
 
     /**
+     * 存储本地所有的txt文件，不可用于局部变量，否则txt文件找不全
+     */
+    public static List<File> txtList = new ArrayList<>();
+
+    /**
      * 获取文件编码
      *
      * @param fileName 文件名
@@ -49,8 +54,8 @@ public class FileUtil {
      */
     public static String formatFileSize(long size) {
         long byteSize = 1024;
-        final long kbSize = 1048576;
-        final long mbSize = 1073741824;
+        final long kbSize = 1024*1024;
+        final long mbSize = 1024*1024*1024;
         if (size == 0) {
             return "0.00B";
         }
@@ -83,30 +88,26 @@ public class FileUtil {
     }
 
     /**
-     * 查询所有txt文件
+     * 查询所有txt文件并放入txtList集合中
      *
-     * @param file txt文件
-     * @return 返回sd卡路径下txt文件集合
+     * @param parentFile txt文件
      */
-    public static List<File> getLocalTxt(File file) {
-        List<File> txtList = new ArrayList<>();
+    public static void getLocalTxt(File parentFile) {
         try {
-            File[] files = file.listFiles();
-            if (files.length > 0) {
-                for (int i = 0; i < files.length; i++) {
-                    if (!files[i].isDirectory()) {
-                        if (files[i].getName().endsWith(".txt")) {
-                            txtList.add(files[i]);
-                        }
-                    } else {
-                        getLocalTxt(files[i]);
+            File[] files = parentFile.listFiles();
+            for (File file : files) {
+                if (!file.isDirectory()) {
+                    // 排除一些小文件
+                    if (file.getName().endsWith(".txt") && file.length() > 1024*100) {
+                        txtList.add(file);
                     }
+                } else {
+                    getLocalTxt(file);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return txtList;
     }
 
     /**
@@ -117,8 +118,8 @@ public class FileUtil {
      */
     public static File getFileByName(String name) {
         String path = Environment.getExternalStorageDirectory().toString();
-        List<File> txtFileList = FileUtil.getLocalTxt(new File(path));
-        for (File file : txtFileList) {
+        FileUtil.getLocalTxt(new File(path));
+        for (File file : txtList) {
             if (name.equals(file.getName())) {
                 return file;
             }
