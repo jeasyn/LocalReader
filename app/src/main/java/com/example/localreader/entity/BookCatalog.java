@@ -15,7 +15,7 @@ public class BookCatalog {
     /**
      * 当前读的页面的第一个字的索引，包含空格和其他字符
      */
-    private long position;
+    private long firstIndex;
 
     public int getId() {
         return id;
@@ -41,11 +41,11 @@ public class BookCatalog {
         this.catalog = catalog;
     }
 
-    public long getPosition() {
-        return position;
+    public long getFirstIndex() {
+        return firstIndex;
     }
 
-    public void setPosition(long position) {
-        this.position = position;
+    public void setFirstIndex(long firstIndex) {
+        this.firstIndex = firstIndex;
     }
 }

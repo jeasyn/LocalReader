@@ -8,9 +8,9 @@ public interface SettingsListener {
     /**
      * 改变亮度
      *
-     * @param brightness 亮度值
+     * @param light 亮度值
      */
-    void changeSystemBright(float brightness);
+    void changeLight(float light);
 
     /**
      * 改变字号

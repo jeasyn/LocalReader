@@ -20,7 +20,7 @@ public class Book extends LitePalSupport implements Serializable {
     /**
      * 当前读的页面的第一个字的索引，包含空格和其他字符
      */
-    private long position;
+    private long firstIndex;
     /**
      * 读书进度（已格式化）
      */
@@ -62,12 +62,12 @@ public class Book extends LitePalSupport implements Serializable {
         this.charset = charset;
     }
 
-    public long getPosition() {
-        return position;
+    public long getFirstIndex() {
+        return firstIndex;
     }
 
-    public void setPosition(long position) {
-        this.position = position;
+    public void setFirstIndex(long firstIndex) {
+        this.firstIndex = firstIndex;
     }
 
     public String getProgress() {

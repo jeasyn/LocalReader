@@ -29,13 +29,6 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
     private int currentFontSize;
     private SeekBar brightnessSb;
     private TextView showSizeTv;
-    private TextView moreSizeTv;
-    private FloatingActionButton whiteBgFb;
-    private FloatingActionButton yellowBgFb;
-    private FloatingActionButton grayBgFb;
-    private FloatingActionButton greenBgFb;
-    private FloatingActionButton blueBgFb;
-    private TextView lessSizeTv;
     private SettingsListener mSettingsListener;
 
     public SettingsDialog(@NonNull Context context) {
@@ -89,13 +82,13 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
     private void initView() {
         brightnessSb = findViewById(R.id.sb_brightness);
         showSizeTv = findViewById(R.id.tv_show_font_size);
-        lessSizeTv = findViewById(R.id.tv_less_font_size);
-        moreSizeTv = findViewById(R.id.tv_more_font_size);
-        whiteBgFb = findViewById(R.id.fb_bg_white);
-        yellowBgFb = findViewById(R.id.fb_bg_yellow);
-        grayBgFb = findViewById(R.id.fb_bg_gray);
-        greenBgFb = findViewById(R.id.fb_bg_green);
-        blueBgFb = findViewById(R.id.fb_bg_blue);
+        TextView lessSizeTv = findViewById(R.id.tv_less_font_size);
+        TextView moreSizeTv = findViewById(R.id.tv_more_font_size);
+        FloatingActionButton whiteBgFb = findViewById(R.id.fb_bg_white);
+        FloatingActionButton yellowBgFb = findViewById(R.id.fb_bg_yellow);
+        FloatingActionButton grayBgFb = findViewById(R.id.fb_bg_gray);
+        FloatingActionButton greenBgFb = findViewById(R.id.fb_bg_green);
+        FloatingActionButton blueBgFb = findViewById(R.id.fb_bg_blue);
 
         lessSizeTv.setOnClickListener(this);
         moreSizeTv.setOnClickListener(this);
@@ -186,7 +179,7 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
         float light = (float) (brightness / 100.0);
         config.setLight(light);
         if (mSettingsListener != null) {
-            mSettingsListener.changeSystemBright(light);
+            mSettingsListener.changeLight(light);
         }
     }
 

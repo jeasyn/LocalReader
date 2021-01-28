@@ -10,27 +10,27 @@ public class Page {
     /**
      * 当前读的页面的第一个字的索引，包含空格和其他字符
      */
-    private long position;
+    private long firstIndex;
     /**
      * 当前阅读页面结尾的位置
      */
-    private long end;
+    private long lastIndex;
     private List<String> lines;
 
-    public long getPosition() {
-        return position;
+    public long getFirstIndex() {
+        return firstIndex;
     }
 
-    public void setPosition(long position) {
-        this.position = position;
+    public void setFirstIndex(long firstIndex) {
+        this.firstIndex = firstIndex;
     }
 
-    public long getEnd() {
-        return end;
+    public long getLastIndex() {
+        return lastIndex;
     }
 
-    public void setEnd(long end) {
-        this.end = end;
+    public void setLastIndex(long lastIndex) {
+        this.lastIndex = lastIndex;
     }
 
     public List<String> getLines() {

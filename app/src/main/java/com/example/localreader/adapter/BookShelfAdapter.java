@@ -61,10 +61,11 @@ public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     /**
-     * 更新过后的books
-     * @param books
+     * 执行删除操作后，调用该方法
+     *
+     * @param books 被更新后的books
      */
-    public void setBookList(List<Book> books){
+    public void setBookList(List<Book> books) {
         this.books = books;
         notifyDataSetChanged();
     }

@@ -61,7 +61,7 @@ public class BookmarkFragment extends Fragment {
     private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            pageFactory.changeChapter(bookmarkList.get(position).getPosition());
+            pageFactory.changeChapter(bookmarkList.get(position).getFirstIndex());
             getActivity().finish();
         }
     };
@@ -88,7 +88,7 @@ public class BookmarkFragment extends Fragment {
     };
 
     /**
-     * 用于从Activity传递数据到Fragment
+     * 从activity传值到fragment
      *
      * @param bookPath 图书路径
      * @return BookmarkFragment
