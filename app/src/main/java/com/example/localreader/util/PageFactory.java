@@ -60,7 +60,6 @@ public class PageFactory {
      * 阅读的文字大小
      */
     private float fontSize;
-    private DecimalFormat df;
     /**
      * 页面文字与上下边缘的距离（书本高边距）
      */
@@ -139,7 +138,6 @@ public class PageFactory {
     private PageListener pageListener;
     private Page currentPage;
     private Page cancelPage;
-    private ContentValues values = new ContentValues();
     private static Status status = Status.OPENING;
     private String progress;
     private long firstIndex;
@@ -160,16 +158,6 @@ public class PageFactory {
         FAIL,
     }
 
-    public static synchronized PageFactory getInstance() {
-        return pageFactory;
-    }
-
-    public static synchronized void createPageFactory(Context context) {
-        if (pageFactory == null) {
-            pageFactory = new PageFactory(context);
-        }
-    }
-
     public PageFactory(Context context) {
         bookUtil = new BookUtil(context);
         this.context = context.getApplicationContext();
@@ -178,7 +166,6 @@ public class PageFactory {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
-        df = new DecimalFormat("#0.0");
         marginWidth = this.context.getResources().getDimension(R.dimen.read_margin_width);
         marginHeight = this.context.getResources().getDimension(R.dimen.read_margin_height);
         statusMarginBottomHeight = this.context.getResources().getDimension(R.dimen.read_status_margin_bottom);
@@ -228,10 +215,10 @@ public class PageFactory {
 
     /**
      * 初始化背景
-     * @param isNight 是否是夜间模式
+     * @param night 是否是夜间模式
      */
-    private void initBg(Boolean isNight) {
-        if (isNight) {
+    private void initBg(boolean night) {
+        if (night) {
             Bitmap bitmap = Bitmap.createBitmap(screenWidth, screenHeight, Bitmap.Config.RGB_565);
             Canvas canvas = new Canvas(bitmap);
             canvas.drawColor(Color.BLACK);
@@ -256,12 +243,8 @@ public class PageFactory {
      */
     private void drawStatus(Bitmap bitmap) {
         String status = "";
-        switch (PageFactory.status) {
-            case OPENING:
-                status = context.getResources().getString(R.string.read_loading);
-                break;
-            default:
-                break;
+        if (PageFactory.status == Status.OPENING) {
+            status = context.getResources().getString(R.string.read_loading);
         }
         Canvas c = new Canvas(bitmap);
         c.drawBitmap(getBgBitmap(), 0, 0, null);
@@ -292,6 +275,7 @@ public class PageFactory {
                     0L, TimeUnit.MILLISECONDS,
                     new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
 
+            ContentValues values = new ContentValues();
             poolExecutor.execute(()->{
                 values.put("firstIndex", currentPage.getFirstIndex());
                 LitePal.update(Book.class, values, book.getId());
@@ -320,6 +304,7 @@ public class PageFactory {
             pageListener.changeProgress(fPercent);
         }
         // 进度文字
+        DecimalFormat df = new DecimalFormat("#0.0");
         progress = df.format(fPercent * 100) + "%";
 
         c.drawText(progress, screenWidth / 2, screenHeight - statusMarginBottomHeight, paint);
@@ -338,7 +323,6 @@ public class PageFactory {
      * 向前翻页
      */
     public void upPage() {
-        Log.d(TAG, pageFactory.getFirstIndex() + " ");
         if (currentPage.getFirstIndex() <= 0) {
             if (!firstPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_head), Toast.LENGTH_SHORT).show();
@@ -359,7 +343,6 @@ public class PageFactory {
      * 向后翻页
      */
     public void nextPage() {
-        Log.d(TAG, pageFactory.getFirstIndex() + " ");
         if (currentPage.getLastIndex() >= bookUtil.getBookLen()) {
             if (!lastPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_end), Toast.LENGTH_SHORT).show();
@@ -436,6 +419,10 @@ public class PageFactory {
         }
     }
 
+    /**
+     * 获取下一个页面的对象
+     * @return 下一页面对象
+     */
     private Page getNextPage() {
         bookUtil.setFirstIndex(currentPage.getLastIndex());
 
@@ -446,6 +433,10 @@ public class PageFactory {
         return page;
     }
 
+    /**
+     * 获取上一个页面的对象
+     * @return 上一页面对象
+     */
     private Page getPrePage() {
         bookUtil.setFirstIndex(currentPage.getFirstIndex());
 
@@ -649,9 +640,9 @@ public class PageFactory {
     }
 
     /**
-     * 获取系统亮度
+     * 获取亮度
      * @param activity 当前页面的activity
-     * @return
+     * @return 亮度
      */
     public int getBrightness(Activity activity) {
         int brightness = 0;
@@ -745,11 +736,21 @@ public class PageFactory {
     /**
      * 设置日间或者夜间模式
      *
-     * @param isNight 是否为夜间模式
+     * @param night 是否为夜间模式
      */
-    public void setDayOrNight(boolean isNight) {
-        initBg(isNight);
+    public void setDayOrNight(boolean night) {
+        initBg(night);
         currentPage(false);
+    }
+
+    public static synchronized PageFactory getInstance() {
+        return pageFactory;
+    }
+
+    public static synchronized void createPageFactory(Context context) {
+        if (pageFactory == null) {
+            pageFactory = new PageFactory(context);
+        }
     }
 
     public void initData() {
