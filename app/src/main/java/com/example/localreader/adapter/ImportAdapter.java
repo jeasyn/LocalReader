@@ -3,7 +3,6 @@ package com.example.localreader.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -152,13 +151,10 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
         holder.isSelectCb.setChecked(FileUtil.isChecked(selectMap, file.getName()));
 
         // 给CheckBox设置监听
-        holder.isSelectCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                selectMap.put(file, isChecked);
-                if (mCheckedChangeListener != null) {
-                    mCheckedChangeListener.onCheckedChanged(position, buttonView, isChecked);
-                }
+        holder.isSelectCb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            selectMap.put(file, isChecked);
+            if (mCheckedChangeListener != null) {
+                mCheckedChangeListener.onCheckedChanged(position, buttonView, isChecked);
             }
         });
     }
@@ -168,18 +164,15 @@ public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
         return sdCardFiles.size();
     }
 
-    private View.OnClickListener mOnItemClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            File file = (File) v.getTag();
-            if (!FileUtil.isChecked(selectMap, file.getName())) {
-                // 不是选中状态
-                selectMap.put(file, true);
-            } else {
-                selectMap.put(file, false);
-            }
-            notifyDataSetChanged();
+    private View.OnClickListener mOnItemClickListener = v -> {
+        File file = (File) v.getTag();
+        if (!FileUtil.isChecked(selectMap, file.getName())) {
+            // 不是选中状态
+            selectMap.put(file, true);
+        } else {
+            selectMap.put(file, false);
         }
+        notifyDataSetChanged();
     };
 
     public void setCheckedChangeListener(CheckedChangeListener checkedChangeListener) {

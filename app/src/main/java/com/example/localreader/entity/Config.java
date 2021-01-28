@@ -52,7 +52,7 @@ public class Config {
     }
 
     public void setBookBg(int bg){
-        sp.edit().putInt(READ_BG,bg).commit();
+        sp.edit().putInt(READ_BG,bg).apply();
     }
 
     public float getFontSize(){
@@ -64,7 +64,7 @@ public class Config {
 
     public void setFontSize(float fontSize){
         this.fontSize = fontSize;
-        sp.edit().putFloat(FONT_SIZE,fontSize).commit();
+        sp.edit().putFloat(FONT_SIZE,fontSize).apply();
     }
 
     /**
@@ -75,7 +75,7 @@ public class Config {
     }
 
     public void setNight(boolean night) {
-        sp.edit().putBoolean(IS_NIGHT,night).commit();
+        sp.edit().putBoolean(IS_NIGHT,night).apply();
     }
 
     public float getLight(){
@@ -83,6 +83,6 @@ public class Config {
     }
 
     public void setLight(float light) {
-        sp.edit().putFloat(LIGHT,light).commit();
+        sp.edit().putFloat(LIGHT,light).apply();
     }
 }
