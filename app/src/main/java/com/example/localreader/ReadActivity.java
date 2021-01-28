@@ -50,11 +50,10 @@ import java.util.List;
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private final static int MESSAGE_CHANGE_PROGRESS = 1;
     private Config config;
     private Book book;
     private PageFactory pageFactory;
-    private boolean isShow = false;
+    private boolean show = false;
     private boolean mDayOrNight;
     private SettingsDialog settingsDetail;
     private PageView bookPage;
@@ -74,30 +73,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
         initData();
-    }
-
-    private void initView() {
-        bookPage = findViewById(R.id.bookPage);
-        showProgressTv = findViewById(R.id.tv_show_progress);
-        showProgressRl = findViewById(R.id.rl_show_progress);
-        TextView upTv = findViewById(R.id.tv_read_up_chapter);
-        chapterProgressSb = findViewById(R.id.sb_chapter_progress);
-        TextView nextTv = findViewById(R.id.tv_read_next_chapter);
-        LinearLayout catalogTv = findViewById(R.id.tv_read_catalog);
-        LinearLayout dayOrNightLayout = findViewById(R.id.ll_read_day_or_night);
-        dayOrNightTv = findViewById(R.id.tv_read_day_or_night);
-        dayOrNightIv = findViewById(R.id.iv_read_day_or_night);
-        LinearLayout settingLayout = findViewById(R.id.ll_read_setting);
-        readBottomRl = findViewById(R.id.rl_read_bottom);
-        toolbar = findViewById(R.id.toolbar);
-        appbar = findViewById(R.id.appbar);
-
-        chapterProgressSb.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
-        upTv.setOnClickListener(this);
-        nextTv.setOnClickListener(this);
-        catalogTv.setOnClickListener(this);
-        dayOrNightLayout.setOnClickListener(this);
-        settingLayout.setOnClickListener(this);
     }
 
     private void initData() {
@@ -130,8 +105,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         try {
             pageFactory.openBook(book, ReadActivity.this);
         } catch (IOException e) {
-            e.printStackTrace();
             Toast.makeText(this, getString(R.string.read_load_fail), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
         settingsDetail.setOnCancelListener(mOnCancelListener);
         settingsDetail.setSettingListener(mSettingsListener);
@@ -163,7 +138,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void changeProgress(float progress) {
             Message message = new Message();
-            message.what = MESSAGE_CHANGE_PROGRESS;
+            message.what = 1;
             message.obj = progress;
             mHandler.sendMessage(message);
         }
@@ -174,13 +149,9 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what) {
-                case MESSAGE_CHANGE_PROGRESS:
-                    float progress = (float) msg.obj;
-                    setSeekBarProgress(progress);
-                    break;
-                default:
-                    break;
+            if (msg.what == 1) {
+                float progress = (float) msg.obj;
+                setSeekBarProgress(progress);
             }
         }
     };
@@ -188,7 +159,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isShow) {
+        if (!show) {
             hideSystemUi();
         }
     }
@@ -205,17 +176,10 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         bookPage = null;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.read_title_add_bookmark, menu);
-        return true;
-    }
-
-
     TouchListener mTouchListener = new TouchListener() {
         @Override
         public void center() {
-            if (isShow) {
+            if (show) {
                 hideReadSetting();
             } else {
                 showReadSetting();
@@ -224,7 +188,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public boolean upPage() {
-            if (isShow) {
+            if (show) {
                 return false;
             }
             pageFactory.upPage();
@@ -233,7 +197,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public boolean nextPage() {
-            if (isShow) {
+            if (show) {
                 return false;
             }
             pageFactory.nextPage();
@@ -247,12 +211,19 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.read_title_add_bookmark, menu);
+        return true;
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         // 添加书签
         if (id == R.id.action_add_bookmark) {
             if (pageFactory.getCurrentPage() != null) {
-                List<Bookmark> bookmarkList = LitePal.where("bookPath = ? and position = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getFirstIndex() + "").find(Bookmark.class);
+                List<Bookmark> bookmarkList = LitePal.where("bookPath = ? and firstIndex = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getFirstIndex() + "").find(Bookmark.class);
 
                 if (!bookmarkList.isEmpty()) {
                     Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
@@ -306,6 +277,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
 
     float pro;
+
     SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -323,7 +295,6 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             pageFactory.changeProgress(pro);
         }
     };
-
     /**
      * 拖动进度条时显示书本进度
      *
@@ -367,7 +338,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private void setProgress(float progress) {
         DecimalFormat decimalFormat = new DecimalFormat("00.00");
         String p = decimalFormat.format(progress * 100.0);
-        showProgressTv.setText(p + "%");
+        showProgressTv.setText(String.format(getString(R.string.read_progress), p));
     }
 
     public void setSeekBarProgress(float progress) {
@@ -378,7 +349,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
      * 显示功能栏动画
      */
     private void showReadSetting() {
-        isShow = true;
+        show = true;
         showProgressRl.setVisibility(View.GONE);
         showSystemUi();
         Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_in);
@@ -393,7 +364,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
      * 隐藏功能栏动画
      */
     private void hideReadSetting() {
-        isShow = false;
+        show = false;
         Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_out);
         Animation topAnim = AnimationUtils.loadAnimation(this, R.anim.top_out);
         if (readBottomRl.getVisibility() == View.VISIBLE) {
@@ -435,7 +406,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (isShow) {
+            if (show) {
                 hideReadSetting();
                 return true;
             }
@@ -455,5 +426,29 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             finish();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void initView() {
+        bookPage = findViewById(R.id.bookPage);
+        showProgressTv = findViewById(R.id.tv_show_progress);
+        showProgressRl = findViewById(R.id.rl_show_progress);
+        TextView upTv = findViewById(R.id.tv_read_up_chapter);
+        chapterProgressSb = findViewById(R.id.sb_chapter_progress);
+        TextView nextTv = findViewById(R.id.tv_read_next_chapter);
+        LinearLayout catalogTv = findViewById(R.id.tv_read_catalog);
+        LinearLayout dayOrNightLayout = findViewById(R.id.ll_read_day_or_night);
+        dayOrNightTv = findViewById(R.id.tv_read_day_or_night);
+        dayOrNightIv = findViewById(R.id.iv_read_day_or_night);
+        LinearLayout settingLayout = findViewById(R.id.ll_read_setting);
+        readBottomRl = findViewById(R.id.rl_read_bottom);
+        toolbar = findViewById(R.id.toolbar);
+        appbar = findViewById(R.id.appbar);
+
+        chapterProgressSb.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
+        upTv.setOnClickListener(this);
+        nextTv.setOnClickListener(this);
+        catalogTv.setOnClickListener(this);
+        dayOrNightLayout.setOnClickListener(this);
+        settingLayout.setOnClickListener(this);
     }
 }

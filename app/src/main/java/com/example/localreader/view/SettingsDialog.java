@@ -22,7 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class SettingsDialog extends Dialog implements View.OnClickListener {
 
-    private String TAG = "SettingsDialog";
+    private final String TAG = "SettingsDialog";
     private Config config;
     private int fontSizeMin;
     private int fontSizeMax;
@@ -57,7 +57,7 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
 
         // 初始化字体大小
         currentFontSize = (int) config.getFontSize();
-        showSizeTv.setText(currentFontSize + "");
+        showSizeTv.setText(String.valueOf(currentFontSize));
 
         // 拖动亮度进度条使数据和进度条位置一样
         brightnessSb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -77,26 +77,6 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
 
             }
         });
-    }
-
-    private void initView() {
-        brightnessSb = findViewById(R.id.sb_brightness);
-        showSizeTv = findViewById(R.id.tv_show_font_size);
-        TextView lessSizeTv = findViewById(R.id.tv_less_font_size);
-        TextView moreSizeTv = findViewById(R.id.tv_more_font_size);
-        FloatingActionButton whiteBgFb = findViewById(R.id.fb_bg_white);
-        FloatingActionButton yellowBgFb = findViewById(R.id.fb_bg_yellow);
-        FloatingActionButton grayBgFb = findViewById(R.id.fb_bg_gray);
-        FloatingActionButton greenBgFb = findViewById(R.id.fb_bg_green);
-        FloatingActionButton blueBgFb = findViewById(R.id.fb_bg_blue);
-
-        lessSizeTv.setOnClickListener(this);
-        moreSizeTv.setOnClickListener(this);
-        whiteBgFb.setOnClickListener(this);
-        yellowBgFb.setOnClickListener(this);
-        grayBgFb.setOnClickListener(this);
-        greenBgFb.setOnClickListener(this);
-        blueBgFb.setOnClickListener(this);
     }
 
     /**
@@ -146,7 +126,7 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
     private void addFontSize() {
         if (currentFontSize < fontSizeMax) {
             currentFontSize += 1;
-            showSizeTv.setText(currentFontSize + "");
+            showSizeTv.setText(String.valueOf(currentFontSize));
             config.setFontSize(currentFontSize);
             if (mSettingsListener != null) {
                 mSettingsListener.changeFontSize(currentFontSize);
@@ -160,7 +140,7 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
     private void lessFontSize() {
         if (currentFontSize > fontSizeMin) {
             currentFontSize -= 1;
-            showSizeTv.setText(currentFontSize + "");
+            showSizeTv.setText(String.valueOf(currentFontSize));
             config.setFontSize(currentFontSize);
             if (mSettingsListener != null) {
                 mSettingsListener.changeFontSize(currentFontSize);
@@ -185,5 +165,25 @@ public class SettingsDialog extends Dialog implements View.OnClickListener {
 
     public void setSettingListener(SettingsListener settingsListener) {
         this.mSettingsListener = settingsListener;
+    }
+
+    private void initView() {
+        brightnessSb = findViewById(R.id.sb_brightness);
+        showSizeTv = findViewById(R.id.tv_show_font_size);
+        TextView lessSizeTv = findViewById(R.id.tv_less_font_size);
+        TextView moreSizeTv = findViewById(R.id.tv_more_font_size);
+        FloatingActionButton whiteBgFb = findViewById(R.id.fb_bg_white);
+        FloatingActionButton yellowBgFb = findViewById(R.id.fb_bg_yellow);
+        FloatingActionButton grayBgFb = findViewById(R.id.fb_bg_gray);
+        FloatingActionButton greenBgFb = findViewById(R.id.fb_bg_green);
+        FloatingActionButton blueBgFb = findViewById(R.id.fb_bg_blue);
+
+        lessSizeTv.setOnClickListener(this);
+        moreSizeTv.setOnClickListener(this);
+        whiteBgFb.setOnClickListener(this);
+        yellowBgFb.setOnClickListener(this);
+        grayBgFb.setOnClickListener(this);
+        greenBgFb.setOnClickListener(this);
+        blueBgFb.setOnClickListener(this);
     }
 }

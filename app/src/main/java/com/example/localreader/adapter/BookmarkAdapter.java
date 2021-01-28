@@ -57,7 +57,7 @@ public class BookmarkAdapter extends BaseAdapter {
         String progress = df.format(percent * 100) + "%";
         bookmarkViewHolder.markProgressTv.setText(progress);
 
-        bookmarkViewHolder.markTimeTv.setText(bookmark.getTime().substring(0, 16));
+        bookmarkViewHolder.markTimeTv.setText(bookmark.getTime());
         return convertView;
     }
 

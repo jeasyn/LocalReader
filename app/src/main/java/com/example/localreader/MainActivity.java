@@ -1,7 +1,6 @@
 package com.example.localreader;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -98,28 +97,6 @@ public class MainActivity extends AppCompatActivity {
         initData();
     }
 
-    private void initViews() {
-        LinearLayout deleteLayout = findViewById(R.id.ll_main_bottom_delete);
-        LinearLayout cancelLayout = findViewById(R.id.ll_main_bottom_cancel);
-        LinearLayout selectLayout = findViewById(R.id.ll_main_bottom_select_all);
-        LinearLayout detailLayout = findViewById(R.id.ll_main_bottom_detail);
-        bookShelfRv = findViewById(R.id.rv_book_shelf);
-        bottomLayout = findViewById(R.id.ll_main_bottom);
-        deleteImg = findViewById(R.id.iv_main_bottom_delete);
-        deleteTv = findViewById(R.id.tv_main_bottom_delete);
-        selectImg = findViewById(R.id.iv_main_bottom_select_all);
-        selectTv = findViewById(R.id.tv_main_bottom_select_all);
-        detailImg = findViewById(R.id.iv_main_bottom_detail);
-        detailTv = findViewById(R.id.tv_main_bottom_detail);
-        filePathTv = view.findViewById(R.id.tv_file_path);
-        fileSizeTv = view.findViewById(R.id.tv_file_size);
-        fileTimeTv = view.findViewById(R.id.tv_file_time);
-        deleteLayout.setOnClickListener(mDeleteBookListener);
-        cancelLayout.setOnClickListener(mCancelListener);
-        selectLayout.setOnClickListener(mSelectListener);
-        detailLayout.setOnClickListener(mDetailListener);
-    }
-
     private void initData() {
         books = LitePal.findAll(Book.class);
         bookShelfRv.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
@@ -176,24 +153,22 @@ public class MainActivity extends AppCompatActivity {
                     .setTitle("警告")
                     .setMessage("确认删除选中的书籍？")
                     .setNegativeButton("取消", null)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            List<Book> selectBooks = adapter.getSelectBook();
-                            books.removeAll(selectBooks);
-                            for (Book book : selectBooks) {
-                                LitePal.delete(Book.class, book.getId());
-                            }
-                            BookUtil.deleteBookmarks(selectBooks);
-                            if (books.size() == 0) {
-                                hideBottomLayout();
-                            }
-                            changeBtnState();
-                            adapter.setBookList(books);
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        List<Book> selectBooks = adapter.getSelectBook();
+                        books.removeAll(selectBooks);
+                        for (Book book : selectBooks) {
+                            LitePal.delete(Book.class, book.getId());
                         }
+                        BookUtil.deleteBookmarks(selectBooks);
+                        if (books.size() == 0) {
+                            hideBottomLayout();
+                        }
+                        changeBtnState();
+                        adapter.setBookList(books);
                     }).show();
         }
     };
+
     private View.OnClickListener mCancelListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -229,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
     /**
      * 打开图书
      */
@@ -359,13 +333,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add:
-                startActivity(new Intent(this, ImportActivity.class));
-                directHideBottom();
-                break;
-            default:
-                break;
+        if (item.getItemId() == R.id.add) {
+            startActivity(new Intent(this, ImportActivity.class));
+            directHideBottom();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -419,25 +389,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE: {
-                // 已被授予权限
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                } else {
-                    // 拒绝授予权限，弹出框，让用户去应用详情页手动设置权限
-                    new AlertDialog.Builder(this)
-                            .setTitle("警告")
-                            .setMessage("存储权限是必须的，若拒绝，则部分功能无法正常运行！")
-                            .setPositiveButton("确定", (dialog, which) -> {
-                                Uri uri = Uri.parse("package:" + getPackageName());
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
-                                startActivity(intent);
-                            }).show();
-                }
-                break;
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                // 拒绝授予权限，弹出框，让用户去应用详情页手动设置权限
+                new AlertDialog.Builder(this)
+                        .setTitle("警告")
+                        .setMessage("存储权限是必须的，若拒绝，则部分功能无法正常运行！")
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            Uri uri = Uri.parse("package:" + getPackageName());
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
+                            startActivity(intent);
+                        }).show();
             }
-            default:
-                break;
         }
+    }
+
+    private void initViews() {
+        LinearLayout deleteLayout = findViewById(R.id.ll_main_bottom_delete);
+        LinearLayout cancelLayout = findViewById(R.id.ll_main_bottom_cancel);
+        LinearLayout selectLayout = findViewById(R.id.ll_main_bottom_select_all);
+        LinearLayout detailLayout = findViewById(R.id.ll_main_bottom_detail);
+        bookShelfRv = findViewById(R.id.rv_book_shelf);
+        bottomLayout = findViewById(R.id.ll_main_bottom);
+        deleteImg = findViewById(R.id.iv_main_bottom_delete);
+        deleteTv = findViewById(R.id.tv_main_bottom_delete);
+        selectImg = findViewById(R.id.iv_main_bottom_select_all);
+        selectTv = findViewById(R.id.tv_main_bottom_select_all);
+        detailImg = findViewById(R.id.iv_main_bottom_detail);
+        detailTv = findViewById(R.id.tv_main_bottom_detail);
+        filePathTv = view.findViewById(R.id.tv_file_path);
+        fileSizeTv = view.findViewById(R.id.tv_file_size);
+        fileTimeTv = view.findViewById(R.id.tv_file_time);
+        deleteLayout.setOnClickListener(mDeleteBookListener);
+        cancelLayout.setOnClickListener(mCancelListener);
+        selectLayout.setOnClickListener(mSelectListener);
+        detailLayout.setOnClickListener(mDetailListener);
     }
 }

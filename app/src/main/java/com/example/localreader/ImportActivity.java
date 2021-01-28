@@ -58,14 +58,6 @@ public class ImportActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
     }
 
-    public void initView() {
-        recyclerView = findViewById(R.id.rv_import_book);
-        noFilePointTv = findViewById(R.id.tv_no_file);
-        importBookshelfBtn = findViewById(R.id.btn_import_book_self);
-
-        selectStatus = findViewById(R.id.btn_select_all_or_not);
-    }
-
     public void initData() {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             //先清空一下，否则会有重复的，或者可以用Set集合存储
@@ -99,7 +91,7 @@ public class ImportActivity extends AppCompatActivity {
         @Override
         public void onCheckedChanged(int position, CompoundButton buttonView, boolean isChecked) {
             int selectedSize = adapter.getSelectNum();
-            importBookshelfBtn.setText("导入书架(" + selectedSize + ")");
+            importBookshelfBtn.setText(String.format(getString(R.string.import_import_bookshelf),String.valueOf(selectedSize)));
         }
     };
 
@@ -145,5 +137,13 @@ public class ImportActivity extends AppCompatActivity {
             adapter.unSelectAll();
         }
         adapter.notifyDataSetChanged();
+    }
+
+    public void initView() {
+        recyclerView = findViewById(R.id.rv_import_book);
+        noFilePointTv = findViewById(R.id.tv_no_file);
+        importBookshelfBtn = findViewById(R.id.btn_import_book_self);
+
+        selectStatus = findViewById(R.id.btn_select_all_or_not);
     }
 }

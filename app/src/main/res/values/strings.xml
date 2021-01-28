@@ -15,7 +15,7 @@
     <string name="import_toolbar_title">本地导入</string>
     <string name="import_no_search_file">未扫描到TXT文件</string>
     <string name="import_select_or_no_select_file">全选</string>
-    <string name="import_import_bookshelf">导入书架(0)</string>
+    <string name="import_import_bookshelf">导入书架(%s)</string>
     <string name="import_already_import">已导入</string>
 
     <string name="read_up_chapter">上一章</string>
@@ -25,6 +25,7 @@
     <string name="read_day_mode">日间</string>
     <string name="read_settings">设置</string>
 
+    <string name="read_progress">%s%%</string>
     <string name="read_add_bookmark">添加书签</string>
 
     <string name="read_settings_brightness">亮度</string>

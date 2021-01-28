@@ -39,7 +39,7 @@
                 style="@style/import_btn"
                 android:background="@color/colorPrimary"
                 android:onClick="importBookShelf"
-                android:text="@string/import_import_bookshelf"
+                android:text="导入书架(0)"
                 android:textColor="@android:color/white" />
 
         </LinearLayout>
