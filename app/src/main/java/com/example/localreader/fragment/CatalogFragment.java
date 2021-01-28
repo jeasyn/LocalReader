@@ -53,13 +53,13 @@ public class CatalogFragment extends Fragment {
     private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            pageFactory.changeChapter(catalogs.get(position).getPosition());
+            pageFactory.changeChapter(catalogs.get(position).getFirstIndex());
             getActivity().finish();
         }
     };
 
     /**
-     * 用于从Activity传递数据到Fragment
+     * 从activity传值到fragment
      *
      * @param bookPath 图书路径
      * @return

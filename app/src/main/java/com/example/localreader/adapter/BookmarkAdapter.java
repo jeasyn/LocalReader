@@ -51,7 +51,7 @@ public class BookmarkAdapter extends BaseAdapter {
         bookmarkViewHolder.markContentTv.setText(bookmark.getPartContent());
 
         // 格式化显示书签进度
-        long begin = bookmark.getPosition();
+        long begin = bookmark.getFirstIndex();
         float percent = (float) (begin * 1.0 / pageFactory.getBookLen());
         DecimalFormat df = new DecimalFormat("#0.0");
         String progress = df.format(percent * 100) + "%";

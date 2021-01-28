@@ -59,17 +59,12 @@ public class MainActivity extends AppCompatActivity {
     private BookShelfAdapter adapter;
     private RecyclerView bookShelfRv;
     private LinearLayout bottomLayout;
-    private LinearLayout deleteLayout;
-    private LinearLayout cancelLayout;
-    private LinearLayout selectLayout;
-    private LinearLayout detailLayout;
     private ImageView deleteImg;
     private TextView deleteTv;
     private ImageView selectImg;
     private TextView selectTv;
     private ImageView detailImg;
     private TextView detailTv;
-    private PopupWindow popupWindow;
     private TextView filePathTv;
     private TextView fileSizeTv;
     private TextView fileTimeTv;
@@ -104,27 +99,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        LinearLayout deleteLayout = findViewById(R.id.ll_main_bottom_delete);
+        LinearLayout cancelLayout = findViewById(R.id.ll_main_bottom_cancel);
+        LinearLayout selectLayout = findViewById(R.id.ll_main_bottom_select_all);
+        LinearLayout detailLayout = findViewById(R.id.ll_main_bottom_detail);
         bookShelfRv = findViewById(R.id.rv_book_shelf);
         bottomLayout = findViewById(R.id.ll_main_bottom);
-
-        deleteLayout = findViewById(R.id.ll_main_bottom_delete);
-        cancelLayout = findViewById(R.id.ll_main_bottom_cancel);
-        selectLayout = findViewById(R.id.ll_main_bottom_select_all);
-        detailLayout = findViewById(R.id.ll_main_bottom_detail);
-
         deleteImg = findViewById(R.id.iv_main_bottom_delete);
         deleteTv = findViewById(R.id.tv_main_bottom_delete);
-
         selectImg = findViewById(R.id.iv_main_bottom_select_all);
         selectTv = findViewById(R.id.tv_main_bottom_select_all);
-
         detailImg = findViewById(R.id.iv_main_bottom_detail);
         detailTv = findViewById(R.id.tv_main_bottom_detail);
-
         filePathTv = view.findViewById(R.id.tv_file_path);
         fileSizeTv = view.findViewById(R.id.tv_file_size);
         fileTimeTv = view.findViewById(R.id.tv_file_time);
-
         deleteLayout.setOnClickListener(mDeleteBookListener);
         cancelLayout.setOnClickListener(mCancelListener);
         selectLayout.setOnClickListener(mSelectListener);
@@ -349,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         // 获取屏幕宽高
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int width = displayMetrics.widthPixels;
-        popupWindow = new PopupWindow(view, 2 * width / 3, WindowManager.LayoutParams.WRAP_CONTENT);
+        PopupWindow popupWindow = new PopupWindow(view, 2 * width / 3, WindowManager.LayoutParams.WRAP_CONTENT);
         // 点击空白处，隐藏popup窗口
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));

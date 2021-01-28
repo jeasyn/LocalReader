@@ -128,18 +128,16 @@ public class PageFactory {
     /**
      * 书本名字
      */
-    private String bookName;
     private Book book;
     private BookUtil bookUtil;
     private int currentCharter = 0;
     private PageListener pageListener;
     private Page currentPage;
-    private Page prePage;
     private Page cancelPage;
     private ContentValues values = new ContentValues();
     private static Status status = Status.OPENING;
     private String progress;
-    private long position;
+    private long firstIndex;
     private Activity activity;
 
     public enum Status {
@@ -168,7 +166,7 @@ public class PageFactory {
     }
 
     public PageFactory(Context context) {
-        bookUtil = new BookUtil();
+        bookUtil = new BookUtil(context);
         this.context = context.getApplicationContext();
         config = Config.getInstance();
         //获取屏幕宽高
@@ -285,7 +283,7 @@ public class PageFactory {
                 @Override
                 public void run() {
                     super.run();
-                    values.put("position", currentPage.getPosition());
+                    values.put("firstIndex", currentPage.getFirstIndex());
                     LitePal.update(Book.class, values, book.getId());
                 }
             }.start();
@@ -306,7 +304,7 @@ public class PageFactory {
             }
         }
         // 画进度
-        float fPercent = (float) (currentPage.getPosition() * 1.0 / bookUtil.getBookLen());
+        float fPercent = (float) (currentPage.getFirstIndex() * 1.0 / bookUtil.getBookLen());
         if (pageListener != null) {
             pageListener.changeProgress(fPercent);
         }
@@ -329,8 +327,8 @@ public class PageFactory {
      * 向前翻页
      */
     public void upPage() {
-        Log.d(TAG, pageFactory.getPosition() + " ");
-        if (currentPage.getPosition() <= 0) {
+        Log.d(TAG, pageFactory.getFirstIndex() + " ");
+        if (currentPage.getFirstIndex() <= 0) {
             if (!firstPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_head), Toast.LENGTH_SHORT).show();
             }
@@ -339,7 +337,7 @@ public class PageFactory {
         } else {
             firstPage = false;
         }
-        position = currentPage.getPosition();
+        firstIndex = currentPage.getFirstIndex();
         cancelPage = currentPage;
         onDraw(pageView.getCurPage(), currentPage.getLines(), true);
         currentPage = getPrePage();
@@ -350,8 +348,8 @@ public class PageFactory {
      * 向后翻页
      */
     public void nextPage() {
-        Log.d(TAG, pageFactory.getPosition() + " ");
-        if (currentPage.getEnd() >= bookUtil.getBookLen()) {
+        Log.d(TAG, pageFactory.getFirstIndex() + " ");
+        if (currentPage.getLastIndex() >= bookUtil.getBookLen()) {
             if (!lastPage) {
                 Toast.makeText(context, context.getResources().getString(R.string.read_to_end), Toast.LENGTH_SHORT).show();
             }
@@ -360,10 +358,9 @@ public class PageFactory {
         } else {
             lastPage = false;
         }
-        position = currentPage.getPosition();
+        firstIndex = currentPage.getFirstIndex();
         cancelPage = currentPage;
         onDraw(pageView.getCurPage(), currentPage.getLines(), true);
-        prePage = currentPage;
         currentPage = getNextPage();
         onDraw(pageView.getNextPage(), currentPage.getLines(), true);
     }
@@ -387,38 +384,37 @@ public class PageFactory {
 
         this.book = book;
         bookPath = book.getBookPath();
-        bookName = book.getBookName().split(".txt")[0];
 
         status = Status.OPENING;
         drawStatus(pageView.getCurPage());
         drawStatus(pageView.getNextPage());
-        readStatus(book.getPosition());
+        readStatus(book.getFirstIndex());
     }
 
     /**
      * 阅读状态
-     * @param position 当前页面的第一个字的索引
+     * @param firstIndex 当前页面的第一个字的索引
      */
-    private void readStatus(long position){
+    private void readStatus(long firstIndex){
         try {
             bookUtil.openBook(book);
         } catch (IOException e) {
             e.printStackTrace();
-            setStatus(false,position);
+            setStatus(false,firstIndex);
             return;
         }
-        setStatus(true,position);
+        setStatus(true,firstIndex);
     }
 
     /**
      * 设置阅读状态
      * @param status 阅读状态
-     * @param position 当前页面的第一个字的索引
+     * @param firstIndex 当前页面的第一个字的索引
      */
-    private void setStatus(boolean status, long position){
+    private void setStatus(boolean status, long firstIndex){
         if (status) {
             PageFactory.status = PageFactory.Status.FINISH;
-            currentPage = getPageForBegin(position);
+            currentPage = getPageForBegin(firstIndex);
             if (pageView != null) {
                 currentPage(true);
             }
@@ -430,32 +426,32 @@ public class PageFactory {
     }
 
     private Page getNextPage() {
-        bookUtil.setPosition(currentPage.getEnd());
+        bookUtil.setFirstIndex(currentPage.getLastIndex());
 
         Page page = new Page();
-        page.setPosition(currentPage.getEnd() + 1);
+        page.setFirstIndex(currentPage.getLastIndex() + 1);
         page.setLines(getNextLines());
-        page.setEnd(bookUtil.getPosition());
+        page.setLastIndex(bookUtil.getFirstIndex());
         return page;
     }
 
     private Page getPrePage() {
-        bookUtil.setPosition(currentPage.getPosition());
+        bookUtil.setFirstIndex(currentPage.getFirstIndex());
 
         Page page = new Page();
-        page.setEnd(bookUtil.getPosition() - 1);
+        page.setLastIndex(bookUtil.getFirstIndex() - 1);
         page.setLines(getPreLines());
-        page.setPosition(bookUtil.getPosition());
+        page.setFirstIndex(bookUtil.getFirstIndex());
         return page;
     }
 
     private Page getPageForBegin(long begin) {
         Page page = new Page();
-        page.setPosition(begin);
+        page.setFirstIndex(begin);
 
-        bookUtil.setPosition(begin - 1);
+        bookUtil.setFirstIndex(begin - 1);
         page.setLines(getNextLines());
-        page.setEnd(bookUtil.getPosition());
+        page.setLastIndex(bookUtil.getFirstIndex());
         return page;
     }
 
@@ -490,7 +486,7 @@ public class PageFactory {
 
             if (lines.size() == lineCount) {
                 if (!line.isEmpty()) {
-                    bookUtil.setPosition(bookUtil.getPosition() - 1);
+                    bookUtil.setFirstIndex(bookUtil.getFirstIndex() - 1);
                 }
                 break;
             }
@@ -506,7 +502,7 @@ public class PageFactory {
         List<String> lines = new ArrayList<>();
         float width = 0;
         String line = "";
-        char[] par = bookUtil.preLine();
+        char[] par = bookUtil.previousLine();
         while (par != null) {
             List<String> preLines = new ArrayList<>();
             for (int i = 0; i < par.length; i++) {
@@ -530,7 +526,7 @@ public class PageFactory {
             }
             width = 0;
             line = "";
-            par = bookUtil.preLine();
+            par = bookUtil.previousLine();
         }
 
         List<String> reLines = new ArrayList<>();
@@ -544,10 +540,10 @@ public class PageFactory {
         }
 
         if (num > 0) {
-            if (bookUtil.getPosition() > 0) {
-                bookUtil.setPosition(bookUtil.getPosition() + num + 2);
+            if (bookUtil.getFirstIndex() > 0) {
+                bookUtil.setFirstIndex(bookUtil.getFirstIndex() + num + 2);
             } else {
-                bookUtil.setPosition(bookUtil.getPosition() + num);
+                bookUtil.setFirstIndex(bookUtil.getFirstIndex() + num);
             }
         }
         return reLines;
@@ -564,7 +560,7 @@ public class PageFactory {
             }
             num--;
             if (num >= 0) {
-                long begin = bookUtil.getBookCatalogList().get(num).getPosition();
+                long begin = bookUtil.getBookCatalogList().get(num).getFirstIndex();
                 currentPage = getPageForBegin(begin);
                 currentPage(true);
                 currentCharter = num;
@@ -582,7 +578,7 @@ public class PageFactory {
         }
         num++;
         if (num < getDirectoryList().size()) {
-            long begin = getDirectoryList().get(num).getPosition();
+            long begin = getDirectoryList().get(num).getFirstIndex();
             currentPage = getPageForBegin(begin);
             currentPage(true);
             currentCharter = num;
@@ -597,7 +593,7 @@ public class PageFactory {
         int num = 0;
         for (int i = 0; getDirectoryList().size() > i; i++) {
             BookCatalog bookCatalogue = getDirectoryList().get(i);
-            if (currentPage.getEnd() >= bookCatalogue.getPosition()) {
+            if (currentPage.getLastIndex() >= bookCatalogue.getFirstIndex()) {
                 num = i;
             } else {
                 break;
@@ -623,10 +619,10 @@ public class PageFactory {
 
     /**
      * 改变章节进度
-     * @param position 当前页面的第一个字的索引
+     * @param firstIndex 当前页面的第一个字的索引
      */
-    public void changeChapter(long position) {
-        currentPage = getPageForBegin(position);
+    public void changeChapter(long firstIndex) {
+        currentPage = getPageForBegin(firstIndex);
         currentPage(true);
     }
 
@@ -667,7 +663,7 @@ public class PageFactory {
         fontPaint.setTextSize(this.fontSize);
         getLineCount();
         measureMarginWidth();
-        currentPage = getPageForBegin(currentPage.getPosition());
+        currentPage = getPageForBegin(currentPage.getFirstIndex());
         currentPage(true);
     }
 
@@ -748,12 +744,10 @@ public class PageFactory {
     public void initData() {
         currentCharter = 0;
         bookPath = "";
-        bookName = "";
         book = null;
         pageView = null;
         pageListener = null;
         cancelPage = null;
-        prePage = null;
         currentPage = null;
     }
 
@@ -809,8 +803,8 @@ public class PageFactory {
         this.pageView = mBookPageView;
     }
 
-    public long getPosition() {
-        return position;
+    public long getFirstIndex() {
+        return firstIndex;
     }
 
     public String getProgress() {

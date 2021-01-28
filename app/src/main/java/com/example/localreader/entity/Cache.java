@@ -7,7 +7,13 @@ import java.lang.ref.WeakReference;
  * @date 2021/01/11
  */
 public class Cache {
+    /**
+     * 存储的字符长度
+     */
     private long size;
+    /**
+     * 存储的字符数组（小说的部分内容）
+     */
     private WeakReference<char[]> data;
 
     public long getSize() {

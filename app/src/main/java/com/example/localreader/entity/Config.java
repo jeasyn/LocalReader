@@ -31,10 +31,6 @@ public class Config {
      * 字体大小
      */
     private float fontSize = 0;
-    /**
-     * 亮度值
-     */
-    private float light = 0;
 
     private Config(Context context){
         this.context = context.getApplicationContext();
@@ -87,7 +83,6 @@ public class Config {
     }
 
     public void setLight(float light) {
-        this.light = light;
         sp.edit().putFloat(LIGHT,light).commit();
     }
 }

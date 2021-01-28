@@ -24,7 +24,7 @@ public class FileUtil {
      *
      * @param fileName 文件名
      * @return 文件编码
-     * @throws IOException 抛出的io异常
+     * @throws IOException
      */
     public static String getCharset(String fileName) throws IOException {
         String charset;

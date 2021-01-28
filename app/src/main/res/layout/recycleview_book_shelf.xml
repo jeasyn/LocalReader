@@ -37,10 +37,10 @@
         style="@style/main_book_bottom_point"
         android:layout_marginTop="3dp"
         android:ellipsize="end"
-        android:lines="1"
         android:text="name"
         android:textColor="@android:color/black"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_main_show_progress"

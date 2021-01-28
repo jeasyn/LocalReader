@@ -60,13 +60,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private PageView bookPage;
     private TextView showProgressTv;
     private RelativeLayout showProgressRl;
-    private TextView upTv;
     private SeekBar chapterProgressSb;
-    private TextView nextTv;
-    private LinearLayout catalogTv;
-    private LinearLayout dayOrNightLayout;
     private TextView dayOrNightTv;
-    private LinearLayout settingLayout;
     private RelativeLayout readBottomRl;
     private Toolbar toolbar;
     private AppBarLayout appbar;
@@ -85,14 +80,14 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         bookPage = findViewById(R.id.bookPage);
         showProgressTv = findViewById(R.id.tv_show_progress);
         showProgressRl = findViewById(R.id.rl_show_progress);
-        upTv = findViewById(R.id.tv_read_up_chapter);
+        TextView upTv = findViewById(R.id.tv_read_up_chapter);
         chapterProgressSb = findViewById(R.id.sb_chapter_progress);
-        nextTv = findViewById(R.id.tv_read_next_chapter);
-        catalogTv = findViewById(R.id.tv_read_catalog);
-        dayOrNightLayout = findViewById(R.id.ll_read_day_or_night);
+        TextView nextTv = findViewById(R.id.tv_read_next_chapter);
+        LinearLayout catalogTv = findViewById(R.id.tv_read_catalog);
+        LinearLayout dayOrNightLayout = findViewById(R.id.ll_read_day_or_night);
         dayOrNightTv = findViewById(R.id.tv_read_day_or_night);
         dayOrNightIv = findViewById(R.id.iv_read_day_or_night);
-        settingLayout = findViewById(R.id.ll_read_setting);
+        LinearLayout settingLayout = findViewById(R.id.ll_read_setting);
         readBottomRl = findViewById(R.id.rl_read_bottom);
         toolbar = findViewById(R.id.toolbar);
         appbar = findViewById(R.id.appbar);
@@ -159,7 +154,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
     SettingsListener mSettingsListener = new SettingsListener() {
         @Override
-        public void changeSystemBright(float brightness) {
+        public void changeLight(float brightness) {
             pageFactory.changeBrightness(ReadActivity.this, brightness);
         }
 
@@ -267,7 +262,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         // 添加书签
         if (id == R.id.action_add_bookmark) {
             if (pageFactory.getCurrentPage() != null) {
-                List<Bookmark> bookmarkList = LitePal.where("bookPath = ? and position = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getPosition() + "").find(Bookmark.class);
+                List<Bookmark> bookmarkList = LitePal.where("bookPath = ? and position = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getFirstIndex() + "").find(Bookmark.class);
 
                 if (!bookmarkList.isEmpty()) {
                     Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
@@ -281,7 +276,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
                         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm ss");
                         String time = sf.format(new Date());
                         bookmark.setTime(time);
-                        bookmark.setPosition(pageFactory.getCurrentPage().getPosition());
+                        bookmark.setFirstIndex(pageFactory.getCurrentPage().getFirstIndex());
                         bookmark.setPartContent(word.toString());
                         bookmark.setBookPath(pageFactory.getBookPath());
                         bookmark.save();
