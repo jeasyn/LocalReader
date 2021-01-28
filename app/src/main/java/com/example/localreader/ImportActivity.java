@@ -55,12 +55,7 @@ public class ImportActivity extends AppCompatActivity {
         toolbar.setTitle(getString(R.string.import_toolbar_title));
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_title_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     public void initView() {

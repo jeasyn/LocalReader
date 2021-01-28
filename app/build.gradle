@@ -17,8 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-}
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
 
 
 dependencies {
@@ -39,9 +43,9 @@ dependencies {
     implementation 'com.umeng.analytics:analytics:6.1.4'
 
     // UniversalDetector获取编码
-    implementation 'com.github.albfernandez:juniversalchardet:2.4.0'
+//    implementation 'com.github.albfernandez:juniversalchardet:2.4.0'
 
     // ThreadFactoryBuilder线程池
-//    implementation 'com.google.guava:guava:30.1-jre'
+    implementation 'com.google.guava:guava:30.1-jre'
 
 }

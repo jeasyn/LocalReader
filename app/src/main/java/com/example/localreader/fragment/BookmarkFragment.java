@@ -1,6 +1,5 @@
 package com.example.localreader.fragment;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,14 +72,11 @@ public class BookmarkFragment extends Fragment {
                     .setTitle("提示")
                     .setMessage("确定删除书签？")
                     .setNegativeButton("取消", null)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            LitePal.delete(Bookmark.class, bookmarkList.get(position).getId());
-                            bookmarkList.clear();
-                            bookmarkList.addAll(LitePal.where("bookPath = ?", bookPath).find(Bookmark.class));
-                            bookmarkAdapter.notifyDataSetChanged();
-                        }
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        LitePal.delete(Bookmark.class, bookmarkList.get(position).getId());
+                        bookmarkList.clear();
+                        bookmarkList.addAll(LitePal.where("bookPath = ?", bookPath).find(Bookmark.class));
+                        bookmarkAdapter.notifyDataSetChanged();
                     }).show();
             //设置为true，可避免长按事件与点击事件冲突
             return true;

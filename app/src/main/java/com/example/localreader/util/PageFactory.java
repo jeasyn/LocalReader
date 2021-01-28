@@ -25,6 +25,7 @@ import com.example.localreader.entity.Config;
 import com.example.localreader.entity.Page;
 import com.example.localreader.listener.PageListener;
 import com.example.localreader.view.PageView;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import org.litepal.LitePal;
 
@@ -32,6 +33,10 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author xialijuan
@@ -39,7 +44,7 @@ import java.util.List;
  */
 public class PageFactory {
 
-    private String TAG = "PageFactory";
+    private final String TAG = "PageFactory";
     private static PageFactory pageFactory;
     private Context context;
     private Config config;
@@ -277,16 +282,22 @@ public class PageFactory {
         if (getDirectoryList().size() > 0 && updateCharter) {
             currentCharter = getCurrentCharter();
         }
-        // 更新Book数据库中的数据
+        // 使用线程池更新Book表中的数据
         if (currentPage != null && book != null) {
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    values.put("firstIndex", currentPage.getFirstIndex());
-                    LitePal.update(Book.class, values, book.getId());
-                }
-            }.start();
+
+            ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                    .setNameFormat("demo-pool-%d").build();
+
+            ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(1, 1,
+                    0L, TimeUnit.MILLISECONDS,
+                    new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
+
+            poolExecutor.execute(()->{
+                values.put("firstIndex", currentPage.getFirstIndex());
+                LitePal.update(Book.class, values, book.getId());
+                Log.d(TAG,Thread.currentThread().getName()+" "+currentPage.getFirstIndex());
+            });
+            poolExecutor.shutdown();
         }
 
         Canvas c = new Canvas(bitmap);

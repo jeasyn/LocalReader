@@ -250,14 +250,11 @@ public class MainActivity extends AppCompatActivity {
                         .setTitle("警告")
                         .setMessage("书籍不存在，是否删除该书籍")
                         .setNegativeButton("取消", null)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                LitePal.delete(Book.class, bookId);
-                                List<Book> all = LitePal.findAll(Book.class);
-                                LitePal.deleteAll(Bookmark.class, "bookPath = ?", book.getBookPath());
-                                adapter.setBookList(all);
-                            }
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            LitePal.delete(Book.class, bookId);
+                            List<Book> all = LitePal.findAll(Book.class);
+                            LitePal.deleteAll(Bookmark.class, "bookPath = ?", book.getBookPath());
+                            adapter.setBookList(all);
                         }).show();
             }
         }
@@ -346,13 +343,10 @@ public class MainActivity extends AppCompatActivity {
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.alpha = 0.3f;
         getWindow().setAttributes(params);
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                WindowManager.LayoutParams params = getWindow().getAttributes();
-                params.alpha = 1.0f;
-                getWindow().setAttributes(params);
-            }
+        popupWindow.setOnDismissListener(() -> {
+            WindowManager.LayoutParams params1 = getWindow().getAttributes();
+            params1.alpha = 1.0f;
+            getWindow().setAttributes(params1);
         });
         popupWindow.showAtLocation(inflater.inflate(R.layout.activity_main, null), Gravity.CENTER, 0, 0);
     }
@@ -434,13 +428,10 @@ public class MainActivity extends AppCompatActivity {
                     new AlertDialog.Builder(this)
                             .setTitle("警告")
                             .setMessage("存储权限是必须的，若拒绝，则部分功能无法正常运行！")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Uri uri = Uri.parse("package:" + getPackageName());
-                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
-                                    startActivity(intent);
-                                }
+                            .setPositiveButton("确定", (dialog, which) -> {
+                                Uri uri = Uri.parse("package:" + getPackageName());
+                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, uri);
+                                startActivity(intent);
                             }).show();
                 }
                 break;

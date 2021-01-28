@@ -1,7 +1,6 @@
 package com.example.localreader;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,12 +29,7 @@ public class CatalogActivity extends AppCompatActivity {
         toolbar.setTitle(book.getBookName().split(".txt")[0]);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_title_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         initView();
     }

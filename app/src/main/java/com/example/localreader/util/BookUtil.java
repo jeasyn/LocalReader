@@ -8,6 +8,7 @@ import com.example.localreader.entity.Book;
 import com.example.localreader.entity.BookCatalog;
 import com.example.localreader.entity.Bookmark;
 import com.example.localreader.entity.Cache;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import org.litepal.LitePal;
 
@@ -20,6 +21,10 @@ import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author xialijuan
@@ -163,7 +168,7 @@ public class BookUtil {
     /**
      * 缓存书本
      *
-     * @throws IOException 抛出io异常
+     * @throws IOException
      */
     private void cacheBook() throws IOException {
         String strCharsetName;
@@ -218,13 +223,15 @@ public class BookUtil {
             index++;
         }
 
-        new Thread() {
-            @Override
-            public void run() {
-                getChapter();
-            }
-        }.start();
+        ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                .setNameFormat("demo-pool-%d").build();
 
+        ThreadPoolExecutor poolExecutor = new ThreadPoolExecutor(1, 1,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(1024), threadFactory, new ThreadPoolExecutor.AbortPolicy());
+
+        poolExecutor.execute(()->getChapter());
+        poolExecutor.shutdown();
     }
 
     /**

@@ -108,12 +108,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         // 一定要放在setNavigationOnClickListener的前面，否则点击事件不会被响应
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_title_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         config = Config.getInstance();
         pageFactory = PageFactory.getInstance();
@@ -145,12 +140,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
         initDayOrNight();
     }
 
-    DialogInterface.OnCancelListener mOnCancelListener = new DialogInterface.OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            hideSystemUi();
-        }
-    };
+    DialogInterface.OnCancelListener mOnCancelListener = dialog -> hideSystemUi();
 
     SettingsListener mSettingsListener = new SettingsListener() {
         @Override
