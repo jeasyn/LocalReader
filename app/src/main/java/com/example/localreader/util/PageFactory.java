@@ -207,6 +207,9 @@ public class PageFactory {
         measureMarginWidth();
     }
 
+    /**
+     * 设置边距宽度
+     */
     private void measureMarginWidth() {
         float wordWidth = fontPaint.measureText("\u3000");
         float width = visibleWidth % wordWidth;
@@ -393,8 +396,8 @@ public class PageFactory {
         try {
             bookUtil.openBook(book);
         } catch (IOException e) {
-            e.printStackTrace();
             setStatus(false,firstIndex);
+            e.printStackTrace();
             return;
         }
         setStatus(true,firstIndex);
@@ -457,6 +460,10 @@ public class PageFactory {
         return page;
     }
 
+    /**
+     * 得到下一行
+     * @return
+     */
     private List<String> getNextLines() {
         List<String> lines = new ArrayList<>();
         float width = 0;
@@ -500,6 +507,10 @@ public class PageFactory {
         return lines;
     }
 
+    /**
+     * 得到上一行
+     * @return
+     */
     private List<String> getPreLines() {
         List<String> lines = new ArrayList<>();
         float width = 0;

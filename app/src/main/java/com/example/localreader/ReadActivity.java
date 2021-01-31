@@ -53,8 +53,14 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     private Config config;
     private Book book;
     private PageFactory pageFactory;
-    private boolean show = false;
-    private boolean mDayOrNight;
+    /**
+     * 是否隐藏底部菜单栏和toolbar
+     */
+    private boolean hide = false;
+    /**
+     * 夜间模式
+     */
+    private boolean night;
     private SettingsDialog settingsDetail;
     private PageView bookPage;
     private TextView showProgressTv;
@@ -159,7 +165,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        if (!show) {
+        if (!hide) {
             hideSystemUi();
         }
     }
@@ -179,7 +185,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     TouchListener mTouchListener = new TouchListener() {
         @Override
         public void center() {
-            if (show) {
+            if (hide) {
                 hideReadSetting();
             } else {
                 showReadSetting();
@@ -188,7 +194,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public boolean upPage() {
-            if (show) {
+            if (hide) {
                 return false;
             }
             pageFactory.upPage();
@@ -197,7 +203,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public boolean nextPage() {
-            if (show) {
+            if (hide) {
                 return false;
             }
             pageFactory.nextPage();
@@ -308,8 +314,8 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initDayOrNight() {
-        mDayOrNight = config.isNight();
-        if (mDayOrNight) {
+        night = config.isNight();
+        if (night) {
             dayOrNightIv.setImageResource(R.drawable.read_day_mode);
             dayOrNightTv.setText(getResources().getString(R.string.read_day_mode));
         } else {
@@ -322,17 +328,17 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
      * 改变显示模式
      */
     public void changeDayOrNight() {
-        if (mDayOrNight) {
-            mDayOrNight = false;
+        if (night) {
+            night = false;
             dayOrNightTv.setText(getResources().getString(R.string.read_night_mode));
             dayOrNightIv.setImageResource(R.drawable.read_night_mode);
         } else {
-            mDayOrNight = true;
+            night = true;
             dayOrNightTv.setText(getResources().getString(R.string.read_day_mode));
             dayOrNightIv.setImageResource(R.drawable.read_day_mode);
         }
-        config.setNight(mDayOrNight);
-        pageFactory.setDayOrNight(mDayOrNight);
+        config.setNight(night);
+        pageFactory.setDayOrNight(night);
     }
 
     private void setProgress(float progress) {
@@ -349,7 +355,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
      * 显示功能栏动画
      */
     private void showReadSetting() {
-        show = true;
+        hide = true;
         showProgressRl.setVisibility(View.GONE);
         showSystemUi();
         Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_in);
@@ -364,7 +370,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
      * 隐藏功能栏动画
      */
     private void hideReadSetting() {
-        show = false;
+        hide = false;
         Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_out);
         Animation topAnim = AnimationUtils.loadAnimation(this, R.anim.top_out);
         if (readBottomRl.getVisibility() == View.VISIBLE) {
@@ -406,7 +412,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (show) {
+            if (hide) {
                 hideReadSetting();
                 return true;
             }
