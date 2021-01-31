@@ -15,15 +15,6 @@ public class CoverFlip extends BaseFlip {
     private Rect srcRect, destRect;
     private GradientDrawable drawable;
 
-    public CoverFlip(Bitmap currentBitmap, Bitmap nextBitmap, int width, int height) {
-        super(currentBitmap, nextBitmap, width, height);
-        srcRect = new Rect(0, 0, screenWidth, screenHeight);
-        destRect = new Rect(0, 0, screenWidth, screenHeight);
-        int[] mBackShadowColors = new int[] { 0x66000000,0x00000000};
-        drawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, mBackShadowColors);
-        drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
-    }
-
     @Override
     public void drawMove(Canvas canvas) {
         if (getDirection().equals(BaseFlip.Direction.next)){
@@ -68,7 +59,7 @@ public class CoverFlip extends BaseFlip {
 
     @Override
     public void startSliding(Scroller scroller) {
-        int dx = 0;
+        int dx;
         if (getDirection().equals(Direction.next)){
             if (getCancel()){
                 int dis = (int) ((screenWidth - startX) + mTouch.x);
@@ -89,5 +80,14 @@ public class CoverFlip extends BaseFlip {
         // 滑动速度保持一致
         int duration =  (400 * Math.abs(dx)) / screenWidth;
         scroller.startScroll((int) mTouch.x, 0, dx, 0, duration);
+    }
+
+    public CoverFlip(Bitmap currentBitmap, Bitmap nextBitmap, int width, int height) {
+        super(currentBitmap, nextBitmap, width, height);
+        srcRect = new Rect(0, 0, screenWidth, screenHeight);
+        destRect = new Rect(0, 0, screenWidth, screenHeight);
+        int[] mBackShadowColors = new int[] { 0x66000000,0x00000000};
+        drawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, mBackShadowColors);
+        drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
     }
 }

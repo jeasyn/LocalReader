@@ -46,11 +46,11 @@ public abstract class BaseFlip {
      * 滑动方向
      */
     private Direction direction = Direction.none;
-    private boolean isCancel = false;
+    private boolean cancel = false;
 
-    public BaseFlip(Bitmap mCurrentBitmap, Bitmap mNextBitmap, int width, int height) {
-        this.curPageBitmap = mCurrentBitmap;
-        this.nextPageBitmap = mNextBitmap;
+    public BaseFlip(Bitmap currentBitmap, Bitmap nextBitmap, int width, int height) {
+        this.curPageBitmap = currentBitmap;
+        this.nextPageBitmap = nextBitmap;
         this.screenWidth = width;
         this.screenHeight = height;
     }
@@ -93,8 +93,8 @@ public abstract class BaseFlip {
         return direction;
     }
 
-    public void setCancel(boolean isCancel) {
-        this.isCancel = isCancel;
+    public void setCancel(boolean cancel) {
+        this.cancel = cancel;
     }
 
     /**
@@ -105,6 +105,6 @@ public abstract class BaseFlip {
     public abstract void startSliding(Scroller scroller);
 
     public boolean getCancel() {
-        return isCancel;
+        return cancel;
     }
 }

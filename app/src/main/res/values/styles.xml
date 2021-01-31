@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionMenuTextColor">@color/toolbar</item>
+        <item name="android:actionMenuTextColor">@color/toolbar</item>
     </style>
 
     <style name="main_book_item">

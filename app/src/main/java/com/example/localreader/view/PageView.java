@@ -55,10 +55,10 @@ public class PageView extends View {
     /**
      * 当前页
      */
-    Bitmap curPageBitmap = null;
-    Bitmap nextPageBitmap = null;
+    private Bitmap curPageBitmap = null;
+    private Bitmap nextPageBitmap = null;
     private BaseFlip baseFlip;
-    Scroller scroller;
+    private Scroller scroller;
     private int bgColor = 0xFFCEC29C;
     private TouchListener mTouchListener;
 
@@ -267,6 +267,9 @@ public class PageView extends View {
         super.computeScroll();
     }
 
+    /**
+     * 中止动画
+     */
     public void abortAnimation() {
         if (!scroller.isFinished()) {
             scroller.abortAnimation();

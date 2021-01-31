@@ -34,15 +34,16 @@ public class CatalogAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        final CatalogViewHolder catalogViewHolder;
-        if (convertView == null) {
+        View view;
+        CatalogViewHolder catalogViewHolder;
+        if (convertView == null){
+            view = LayoutInflater.from(context).inflate(R.layout.item_catalog,parent,false);
             catalogViewHolder = new CatalogViewHolder();
-            convertView = inflater.inflate(R.layout.item_catalog, parent, false);
-            catalogViewHolder.catalogTv = convertView.findViewById(R.id.tv_catalog);
-            convertView.setTag(catalogViewHolder);
-        } else {
-            catalogViewHolder = (CatalogViewHolder) convertView.getTag();
+            catalogViewHolder.catalogTv = view.findViewById(R.id.tv_catalog);
+            view.setTag(catalogViewHolder);
+        }else {
+            view = convertView;
+            catalogViewHolder = (CatalogViewHolder) view.getTag();
         }
         if (currentCharter == position) {
             // 正在阅读的当前章节
@@ -51,7 +52,7 @@ public class CatalogAdapter extends BaseAdapter {
             catalogViewHolder.catalogTv.setTextColor(ContextCompat.getColor(context, R.color.read_default_text));
         }
         catalogViewHolder.catalogTv.setText(catalogs.get(position).getCatalog());
-        return convertView;
+        return view;
     }
 
     /**

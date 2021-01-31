@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView fileTimeTv;
     private View view;
     private LayoutInflater inflater;
-    private boolean isHideBottom;
+    private boolean hideBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle(getString(R.string.main_toolbar_title));
 
-        initViews();
+        initView();
         initData();
     }
 
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
      * 显示底部菜单
      */
     private void showBottomLayout() {
-        isHideBottom = true;
+        hideBottom = true;
         Animation mAnimationBottomIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bottom_in);
         bottomLayout.setVisibility(View.VISIBLE);
         bottomLayout.startAnimation(mAnimationBottomIn);
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
      * 隐藏底部菜单
      */
     private void hideBottomLayout() {
-        isHideBottom = false;
+        hideBottom = false;
         // 隐藏复选框
         adapter.showState(false);
         Animation mAnimationBottomOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bottom_out);
@@ -343,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (isHideBottom) {
+            if (hideBottom) {
                 hideBottomLayout();
             } else {
                 exit();
@@ -404,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initViews() {
+    private void initView() {
         LinearLayout deleteLayout = findViewById(R.id.ll_main_bottom_delete);
         LinearLayout cancelLayout = findViewById(R.id.ll_main_bottom_cancel);
         LinearLayout selectLayout = findViewById(R.id.ll_main_bottom_select_all);

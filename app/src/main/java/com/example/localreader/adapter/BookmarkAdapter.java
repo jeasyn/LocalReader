@@ -35,19 +35,22 @@ public class BookmarkAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        final BookmarkViewHolder bookmarkViewHolder;
-        if (convertView == null) {
-            bookmarkViewHolder = new BookmarkViewHolder();
-            convertView = inflater.inflate(R.layout.item_bookmark, parent, false);
-            bookmarkViewHolder.markContentTv = convertView.findViewById(R.id.tv_mark_content);
-            bookmarkViewHolder.markProgressTv = convertView.findViewById(R.id.tv_mark_progress);
-            bookmarkViewHolder.markTimeTv = convertView.findViewById(R.id.tv_mark_time);
-            convertView.setTag(bookmarkViewHolder);
-        } else {
-            bookmarkViewHolder = (BookmarkViewHolder) convertView.getTag();
-        }
         Bookmark bookmark = bookmarks.get(position);
+        View view;
+        final BookmarkViewHolder bookmarkViewHolder;
+        if (convertView == null){
+            view = LayoutInflater.from(context).inflate(R.layout.item_bookmark,parent,false);
+            bookmarkViewHolder = new BookmarkViewHolder();
+            bookmarkViewHolder.markContentTv = view.findViewById(R.id.tv_mark_content);
+            bookmarkViewHolder.markProgressTv = view.findViewById(R.id.tv_mark_progress);
+            bookmarkViewHolder.markTimeTv = view.findViewById(R.id.tv_mark_time);
+            // 将ViewHolder存储在View中
+            view.setTag(bookmarkViewHolder);
+        }else {
+            view = convertView;
+            // 重新获取ViewHolder
+            bookmarkViewHolder = (BookmarkViewHolder) view.getTag();
+        }
         bookmarkViewHolder.markContentTv.setText(bookmark.getPartContent());
 
         // 格式化显示书签进度
@@ -58,7 +61,7 @@ public class BookmarkAdapter extends BaseAdapter {
         bookmarkViewHolder.markProgressTv.setText(progress);
 
         bookmarkViewHolder.markTimeTv.setText(bookmark.getTime());
-        return convertView;
+        return view;
     }
 
     @Override
