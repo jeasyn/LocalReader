@@ -25,6 +25,7 @@
 	> Program type already present:
 	> org.mozilla.universalchardet.CharsetListener
 	
+
  	解决：在libs导入juniversalchardet-1.0.3.jar包即可
 3. 使用ThreadFactoryBuilder线程池导入依赖时，必须使用java8，在build.gradle的android闭包中添加
 
@@ -45,14 +46,14 @@
 这里只列出了几个对我来说较大的问题，其他就不一一列举了
 
 ### 截图
-![image](https://github.com/xialeejune/LocalReader/blob/master/screenshots/bookshelf.jpg)
+<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/bookshelf.jpg" alt="bookshelf" style="zoom: 25%;" />
 
-![image](https://github.com/xialeejune/LocalReader/blob/master/screenshots/import.jpg)
+<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/import.jpg" alt="import" style="zoom: 25%;" />
 
-![image](https://github.com/xialeejune/LocalReader/blob/master/screenshots/read.jpg)
+<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/read.jpg" alt="read" style="zoom: 25%;" />
 
-![image](https://github.com/xialeejune/LocalReader/blob/master/screenshots/settings.jpg)
+<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/settings.jpg" alt="settings" style="zoom: 25%;" />
 
-![image](https://github.com/xialeejune/LocalReader/blob/master/screenshots/catalog.jpg)
+<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/catalog.jpg" alt="catalog" style="zoom: 25%;" />
 
-![image](https://github.com/xialeejune/LocalReader/blob/master/screenshots/bookmark.jpg)
+<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/bookmark.jpg" alt="bookmark" style="zoom: 25%;" />
