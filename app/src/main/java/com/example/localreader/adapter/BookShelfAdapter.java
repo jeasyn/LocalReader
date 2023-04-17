@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by xialijuan on 14/12/2020.
+ * Created by xialijuan on 2020/12/14.
  */
 public class BookShelfAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 

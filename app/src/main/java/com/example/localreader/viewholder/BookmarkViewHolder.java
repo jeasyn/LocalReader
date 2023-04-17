@@ -7,7 +7,7 @@ import android.widget.TextView;
  * @date 2021/01/02
  */
 /**
- * Created by xialijuan on 02/01/2021.
+ * Created by xialijuan on 2021/01/02.
  */
 public class BookmarkViewHolder {
 

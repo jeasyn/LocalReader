@@ -45,7 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by xialijuan on 22/12/2020.
+ * Created by xialijuan on 2020/12/22.
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener {
 

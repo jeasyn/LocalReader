@@ -6,7 +6,7 @@ import android.graphics.PointF;
 import android.widget.Scroller;
 
 /**
- * Created by xialijuan on 27/12/2020.
+ * Created by xialijuan on 2020/12/27.
  */
 public abstract class BaseFlip {
 

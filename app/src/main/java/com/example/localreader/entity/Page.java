@@ -3,7 +3,7 @@ package com.example.localreader.entity;
 import java.util.List;
 
 /**
- * Created by xialijuan on 27/12/2020.
+ * Created by xialijuan on 2020/12/27.
  */
 public class Page {
     /**

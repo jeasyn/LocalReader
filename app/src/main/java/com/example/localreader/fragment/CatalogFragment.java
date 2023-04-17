@@ -19,7 +19,7 @@ import com.example.localreader.util.PageFactory;
 import java.util.List;
 
 /**
- * Created by xialijuan on 30/12/2020.
+ * Created by xialijuan on 2020/12/30.
  */
 public class CatalogFragment extends Fragment {
 
