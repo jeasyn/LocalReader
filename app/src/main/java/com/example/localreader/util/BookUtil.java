@@ -27,8 +27,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author xialijuan
- * @date 2021/01/11
+ * Created by xialijuan on 11/01/2020.
  */
 public class BookUtil {
 

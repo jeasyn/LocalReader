@@ -46,14 +46,14 @@
 这里只列出了几个对我来说较大的问题，其他就不一一列举了
 
 ### 截图
-<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/bookshelf.jpg" alt="bookshelf" style="zoom: 25%;" />
+<img src="E:\ProgramData\Typora\typora-user-images/bookshelf.jpg" alt="bookshelf" style="zoom: 25%;" />
 
-<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/import.jpg" alt="import" style="zoom: 25%;" />
+<img src="E:\ProgramData\Typora\typora-user-images/import.jpg" alt="import" style="zoom: 25%;" />
 
-<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/read.jpg" alt="read" style="zoom: 25%;" />
+<img src="E:\ProgramData\Typora\typora-user-images/read.jpg" alt="read" style="zoom: 25%;" />
 
-<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/settings.jpg" alt="settings" style="zoom: 25%;" />
+<img src="E:\ProgramData\Typora\typora-user-images/settings.jpg" alt="settings" style="zoom: 25%;" />
 
-<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/catalog.jpg" alt="catalog" style="zoom: 25%;" />
+<img src="E:\ProgramData\Typora\typora-user-images/catalog.jpg" alt="catalog" style="zoom: 25%;" />
 
-<img src="https://cdn.jsdelivr.net/gh/xialijuan0/ImageRepo@master/LocalReader/bookmark.jpg" alt="bookmark" style="zoom: 25%;" />
+<img src="E:\ProgramData\Typora\typora-user-images/bookmark.jpg" alt="bookmark" style="zoom: 25%;" />

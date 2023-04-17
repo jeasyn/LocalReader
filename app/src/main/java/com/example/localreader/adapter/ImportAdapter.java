@@ -19,8 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @author xialijuan
- * @date 2020/12/06
+ * Created by xialijuan on 06/12/2020.
  */
 public class ImportAdapter extends RecyclerView.Adapter<ImportViewHolder> {
 

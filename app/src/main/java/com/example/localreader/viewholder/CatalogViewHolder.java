@@ -3,8 +3,7 @@ package com.example.localreader.viewholder;
 import android.widget.TextView;
 
 /**
- * @author xialijuan
- * @date 2020/12/30
+ * Created by xialijuan on 30/12/2020.
  */
 public class CatalogViewHolder {
 

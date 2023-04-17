@@ -6,8 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * @author xialijuan
- * @date 2020/12/14
+ * Created by xialijuan on 14/12/2020.
  */
 public class BaseViewHolder extends RecyclerView.ViewHolder {
 

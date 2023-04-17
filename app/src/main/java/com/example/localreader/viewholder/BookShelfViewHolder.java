@@ -9,8 +9,7 @@ import androidx.annotation.NonNull;
 import com.example.localreader.R;
 
 /**
- * @author xialijuan
- * @date 2020/12/14
+ * Created by xialijuan on 14/12/2020.
  */
 public class BookShelfViewHolder extends BaseViewHolder {
 

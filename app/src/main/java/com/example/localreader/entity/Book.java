@@ -5,8 +5,7 @@ import org.litepal.crud.LitePalSupport;
 import java.io.Serializable;
 
 /**
- * @author xialijuan
- * @date 2020/12/05
+ * Created by xialijuan on 05/12/2020.
  */
 public class Book extends LitePalSupport implements Serializable {
 

@@ -22,8 +22,7 @@ import org.litepal.LitePal;
 import java.util.List;
 
 /**
- * @author xialijuan
- * @date 2021/01/02
+ * Created by xialijuan on 02/01/2021.
  */
 public class BookmarkFragment extends Fragment {
 

@@ -9,8 +9,7 @@ import com.example.localreader.fragment.BookmarkFragment;
 import com.example.localreader.fragment.CatalogFragment;
 
 /**
- * @author xialijuan
- * @date 2020/12/30
+ * Created by xialijuan on 30/12/2020.
  */
 public class MyPagerAdapter extends FragmentStatePagerAdapter {
 
