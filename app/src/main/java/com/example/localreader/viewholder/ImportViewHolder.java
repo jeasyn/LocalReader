@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import com.example.localreader.R;
 
 /**
- * Created by xialijuan on 06/12/2020.
+ * Created by xialijuan on 2020/12/06.
  */
 public class ImportViewHolder extends BaseViewHolder {
 

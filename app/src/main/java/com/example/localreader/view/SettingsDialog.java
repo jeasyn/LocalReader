@@ -17,7 +17,7 @@ import com.example.localreader.listener.SettingsListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
- * Created by xialijuan on 05/01/2020.
+ * Created by xialijuan on 2021/01/05.
  */
 public class SettingsDialog extends Dialog implements View.OnClickListener {
 

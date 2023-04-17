@@ -3,7 +3,7 @@ package com.example.localreader.entity;
 import org.litepal.crud.LitePalSupport;
 
 /**
- * Created by xialijuan on 30/12/2020.
+ * Created by xialijuan on 2020/12/30.
  */
 public class Bookmark extends LitePalSupport {
 

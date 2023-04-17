@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import com.example.localreader.R;
 
 /**
- * Created by xialijuan on 11/01/2021.
+ * Created by xialijuan on 2021/01/11.
  */
 public class Config {
 
