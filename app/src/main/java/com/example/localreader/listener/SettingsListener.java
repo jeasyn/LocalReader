@@ -1,8 +1,7 @@
 package com.example.localreader.listener;
 
 /**
- * @author xialijuan
- * @date 2021/01/05
+ * Created by xialijuan on 05/01/2020.
  */
 public interface SettingsListener {
     /**

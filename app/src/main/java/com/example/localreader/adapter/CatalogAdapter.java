@@ -15,8 +15,7 @@ import com.example.localreader.viewholder.CatalogViewHolder;
 import java.util.List;
 
 /**
- * @author xialijuan
- * @date 2020/12/30
+ * Created by xialijuan on 30/12/2020.
  */
 public class CatalogAdapter extends BaseAdapter {
 

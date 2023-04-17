@@ -39,8 +39,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author xialijuan
- * @date 2020/12/25
+ * Created by xialijuan on 25/12/2020.
  */
 public class PageFactory {
 

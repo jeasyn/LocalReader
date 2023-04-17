@@ -1,8 +1,7 @@
 package com.example.localreader.listener;
 
 /**
- * @author xialijuan
- * @date 2020/12/25
+ * Created by xialijuan on 25/12/2020.
  */
 public interface TouchListener {
     /**

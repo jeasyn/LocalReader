@@ -15,8 +15,7 @@ import com.example.localreader.listener.TouchListener;
 import com.example.localreader.util.PageFactory;
 
 /**
- * @author xialijuan
- * @date 2020/12/22
+ * Created by xialijuan on 22/12/2020.
  */
 public class PageView extends View {
     private Context context;

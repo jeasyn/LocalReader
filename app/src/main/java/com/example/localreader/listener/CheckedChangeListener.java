@@ -3,8 +3,7 @@ package com.example.localreader.listener;
 import android.widget.CompoundButton;
 
 /**
- * @author xialijuan
- * @date 2020/12/06
+ * Created by xialijuan on 06/12/2020.
  */
 public interface CheckedChangeListener {
     /**

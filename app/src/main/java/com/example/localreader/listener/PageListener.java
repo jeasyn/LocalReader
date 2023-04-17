@@ -1,8 +1,7 @@
 package com.example.localreader.listener;
 
 /**
- * @author xialijuan
- * @date 2021/1/27
+ * Created by xialijuan on 27/01/2021.
  */
 public interface PageListener {
     /**

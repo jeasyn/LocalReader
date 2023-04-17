@@ -45,8 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author xialijuan
- * @date 2020/12/22
+ * Created by xialijuan on 22/12/2020.
  */
 public class ReadActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -301,6 +300,7 @@ public class ReadActivity extends AppCompatActivity implements View.OnClickListe
             pageFactory.changeProgress(pro);
         }
     };
+
     /**
      * 拖动进度条时显示书本进度
      *

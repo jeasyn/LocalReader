@@ -48,8 +48,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * @author xialijuan
- * @date 2020/12/05
+ * Created by xialijuan on 05/12/2020.
  */
 public class MainActivity extends AppCompatActivity {
 

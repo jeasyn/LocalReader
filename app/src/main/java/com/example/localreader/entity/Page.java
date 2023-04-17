@@ -3,8 +3,7 @@ package com.example.localreader.entity;
 import java.util.List;
 
 /**
- * @author xialijuan
- * @date 2020/12/27
+ * Created by xialijuan on 27/12/2020.
  */
 public class Page {
     /**

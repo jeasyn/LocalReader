@@ -19,8 +19,7 @@ import com.example.localreader.util.PageFactory;
 import java.util.List;
 
 /**
- * @author xialijuan
- * @date 2020/12/30
+ * Created by xialijuan on 30/12/2020.
  */
 public class CatalogFragment extends Fragment {
 
